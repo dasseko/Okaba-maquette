@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">O\'kaba</string>
+    <string name="title_activity_main">O\'kaba</string>
+    <string name="package_name">ga.okaba.maquette</string>
+    <string name="custom_url_scheme">ga.okaba.maquette</string>
+</resources>

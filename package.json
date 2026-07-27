@@ -1,0 +1,30 @@
+{
+  "name": "okaba-maquette",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "android:add": "cap add android",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android",
+    "audit:ui": "node tests/ui-audit.mjs",
+    "audit:event": "node tests/event-audit.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "latest",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "latest",
+    "@capacitor/status-bar": "^8.0.3",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest",
+    "@vitejs/plugin-react": "latest",
+    "playwright-core": "^1.62.0",
+    "vite": "latest"
+  }
+}

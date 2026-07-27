@@ -1,0 +1,31 @@
+O'KABA — GÉNÉRER L'APK SUR LE PC AVEC ANDROID STUDIO
+=====================================================
+
+Ce dossier Android contient déjà la dernière version web synchronisée par
+Capacitor 8.4.2. Il n'est pas nécessaire de relancer Capacitor pour générer
+l'APK à partir du paquet de transfert.
+
+1. Décompresser OKABA-Android-Studio-ready.zip.
+2. Ouvrir Android Studio.
+3. Choisir "Open" puis sélectionner le dossier
+   "OKABA-Android-Studio-ready" décompressé.
+4. Laisser Android Studio terminer Gradle Sync et télécharger les composants
+   Android demandés. Utiliser le JDK intégré à Android Studio si un JDK est
+   demandé.
+5. Pour un APK de test : menu Build > Build Bundle(s) / APK(s) > Build APK(s).
+6. Récupérer le fichier :
+   app\build\outputs\apk\debug\app-debug.apk
+
+Équivalent dans le terminal Android Studio sous Windows :
+  .\gradlew.bat assembleDebug
+
+Pour un APK signé destiné à la diffusion :
+  Build > Generate Signed App Bundle or APK > APK
+
+Informations de l'application :
+  Nom : O'KABA
+  Identifiant : ga.okaba.maquette
+  Version : 1.0 (versionCode 1)
+
+Important : ne pas supprimer le dossier node_modules fourni dans le paquet.
+Gradle l'utilise pour le module natif Capacitor Android.

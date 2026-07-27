@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Drapeau du Gabon</title>
+  <desc id="desc">Trois bandes horizontales verte, jaune et bleue.</desc>
+  <rect width="600" height="200" fill="#009E60"/>
+  <rect y="200" width="600" height="200" fill="#FCD116"/>
+  <rect y="400" width="600" height="200" fill="#3A75C4"/>
+</svg>

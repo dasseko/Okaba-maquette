@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Vite and Capacitor generated output
+dist/
+.tmp/
+test-results/
+
+# Local logs and transient files
+*.log
+*.tmp
+/_
+/codex
+/okaba-home.png
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+google-services.json
+
+# Editor and OS metadata
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local Codex/agent state
+.agents/
+.codex/
+
+# Redundant generated Android Studio export; the canonical project is android/
+/OKABA-Android-Studio-ready/

@@ -1,0 +1,15 @@
+{
+  "appId": "ga.okaba.maquette",
+  "appName": "O'kaba",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true
+  },
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": true,
+      "style": "DARK"
+    }
+  }
+}
