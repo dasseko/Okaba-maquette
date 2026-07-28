@@ -67,16 +67,6 @@ html.okaba-native .okaba-app-shell {
   to { opacity: 1; }
 }
 
-/* Les cartes automatiques gardent une proportion lisible sur téléphone et
-   gagnent en hauteur sur tablette au lieu d'étirer/couper leurs affiches. */
-.okaba-auto-card {
-  height: clamp(176px, calc((100vw - 28px) / 2.4), 322px) !important;
-}
-
-.okaba-auto-card--smart {
-  height: clamp(196px, calc((100vw - 32px) / 2.8), 276px) !important;
-}
-
 @media (max-width: 600px), (max-height: 700px) {
   .okaba-app-shell {
     padding: 0;

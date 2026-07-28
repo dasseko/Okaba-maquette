@@ -1353,11 +1353,14 @@ function NavProvider({ children, initial = 'splash', initialParams = {} }) {
 // Les imports ES sont évalués avant le corps de main.jsx. Lire ici un drapeau
 // défini par main.jsx classait donc toujours l'APK comme une page web et
 // affichait la barre iPhone fictive par-dessus celle du téléphone. Capacitor
-// est la source de vérité pour l'environnement natif. La maquette est aussi
-// une application plein écran dans le navigateur : elle ne simule jamais une
-// seconde barre système, ni une coque de téléphone.
+// est la source de vérité pour l'environnement natif. Sur le web de bureau,
+// le cadre de démonstration reste visible ; sur un vrai téléphone, les règles
+// responsive le retirent pour conserver toute la surface utile.
 const IS_NATIVE_APP = Capacitor.isNativePlatform();
-const USE_DEVICE_CHROME = true;
+// Dans l'APK, le téléphone fournit déjà sa propre coque et sa barre système.
+// Dans un navigateur de bureau, on conserve au contraire le cadre de la
+// maquette Claude Design pour visualiser l'interface à sa vraie échelle mobile.
+const USE_DEVICE_CHROME = IS_NATIVE_APP;
 const APP_SAFE_TOP = IS_NATIVE_APP
   ? 'max(env(safe-area-inset-top), var(--okaba-status-bar-height, 24px))'
   : USE_DEVICE_CHROME ? 'env(safe-area-inset-top, 0px)' : '50px';
@@ -1392,7 +1395,7 @@ const StatusBar = ({ dark = false, time = '9:41' }) => {
 const PUB_ACTIONS = [
   { id: 'annonce',    label: 'Publier une annonce',         icon: 'edit',      tone: '#0B7C39', screen: 'publier', primary: true },
   { id: 'reel',       label: 'Diffuser une capsule vidéo (Reel)', icon: 'video', tone: '#C8302E' },
-  { id: 'etab',       label: 'Créer un établissement',      icon: 'shop',      tone: '#E0A400' },
+  { id: 'etab',       label: 'Référencer un établissement', icon: 'shop',      tone: '#E0A400', screen: 'etab' },
   { id: 'event',      label: 'Créer un événement',          icon: 'calendar',  tone: '#5C6B7A' },
   { id: 'cv',         label: 'Soumettre mon CV / offre d’emploi', icon: 'doc',  tone: '#5C6B7A' },
   { id: 'service',    label: 'Proposer un service',         icon: 'handshake', tone: '#0B7C39' },
@@ -1705,16 +1708,6 @@ const Img = ({ src, style = {}, overlay, alt = '', children }) => (
   </div>
 );
 
-// Média de carrousel sans recadrage destructif : un fond flouté remplit la
-// carte tandis que l'affiche complète reste visible au premier plan.
-const CarouselMedia = ({ src, style = {}, overlay, alt = '', fit = 'contain', position = 'center' }) => (
-  <div data-carousel-media style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#102619', ...style }}>
-    {fit === 'contain' && <div aria-hidden style={{ position: 'absolute', inset: -16, backgroundImage: `url('${src}')`, backgroundSize: 'cover', backgroundPosition: position, filter: 'blur(14px)', opacity: 0.58, transform: 'scale(1.08)' }}/>} 
-    <img src={src} alt={alt} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: fit, objectPosition: position, display: 'block' }}/>
-    {overlay && <div style={{ position: 'absolute', inset: 0, background: overlay, pointerEvents: 'none' }}/>} 
-  </div>
-);
-
 const Avatar = ({ src, size = 32, ring, radius }) => (
   <div style={{
     width: size, height: size, borderRadius: radius != null ? radius : size,
@@ -1994,7 +1987,7 @@ const StatusPill = ({ open, time }) => (
 );
 
 Object.assign(window, {
-  Img, CarouselMedia, Avatar, Stars, Badge, FeaturedTag, SectionHead, Price,
+  Img, Avatar, Stars, Badge, FeaturedTag, SectionHead, Price,
   ListingCard, ListingRow, ShopRow, CatChip, EmptyState, GreenHeader, DetailOverlayHeader, StatusPill,
 });
 
@@ -2140,8 +2133,8 @@ function HomeScreen() {
           <button data-auto-carousel="home-banner" aria-label={activeBanner.alt} onClick={openActiveBanner} style={{ width: '100%', border: 'none', cursor: activeBanner.target || activeBanner.event ? 'pointer' : 'default', padding: 0, borderRadius: 16, overflow: 'hidden',
             display: 'block', position: 'relative', aspectRatio: '1672 / 941', textAlign: 'left',
             background: '#fff', boxShadow: '0 6px 18px rgba(0,0,0,0.16)' }}>
-            {HOME_BANNERS.map((banner, index) => <CarouselMedia key={banner.id} src={banner.src} alt={banner.alt}
-              style={{ display: bannerSlide === index ? 'block' : 'none', animation: bannerSlide === index ? 'okabaCarouselIn .28s ease-out' : 'none' }}/>) }
+            {HOME_BANNERS.map((banner, index) => <img key={banner.id} src={banner.src} alt={banner.alt}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: bannerSlide === index ? 'block' : 'none', animation: bannerSlide === index ? 'okabaCarouselIn .28s ease-out' : 'none', background: '#fff' }}/>) }
           </button>
         </div>
 
@@ -2180,7 +2173,7 @@ function HomeScreen() {
             <button data-auto-carousel="home-events" className="okaba-auto-card" key={featuredEvent.id} onClick={() => navigate('event', { event: featuredEvent })} style={{ width: '100%', border: 'none', cursor: 'pointer', padding: 0,
               borderRadius: 16, overflow: 'hidden', position: 'relative', height: 176, textAlign: 'left',
               boxShadow: '0 4px 14px rgba(0,0,0,0.12)', display: 'block', animation: 'okabaCarouselIn .28s ease-out' }}>
-              <CarouselMedia src={featuredEvent.poster || featuredEvent.img} alt={featuredEvent.title} position="center 22%"
+              <Img src={featuredEvent.poster || featuredEvent.img} style={{ position: 'absolute', inset: 0, backgroundPosition: 'center 22%' }}
                 overlay="linear-gradient(90deg, rgba(7,40,20,0.86) 0%, rgba(7,40,20,0.55) 45%, rgba(7,40,20,0.15) 100%)"/>
               {/* badge date */}
               <div style={{ position: 'absolute', top: 12, right: 12, background: OK.gold, color: '#3a2c00',
@@ -4313,7 +4306,7 @@ function BaieScreen() {
           </div>
           <div style={{ position: 'relative', padding: '12px 14px 10px' }}>
               <button data-auto-carousel="baie-events" className="okaba-auto-card" key={featuredBaieEvent.id} onClick={() => navigate('event', { event: { ...featuredBaieEvent, place: 'La Baie des Rois · Libreville' } })} style={{ width: '100%', border: 'none', cursor: 'pointer', padding: 0, borderRadius: 16, overflow: 'hidden', position: 'relative', height: 200, textAlign: 'left', boxShadow: '0 4px 14px rgba(0,0,0,0.12)', background: '#0b1a10', display: 'block', animation: 'okabaCarouselIn .28s ease-out' }}>
-                <CarouselMedia src={featuredBaieEvent.poster} alt={featuredBaieEvent.title} position="center top"/>
+                <img src={featuredBaieEvent.poster} alt={featuredBaieEvent.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}/>
               </button>
               <div style={{ position: 'absolute', right: 27, bottom: 20, display: 'flex', gap: 5, zIndex: 4 }}>
                 {baieEvents.map((event, index) => <button key={event.id} onClick={() => setBaieEventSlide(index)} aria-label={`Afficher ${event.title}`} style={{ width: index === baieEventSlide ? 16 : 6, height: 6, borderRadius: 999, padding: 0, border: 'none', cursor: 'pointer', background: index === baieEventSlide ? OK.gold : 'rgba(255,255,255,.7)', boxShadow: '0 1px 3px rgba(0,0,0,.25)', transition: 'width .25s ease' }}/>) }
@@ -5919,6 +5912,291 @@ const PKG = [
     perks: ['Annonces illimitées', 'Boutique certifiée', 'Mises en vedette incluses', 'Éligible badge Made in Gabon', 'Support prioritaire'] },
 ];
 
+// ── RÉFÉRENCER UN ÉTABLISSEMENT ────────────────────────────
+// Synchronisé depuis Claude Design (révision du 28 juillet 2026).
+const ETAB_TYPES = {
+  resto: { label: 'Restaurant & bar', img: 'assets/etab-restaurant.jpg', rubriques: ['Restaurant', 'Bar & lounge', 'Fast-food', 'Pâtisserie'], namePh: 'Ex : Le Grill du Roi', fields: [
+    { k: 'cuisine', label: 'Cuisine', type: 'chips', opts: ['Gabonaise', 'Africaine', 'Européenne', 'Asiatique', 'Libanaise', 'Grillades'] },
+    { k: 'gamme', label: 'Gamme de prix', type: 'chips', opts: ['€', '€€', '€€€'] },
+    { k: 'places', label: 'Nombre de places', type: 'num', ph: 'Ex : 60' },
+    { k: 'services', label: 'Services', type: 'chips', opts: ['Terrasse', 'Livraison', 'À emporter', 'Climatisé'] },
+  ] },
+  hotel: { label: 'Hôtel', img: 'assets/etab-hotel.jpg', rubriques: ['Hôtel', 'Résidence meublée', 'Auberge'], namePh: 'Ex : Résidence Bord de Mer', fields: [
+    { k: 'standing', label: 'Standing', type: 'chips', opts: ['2 ★', '3 ★', '4 ★', '5 ★'] },
+    { k: 'chambres', label: 'Chambres', type: 'num', ph: 'Ex : 40' },
+    { k: 'nuit', label: 'Prix / nuit (FCFA)', type: 'num', ph: 'Ex : 45 000' },
+    { k: 'equip', label: 'Équipements', type: 'chips', opts: ['Piscine', 'Restaurant', 'Salle de sport', 'Navette', 'Wi-Fi'] },
+  ] },
+  commerce: { label: 'Commerce', img: 'assets/etab-commerce.jpg', rubriques: ['Supermarché', 'Boutique', 'Mode', 'Électronique', 'Quincaillerie'], namePh: 'Ex : Galerie des Créateurs', fields: [
+    { k: 'rayons', label: 'Rayons', type: 'chips', opts: ['Alimentation', 'Mode', 'Maison', 'Beauté', 'High-tech'] },
+    { k: 'paiement', label: 'Paiement', type: 'chips', opts: ['Espèces', 'Mobile Money', 'Carte'] },
+  ] },
+  sante: { label: 'Santé', img: 'assets/etab-sante.jpg', rubriques: ['Pharmacie', 'Clinique', 'Cabinet médical', 'Laboratoire'], namePh: 'Ex : Pharmacie du Komo', fields: [
+    { k: 'garde', label: 'Garde de nuit', type: 'chips', opts: ['Oui', 'Non'] },
+    { k: 'conv', label: 'Conventionné CNAMGS', type: 'chips', opts: ['Oui', 'Non'] },
+    { k: 'spec', label: 'Spécialités', type: 'text', ph: 'Ex : Pédiatrie, dentaire' },
+  ] },
+  service: { label: 'Services & artisan', img: 'assets/etab-service-artisan.jpg', rubriques: ['Bâtiment', 'Beauté', 'Transport', 'Événementiel', 'Réparation'], namePh: 'Ex : Atelier Bois du Gabon', fields: [
+    { k: 'domaine', label: 'Domaine', type: 'chips', opts: ['Bâtiment', 'Beauté', 'Cours', 'Transport', 'Réparation'] },
+    { k: 'mode', label: 'Prestation', type: 'chips', opts: ['À domicile', 'Sur place', 'En ligne'] },
+    { k: 'zone', label: 'Zone d’intervention', type: 'text', ph: 'Ex : Libreville & Akanda' },
+  ] },
+  loisir: { label: 'Loisirs & divertissement', img: 'assets/etab-loisirs.jpg', rubriques: ['Cinéma', 'Salle de sport', 'Espace jeux', 'Club de plage'], namePh: 'Ex : Ciné Baie des Rois', fields: [
+    { k: 'ltype', label: 'Type', type: 'chips', opts: ['Cinéma', 'Sport', 'Jeux', 'Plage', 'Parc'] },
+    { k: 'public', label: 'Public', type: 'chips', opts: ['Famille', 'Enfants', 'Adultes'] },
+  ] },
+  instit: { label: 'Institution', img: 'assets/etab-institution.jpg', rubriques: ['Ministère', 'Mairie', 'Agence publique', 'Ambassade'], namePh: 'Ex : Mairie de Libreville', fields: [
+    { k: 'itype', label: 'Nature', type: 'chips', opts: ['Ministère', 'Mairie', 'Agence', 'Ambassade'] },
+    { k: 'tutelle', label: 'Tutelle', type: 'text', ph: 'Ex : Ministère de l’Intérieur' },
+  ] },
+  complexe: { label: 'Complexe', img: 'assets/etab-hero-complexe.jpg', rubriques: ['Complexe de loisirs', 'Centre commercial', 'Marché'], namePh: 'Ex : La Baie des Rois', fields: [
+    { k: 'univers', label: 'Univers présents', type: 'chips', opts: ['Restaurants', 'Bars', 'Loisirs', 'Shopping', 'Hôtel'] },
+    { k: 'enseignes', label: 'Nombre d’enseignes', type: 'num', ph: 'Ex : 12' },
+  ] },
+};
+
+const ETAB_STEPS_MINE = ['Type', 'Identité', 'Lieu', 'Détails', 'Médias', 'Forfait'];
+const ETAB_STEPS_OTHER = ['Type', 'Identité', 'Lieu', 'Médias'];
+const MY_ETABS = [
+  { id: 'me1', name: 'Chez Mama Awa', rub: 'Restaurant · Nkembo', status: 'Référencé', tone: OK.green, img: 'assets/etab-restaurant.jpg' },
+  { id: 'me2', name: 'Boutique Awa Mode', rub: 'Mode · Quartier Louis', status: 'Brouillon', tone: OK.gold, img: 'assets/etab-commerce.jpg' },
+];
+const ETAB_PKG = [
+  { id: 'free', name: 'Free', priceStr: 'Gratuit', tone: '#1F73C4', tag: 'Fiche simple', perks: ['Fiche dans l’annuaire', 'Coordonnées & horaires', '3 photos', 'Messagerie intégrée'] },
+  { id: 'pro', name: 'Pro', priceStr: '5 000 F', per: '/ mois', tone: OK.green, popular: true, tag: 'Le plus choisi', perks: ['Badge établissement vérifié', 'Galerie illimitée + vidéos', 'Statistiques de visites', 'Mise en avant dans sa rubrique', 'Publication d’actualités'] },
+  { id: 'business', name: 'Business', priceStr: '18 000 F', per: '/ mois', tone: '#B8860B', tag: 'Groupes & complexes', perks: ['Plusieurs établissements', 'Fiche certifiée', 'Gestion des enseignes', 'Éligible badge Made in Gabon', 'Support prioritaire'] },
+];
+
+function EtabProgress({ steps, step }) {
+  return (
+    <div style={{ padding: '16px 18px 6px' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+        <span style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>{steps[step]}</span>
+        <span style={{ fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink3 }}>Étape {step + 1} sur {steps.length}</span>
+      </div>
+      <div style={{ display: 'flex', gap: 5, marginTop: 10 }}>
+        {steps.map((label, index) => <div key={label} style={{ flex: 1, height: 4, borderRadius: 4, background: index < step ? OK.green : index === step ? OK.gold : OK.line }}/>) }
+      </div>
+    </div>
+  );
+}
+
+function EtabScreen() {
+  const { back, navigate, canBack } = useNav();
+  const [mode, setMode] = useState(null);
+  const [started, setStarted] = useState(false);
+  const [step, setStep] = useState(0);
+  const [sel, setSel] = useState(null);
+  const [name, setName] = useState('');
+  const [rubrique, setRubrique] = useState('');
+  const [accroche, setAccroche] = useState('');
+  const [desc, setDesc] = useState('');
+  const [addr, setAddr] = useState('');
+  const [quartier, setQuartier] = useState('');
+  const [ville, setVille] = useState('Libreville');
+  const [tel, setTel] = useState('');
+  const [wa, setWa] = useState('');
+  const [hours, setHours] = useState('');
+  const [rythme, setRythme] = useState('Tous les jours');
+  const [form, setForm] = useState({});
+  const [docs, setDocs] = useState([]);
+  const [media, setMedia] = useState([{ type: 'photo' }]);
+  const [pkg, setPkg] = useState('free');
+  const [preview, setPreview] = useState(false);
+
+  const cfg = sel ? ETAB_TYPES[sel] : null;
+  const isOther = mode === 'other';
+  const steps = isOther ? ETAB_STEPS_OTHER : ETAB_STEPS_MINE;
+  const successStep = steps.length;
+  const iType = 0, iId = 1, iLoc = 2, iDet = isOther ? -1 : 3, iMedia = isOther ? 3 : 4, iPkg = isOther ? -1 : 5;
+  const coverImg = cfg?.img || 'assets/etab-hero-complexe.jpg';
+  const idValid = Boolean(name.trim() && rubrique);
+  const locValid = Boolean(addr.trim() && ville.trim() && tel.trim());
+  const setF = (key, value) => setForm(current => ({ ...current, [key]: value }));
+
+  useEffect(() => {
+    if (cfg) setRubrique(cfg.rubriques[0]);
+  }, [cfg]);
+
+  const goBack = () => {
+    if (preview) { setPreview(false); return; }
+    if (step > 0) { setStep(current => current - 1); return; }
+    if (started || mode === 'other') { setStarted(false); setMode(mode === 'other' ? null : mode); return; }
+    if (mode) { setMode(null); return; }
+    if (canBack) back(); else navigate('home');
+  };
+
+  if (!mode) {
+    const choices = [
+      { id: 'mine', title: 'Mon établissement', sub: 'Je suis le propriétaire ou le gérant', img: 'assets/etab-entry-owner-africa.jpg' },
+      { id: 'other', title: 'Un autre établissement', sub: 'Je signale un lieu que je connais', img: 'assets/etab-entry-place-gabon.jpg' },
+    ];
+    return (
+      <Screen bg={OK.bg2} statusDark={false}>
+        <div data-screen-label="Référencer un établissement">
+          <div style={{ position: 'relative', minHeight: 300, padding: '52px 20px 34px', borderRadius: '0 0 26px 26px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <Img src="assets/etab-entry-hero-gabon.jpg" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(4,26,14,0.42) 0%, rgba(6,42,24,0.35) 42%, rgba(4,26,14,0.82) 100%)"/>
+            <button onClick={() => canBack ? back() : navigate('home')} aria-label="Retour" style={{ position: 'relative', width: 38, height: 38, borderRadius: 999, border: '1px solid rgba(255,255,255,0.22)', cursor: 'pointer', background: 'rgba(255,255,255,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+            </button>
+            <h1 style={{ margin: 'auto 0 0', position: 'relative', fontFamily: FX, fontWeight: 800, fontSize: 28, lineHeight: 1.12, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>Référencer un<br/>établissement</h1>
+            <p style={{ margin: '10px 0 0', position: 'relative', fontFamily: FX, fontSize: 13, color: 'rgba(255,255,255,0.88)', lineHeight: 1.5, maxWidth: 285 }}>Ajoutez un lieu à l’annuaire pour le rendre visible de tous les Gabonais.</p>
+          </div>
+          <div style={{ padding: '18px 16px 0', display: 'flex', flexDirection: 'column', gap: 13 }}>
+            {choices.map(choice => (
+              <button key={choice.id} onClick={() => { setMode(choice.id); if (choice.id === 'other') setStarted(true); }} style={{ textAlign: 'left', cursor: 'pointer', padding: 0, overflow: 'hidden', background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 20, boxShadow: '0 4px 16px rgba(0,0,0,0.07)', display: 'flex', alignItems: 'stretch' }}>
+                <div style={{ position: 'relative', width: 106, flexShrink: 0 }}><Img src={choice.img} style={{ position: 'absolute', inset: 0 }}/></div>
+                <div style={{ flex: 1, minWidth: 0, padding: '16px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink }}>{choice.title}</div>
+                    <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, marginTop: 5, lineHeight: 1.4 }}>{choice.sub}</div>
+                  </div>
+                  <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2.4}/>
+                </div>
+              </button>
+            ))}
+          </div>
+          <div style={{ padding: '24px 16px 28px' }}>
+            <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 18, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 11 }}>
+              {['Vous remplissez la fiche', 'Nous vérifions les informations', 'La fiche est publiée sous 24–48 h'].map((text, index) => (
+                <div key={text} style={{ display: 'flex', gap: 11, alignItems: 'center' }}>
+                  <span style={{ width: 20, height: 20, borderRadius: 999, background: 'rgba(11,124,57,0.1)', color: OK.green, fontFamily: FX, fontSize: 10.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{index + 1}</span>
+                  <span style={{ fontFamily: FX, fontSize: 12.5, fontWeight: 600, color: OK.ink2 }}>{text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  if (mode === 'mine' && !started) {
+    return (
+      <Screen bg={OK.bg2} statusDark footerPad={92} footer={<PubBar label="Référencer un nouvel établissement" onClick={() => setStarted(true)}/> }>
+        <div data-screen-label="Mes établissements">
+          <GreenHeader title="Mes établissements" onBack={() => setMode(null)}/>
+          <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 11 }}>
+            {MY_ETABS.map(item => (
+              <button key={item.id} onClick={() => setStarted(true)} style={{ textAlign: 'left', cursor: 'pointer', padding: 12, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 52, height: 52, borderRadius: 13, overflow: 'hidden', flexShrink: 0 }}><Img src={item.img} style={{ width: '100%', height: '100%' }}/></div>
+                <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: FX, fontSize: 14.5, fontWeight: 800, color: OK.ink }}>{item.name}</div><div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2, marginTop: 2 }}>{item.rub}</div></div>
+                <span style={{ fontFamily: FX, fontSize: 9.5, fontWeight: 800, color: item.tone === OK.gold ? '#8A6B00' : item.tone, background: item.tone + '18', padding: '4px 9px', borderRadius: 999 }}>{item.status}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  if (step === successStep) {
+    return (
+      <Screen bg={OK.bg2} statusDark>
+        <div data-screen-label="Établissement soumis" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 28px', textAlign: 'center' }}>
+          <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}><Icon name="check" size={48} color="#fff" strokeWidth={3}/></div>
+          <h1 style={{ margin: '24px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 25, color: OK.ink }}>{isOther ? 'Merci à vous !' : 'Demande envoyée'}</h1>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: '#8A6B00', background: 'rgba(197,150,0,0.16)', border: '1px solid rgba(197,150,0,0.4)', padding: '5px 12px', borderRadius: 999 }}><span style={{ width: 7, height: 7, borderRadius: 7, background: OK.gold }}/> En attente de validation</span>
+          <p style={{ margin: '14px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, maxWidth: 285 }}><strong style={{ color: OK.ink }}>« {name || 'Votre établissement'} »</strong> {isOther ? 'a bien été signalé. Nos équipes vérifient les informations avant publication dans l’annuaire, sous' : 'est en cours de vérification par nos équipes. Sa fiche sera publiée dans l’annuaire sous'} <strong style={{ color: OK.ink }}>24 à 48 h</strong>.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 26, width: '100%' }}>
+            <button onClick={() => navigate('annuaire')} style={{ height: 52, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FX, fontSize: 15, fontWeight: 800 }}>Voir l’annuaire</button>
+            <button onClick={() => navigate('home')} style={{ height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, cursor: 'pointer', fontFamily: FX, fontSize: 15, fontWeight: 800 }}>Retour à l’accueil</button>
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  if (preview) {
+    return (
+      <Screen bg={OK.bg} statusDark footerPad={92} footer={
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff', display: 'flex', gap: 10 }}>
+          <button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, cursor: 'pointer', fontFamily: FX, fontWeight: 800 }}>Modifier</button>
+          <button onClick={() => { setPreview(false); setStep(isOther ? successStep : iPkg); }} style={{ flex: 1.4, height: 52, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FX, fontWeight: 800 }}>{isOther ? 'Soumettre' : 'Continuer'}</button>
+        </div>
+      }>
+        <div data-screen-label="Aperçu établissement">
+          <div style={{ position: 'relative', height: 190 }}>
+            <Img src={coverImg} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.34), transparent 50%)"/>
+            <button onClick={() => setPreview(false)} aria-label="Retour" style={{ position: 'absolute', top: 14, left: 14, width: 40, height: 40, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink}/></button>
+            <span style={{ position: 'absolute', top: 18, right: 14, fontFamily: FX, fontWeight: 800, fontSize: 11.5, color: '#fff', background: 'rgba(0,0,0,.42)', padding: '5px 11px', borderRadius: 999 }}>Aperçu</span>
+          </div>
+          <div style={{ padding: '0 18px 26px', marginTop: -34, position: 'relative' }}>
+            <div style={{ width: 76, height: 76, borderRadius: 18, overflow: 'hidden', border: '3px solid #fff', background: '#fff' }}><Img src={coverImg} style={{ width: '100%', height: '100%' }}/></div>
+            <h1 style={{ margin: '10px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 21, color: OK.ink }}>{name || 'Nom de l’établissement'}</h1>
+            <div style={{ fontFamily: FX, fontWeight: 700, fontSize: 12, color: OK.green, marginTop: 3, textTransform: 'uppercase' }}>{rubrique || cfg?.label}</div>
+            {accroche && <div style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink2, marginTop: 6 }}>{accroche}</div>}
+            <span style={{ display: 'inline-flex', marginTop: 12, fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: '#8A6B00', background: 'rgba(197,150,0,.16)', padding: '4px 10px', borderRadius: 999 }}>Fiche en attente de validation</span>
+            {desc && <p style={{ margin: '14px 0 0', fontFamily: FX, fontSize: 13, color: OK.ink2, lineHeight: 1.6 }}>{desc}</p>}
+            <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 16, overflow: 'hidden', marginTop: 18 }}>
+              {[['pin', 'Adresse', [addr, quartier, ville].filter(Boolean).join(' · ') || 'Non renseignée'], ['clock', 'Horaires', hours ? `${rythme} · ${hours}` : rythme], ['phone', 'Téléphone', tel || 'Non renseigné']].map(([icon, label, value], index) => (
+                <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: index ? `1px solid ${OK.line}` : 'none' }}><Icon name={icon} size={17} color={OK.green}/><div><div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ fontFamily: FX, fontSize: 13, fontWeight: 600, color: OK.ink }}>{value}</div></div></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  let footer;
+  if (step === iType) footer = <PubBar label="Continuer" disabled={!sel} onClick={() => sel && setStep(iId)}/>;
+  else if (step === iId) footer = <PubBar label="Continuer" disabled={!idValid} onClick={() => idValid && setStep(iLoc)}/>;
+  else if (step === iLoc) footer = <PubBar label="Continuer" disabled={!locValid} onClick={() => locValid && setStep(isOther ? iMedia : iDet)}/>;
+  else if (step === iDet) footer = <PubBar label="Continuer" onClick={() => setStep(iMedia)}/>;
+  else if (step === iMedia) footer = <PubBar label="Continuer" disabled={!media.length} onClick={() => media.length && setPreview(true)}/>;
+  else footer = <PubBar label="Soumettre pour validation" icon="check" onClick={() => setStep(successStep)}/>;
+
+  return (
+    <Screen bg={OK.bg2} statusDark footerPad={92} footer={footer}>
+      <div data-screen-label="Référencer un établissement">
+        <GreenHeader title="Référencer un établissement" onBack={goBack}/>
+        <EtabProgress steps={steps} step={step}/>
+
+        {step === iType && <div>
+          <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.green, margin: '14px 18px 0' }}>Quel type d’établissement ?</div>
+          <p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>La fiche sera référencée dans l’annuaire O’KABA.</p>
+          <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+            {Object.entries(ETAB_TYPES).map(([id, type]) => <button key={id} onClick={() => setSel(id)} style={{ position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', padding: 0, textAlign: 'left', border: sel === id ? `2.5px solid ${OK.green}` : 'none', boxShadow: '0 2px 8px rgba(0,0,0,.1)' }}><Img src={type.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.05) 28%, rgba(0,0,0,.68) 100%)"/>{sel === id && <span style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 11, right: 11, bottom: 10, fontFamily: FX, fontWeight: 800, fontSize: 13.5, color: '#fff' }}>{type.label}</span></button>)}
+          </div>
+        </div>}
+
+        {step === iId && cfg && <div style={{ padding: '14px 16px' }}><PubCard title="Identité" icon="shop"><div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div><label style={PUB_LABEL}>Nom de l’établissement</label><input value={name} onChange={event => setName(event.target.value)} placeholder={cfg.namePh} style={PUB_FIELD}/></div>
+          <div><label style={PUB_LABEL}>Rubrique annuaire</label><ChipRow opts={cfg.rubriques} value={rubrique} onPick={setRubrique}/></div>
+          <div><label style={PUB_LABEL}>Accroche courte</label><input value={accroche} onChange={event => setAccroche(event.target.value)} placeholder="Ex : Cuisine gabonaise · vue mer" style={PUB_FIELD}/></div>
+          <div><label style={PUB_LABEL}>Description</label><textarea value={desc} onChange={event => setDesc(event.target.value)} rows={4} placeholder="Présentez votre établissement, vos spécialités, ce qui vous distingue…" style={{ ...PUB_FIELD, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.5 }}/></div>
+        </div></PubCard></div>}
+
+        {step === iLoc && <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <PubCard title="Localisation" icon="pin"><div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div><label style={PUB_LABEL}>Adresse</label><input value={addr} onChange={event => setAddr(event.target.value)} placeholder="Ex : Bord de mer, Boulevard Triomphal" style={PUB_FIELD}/></div>
+            <div style={{ display: 'flex', gap: 12 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Quartier</label><input value={quartier} onChange={event => setQuartier(event.target.value)} placeholder="Ex : Louis" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Ville</label><input value={ville} onChange={event => setVille(event.target.value)} placeholder="Ex : Libreville" style={PUB_FIELD}/></div></div>
+            <div style={{ height: 140, borderRadius: 14, overflow: 'hidden', position: 'relative', border: `1px solid ${OK.line}` }}><Img src="assets/etab-carte.jpg" style={{ position: 'absolute', inset: 0 }} overlay="rgba(11,124,57,.18)"/><div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-100%)' }}><Icon name="pin" size={32} color={OK.green}/></div></div>
+          </div></PubCard>
+          <PubCard title="Contact & horaires" icon="phone"><div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ display: 'flex', gap: 12 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Téléphone</label><input value={tel} onChange={event => setTel(event.target.value)} placeholder="+241 …" inputMode="tel" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>WhatsApp</label><input value={wa} onChange={event => setWa(event.target.value)} placeholder="+241 …" inputMode="tel" style={PUB_FIELD}/></div></div>
+            <div><label style={PUB_LABEL}>Rythme d’ouverture</label><ChipRow opts={['Tous les jours', 'Lun – Sam', 'Lun – Ven', '24/7']} value={rythme} onPick={setRythme}/></div>
+            {rythme !== '24/7' && <div><label style={PUB_LABEL}>Horaires</label><input value={hours} onChange={event => setHours(event.target.value)} placeholder="Ex : 08:00 – 22:00" style={PUB_FIELD}/></div>}
+          </div></PubCard>
+        </div>}
+
+        {step === iDet && cfg && <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <PubCard title={`Détails · ${cfg.label}`} icon="edit"><div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>{cfg.fields.map(field => <div key={field.k} style={{ flex: field.type === 'chips' ? '1 1 100%' : '1 1 calc(50% - 7px)', minWidth: 0 }}><label style={PUB_LABEL}>{field.label}</label>{field.type === 'chips' ? <ChipRow opts={field.opts} value={form[field.k]} onPick={value => setF(field.k, value)}/> : <input value={form[field.k] || ''} onChange={event => setF(field.k, field.type === 'num' ? event.target.value.replace(/[^0-9]/g, '') : event.target.value)} placeholder={field.ph} inputMode={field.type === 'num' ? 'numeric' : 'text'} style={PUB_FIELD}/>}</div>)}</div></PubCard>
+          <PubCard title="Justificatifs" icon="doc"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, color: OK.ink2, lineHeight: 1.5 }}>Facultatif, mais un RCCM ou NIF accélère la vérification et permet d’obtenir le badge <strong>établissement vérifié</strong>.</p><div style={{ display: 'flex', gap: 10 }}>{['RCCM', 'NIF'].map(doc => { const on = docs.includes(doc); return <button key={doc} onClick={() => setDocs(current => on ? current.filter(item => item !== doc) : [...current, doc])} style={{ flex: 1, height: 68, borderRadius: 13, border: on ? `1.5px solid ${OK.green}` : `1.5px dashed ${OK.line}`, background: on ? 'rgba(11,124,57,.06)' : '#fff', color: on ? OK.green : OK.ink2, fontWeight: 800 }}>{on ? `${doc} ajouté` : `Ajouter ${doc}`}</button>; })}</div></PubCard>
+        </div>}
+
+        {step === iMedia && <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <PubCard title="Logo & couverture" icon="camera"><div style={{ display: 'flex', gap: 12 }}><button style={{ width: 92, height: 92, borderRadius: 16, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.06)', color: OK.green, fontWeight: 800 }}>Logo</button><button style={{ flex: 1, height: 92, borderRadius: 16, border: 0, padding: 0, position: 'relative', overflow: 'hidden' }}><Img src={coverImg} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, transparent, rgba(0,0,0,.5))"/><span style={{ position: 'absolute', left: 0, right: 0, bottom: 10, color: '#fff', fontWeight: 800 }}>Photo de couverture</span></button></div></PubCard>
+          <PubCard title="Galerie" icon="camera"><div style={{ display: 'flex', gap: 10 }}><button onClick={() => setMedia(current => [...current, { type: 'photo' }])} style={{ flex: 1, height: 44, borderRadius: 12, border: `1.5px solid ${OK.green}`, background: 'rgba(11,124,57,.06)', color: OK.green, fontWeight: 800 }}>Photo</button><button onClick={() => setMedia(current => [...current, { type: 'video' }])} style={{ flex: 1, height: 44, borderRadius: 12, border: `1.5px solid ${OK.red}`, background: 'rgba(224,36,27,.05)', color: OK.red, fontWeight: 800 }}>Vidéo</button></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>{media.map((item, index) => <div key={`${item.type}-${index}`} style={{ position: 'relative', aspectRatio: '1', borderRadius: 12, overflow: 'hidden' }}><Img src={coverImg} style={{ position: 'absolute', inset: 0 }}/>{item.type === 'video' && <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.25)' }}><Icon name="video" size={22} color="#fff"/></span>}<button onClick={() => setMedia(current => current.filter((_, itemIndex) => itemIndex !== index))} aria-label="Supprimer" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={12} color="#fff"/></button></div>)}</div></PubCard>
+        </div>}
+
+        {step === iPkg && <div style={{ padding: '10px 16px 20px' }}><div style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.green }}>Choisissez votre forfait</div><p style={{ margin: '4px 0 14px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Référencez-vous gratuitement, ou passez Pro pour être vérifié et mis en avant.</p><div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>{ETAB_PKG.map(offer => { const on = pkg === offer.id; return <button key={offer.id} onClick={() => setPkg(offer.id)} style={{ textAlign: 'left', cursor: 'pointer', background: '#fff', borderRadius: 16, padding: '14px 15px', border: on ? `2px solid ${offer.tone}` : `1px solid ${OK.line}` }}><div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flex: 1 }}><div style={{ fontFamily: FX, fontSize: 16, fontWeight: 800, color: OK.ink }}>{offer.name}</div><div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>{offer.tag}</div></div><strong style={{ fontFamily: FX, fontSize: 20, color: OK.ink }}>{offer.priceStr}</strong>{offer.per && <span style={{ fontSize: 11, color: OK.ink3 }}>{offer.per}</span>}</div>{on && <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${OK.line}`, display: 'grid', gap: 7 }}>{offer.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 12, color: OK.ink2 }}>✓ {perk}</span>)}</div>}</button>; })}</div></div>}
+      </div>
+    </Screen>
+  );
+}
+
 function PublierScreen() {
   const { back, navigate, canBack } = useNav();
   const cats = MARKET_CATS.filter(c => !['all', 'gabon', 'services', 'events'].includes(c.id));
@@ -6485,7 +6763,7 @@ function CompteScreen() {
   );
 }
 
-Object.assign(window, { PublierScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen });
+Object.assign(window, { PublierScreen, EtabScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen });
 
 
 // ===================== 11-app =====================
@@ -6528,6 +6806,7 @@ function renderScreen(entry) {
     case 'baie-information': return <BaieInformationScreen/>;
     case 'baie-article':  return <BaieArticleScreen params={params}/>;
     case 'publier':       return <PublierScreen/>;
+    case 'etab':          return <EtabScreen/>;
     case 'notifications': return <NotificationsScreen/>;
     case 'messages':      return <MessagesScreen/>;
     case 'chat':          return <ChatScreen params={params}/>;
