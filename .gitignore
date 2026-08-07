@@ -30,6 +30,12 @@ Thumbs.db
 # Local Codex/agent state
 .agents/
 .codex/
+.claude/
+skills-lock.json
+
+# HyperFrames video tooling output (not part of the maquette app)
+videos/
+.tmp-*
 
 # Redundant generated Android Studio export; the canonical project is android/
 /OKABA-Android-Studio-ready/

@@ -198,6 +198,7 @@ const ALL_CATEGORIES = [
   { id: 'petrole',      short: 'Pétrole',    name: 'Pétrole',                                         icon: 'oil',        count: 27,   tone: '#404040' },
   { id: 'maison',       short: 'Maison',     name: 'Pour la maison',                                  icon: 'home',       count: 341,  tone: '#B8731E' },
   { id: 'services',     short: 'Services',   name: 'Prestations de services',                         icon: 'briefcase',  count: 478,  tone: '#404040' },
+  { id: 'proximite',    short: 'Proximité',  name: 'Services de proximité',                           icon: 'handshake',  count: 52,   tone: '#0B7C39' },
   { id: 'restaurants',  short: 'Restos',     name: 'Restaurants et sorties',                          icon: 'restaurant', count: 842,  tone: '#C8553D' },
   { id: 'sante',        short: 'Santé',      name: 'Santé',                                           icon: 'sante',      count: 234,  tone: '#009E60' },
   { id: 'shopping',     short: 'Shopping',   name: 'Shopping',                                        icon: 'shop',       count: 612,  tone: '#8E5BB5' },
@@ -460,7 +461,7 @@ const HOME_MODULES = [
   { id: 'baie',         label: 'Baie des Rois', target: 'baie',      param: null,  img: 'assets/baie-cover.png' },
   { id: 'tourisme',     label: 'Tourisme',      target: 'tourisme',  param: null,  img: 'assets/tour-plage.jpg' },
   { id: 'made-gabon',   label: 'Made in Gabon', target: 'market',    param: 'gabon', img: 'assets/gabon-flag.svg' },
-  { id: 'services-pro', label: 'Services Pro',  target: 'market',    param: 'services', img: 'assets/proximite-artisan.jpg' },
+  { id: 'services-pro', label: 'Services Pro',  target: 'proximity-services', param: null, img: 'assets/proximite-artisan.jpg' },
   { id: 'annuaire',     label: 'Annuaire',      target: 'annuaire',  param: null,  img: 'assets/services/annuaire-book.jpg' },
 ];
 
@@ -485,7 +486,7 @@ const OKABA_SERVICES = [
   { id: 'actualite', label: 'Actualité', target: 'notifications', img: 'assets/services/service-actualite.jpg' },
   { id: 'billetterie', label: 'Billetterie', target: 'events', img: 'assets/services/service-billetterie.jpg' },
   { id: 'sante', label: 'Santé', target: 'annuaire', params: { cat: 'sante' }, img: 'assets/services/service-sante-docteur.jpg' },
-  { id: 'services', label: 'Services', target: 'market', params: { cat: 'services' }, img: 'assets/proximite-artisan.jpg' },
+  { id: 'services', label: 'Services', target: 'proximity-services', img: 'assets/proximite-artisan.jpg' },
   { id: 'services-publics', label: 'Services Publics', target: 'annuaire', params: { cat: 'admin' }, img: 'assets/mairie-lbv-building.jpg' },
   { id: 'entreprenariat', label: 'Entreprenariat', target: 'shops', img: 'assets/services/service-entreprenariat.jpg' },
   { id: 'chat', label: 'Chat', target: 'messages', img: 'assets/services/service-chat.jpg' },
@@ -559,36 +560,9 @@ const SHOPS = {
     avatar: 'assets/mas-famille-avatar.jpg',
     cover: 'assets/mas-famille-cover.jpg',
     bio: 'Coopérative agricole familiale spécialisée dans la transformation de produits naturels locaux.',
-    produits: 'Elle commercialise des savons naturels (beurre de karité, okoumé, charbon végétal), des infusions et des jus de fruits 100 % naturels, sans additifs ni conservateurs.',
+    produits: 'Savons et shampooings artisanaux, beurre de moabi, poudre de cacao, huile de pain (magningou) — 100 % naturels, sans additifs.',
     phone: '+241 74 06 67 64 / +241 66 61 09 81', email: 'cooperativemasetfamille@gmail.com',
-    responseTime: 'Répond en ~2h', photosCount: 11, avisCount: 10,
-  },
-  'okaba-motors': {
-    id: 'okaba-motors', name: 'Okaba Motors', handle: '@okabamotors',
-    cat: 'Véhicules · Concession', city: 'Libreville · Glass',
-    verified: true, pro: true, rating: 4.7, reviews: 128, followers: 3240, since: 2019,
-    avatar: 'https://images.unsplash.com/photo-1531384441138-2736e62e0919?w=200&q=80&auto=format&fit=crop',
-    cover: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=900&q=80&auto=format&fit=crop',
-    bio: 'Vente de véhicules d\u2019occasion révisés et garantis. Reprise possible. Financement disponible.',
-    phone: '+241 06 22 14 80', responseTime: 'Répond en ~1h',
-  },
-  'libreville-immo': {
-    id: 'libreville-immo', name: 'Libreville Immo', handle: '@lbvimmo',
-    cat: 'Immobilier · Agence', city: 'Libreville · Batterie IV',
-    verified: true, pro: true, rating: 4.5, reviews: 86, followers: 2110, since: 2017,
-    avatar: 'https://images.unsplash.com/photo-1611432579699-484f7990b127?w=200&q=80&auto=format&fit=crop',
-    cover: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=900&q=80&auto=format&fit=crop',
-    bio: 'Location et vente d\u2019appartements, villas et terrains à Libreville et alentours. Visites accompagnées.',
-    phone: '+241 01 73 09 22', responseTime: 'Répond en ~2h',
-  },
-  'gabon-tech': {
-    id: 'gabon-tech', name: 'Gabon Tech Store', handle: '@gabontech',
-    cat: 'Électronique · High-tech', city: 'Libreville · Mont-Bouët',
-    verified: true, pro: true, rating: 4.8, reviews: 254, followers: 5680, since: 2020,
-    avatar: 'https://images.unsplash.com/photo-1463453091185-61582044d556?w=200&q=80&auto=format&fit=crop',
-    cover: 'https://images.unsplash.com/photo-1556656793-08538906a9f8?w=900&q=80&auto=format&fit=crop',
-    bio: 'Smartphones, ordinateurs et accessoires neufs et reconditionnés. Garantie 6 à 12 mois. Livraison Libreville.',
-    phone: '+241 07 45 11 03', responseTime: 'Répond en ~30 min',
+    responseTime: 'Répond en ~2h', photosCount: 11, avisCount: 28,
   },
   'mama-style': {
     id: 'mama-style', name: 'Mama Style', handle: '@mamastyle',
@@ -599,138 +573,41 @@ const SHOPS = {
     bio: 'Créations sur mesure en pagne et wax. Robes, ensembles et accessoires faits main au Gabon.',
     phone: '+241 06 78 90 12', responseTime: 'Répond en ~3h',
   },
+  'okaba-motors': {
+    id: 'okaba-motors', name: 'Okaba Motors', handle: '@okabamotors',
+    cat: 'Véhicules · Concession', city: 'Libreville · Glass',
+    verified: true, pro: true, rating: 4.7, reviews: 128, followers: 3240, since: 2019,
+    avatar: 'assets/africa-hilux-4x4.jpg',
+    cover: 'assets/africa-hilux-4x4.jpg',
+    bio: 'Vente de véhicules d’occasion révisés et garantis. Reprise possible. Financement disponible.',
+    phone: '+241 06 22 14 80', responseTime: 'Répond en ~1h',
+  },
+  'gabon-tech': {
+    id: 'gabon-tech', name: 'Gabon Tech Store', handle: '@gabontech',
+    cat: 'Électronique · High-tech', city: 'Libreville · Mont-Bouët',
+    verified: true, pro: true, rating: 4.8, reviews: 254, followers: 5680, since: 2020,
+    avatar: 'assets/africa-phone-shop.jpg',
+    cover: 'assets/africa-phone-shop.jpg',
+    bio: 'Smartphones, ordinateurs et accessoires neufs et reconditionnés. Garantie 6 à 12 mois. Livraison Libreville.',
+    phone: '+241 07 45 11 03', responseTime: 'Répond en ~30 min',
+  },
 };
 
 // Annonces (listings) ──────────────────────────────────────
 // prix en FCFA. ref = numéro de référence (consigne sécurité PDF BETA).
 const LISTINGS = [
   {
-    id: 'savon-karite', cat: 'maison', shop: 'mas-famille',
-    title: 'Savon naturel au beurre de karité',
-    price: 2500, negotiable: false, condition: 'Neuf',
-    city: 'Libreville · London', posted: 'Il y a 2 jours', ref: 'OKB-MA-90011',
-    featured: true,
-    images: ['assets/savon-karite.jpg', 'assets/savon-karite-2.jpg'],
-    specs: [['Type', 'Karité'], ['Poids', '120 g'], ['Naturel', '100 %'], ['Additifs', 'Aucun']],
-    desc: 'Savon artisanal au beurre de karité pur, fabriqué localement. Sans additifs ni conservateurs. Nourrit et hydrate la peau en profondeur.',
-  },
-  {
-    id: 'infusion-bio', cat: 'maison', shop: 'mas-famille',
-    title: 'Infusion naturelle aux plantes locales',
-    price: 3000, negotiable: false, condition: 'Neuf',
-    city: 'Libreville · London', posted: 'Il y a 4 jours', ref: 'OKB-MA-90012',
-    featured: false,
-    images: ['https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=800&q=80&auto=format&fit=crop'],
-    specs: [['Format', 'Sachet 50 g'], ['Origine', 'Gabon'], ['Bio', 'Oui'], ['Conservateurs', 'Non']],
-    desc: 'Infusion 100 % naturelle préparée à partir de plantes gabonaises. Sans conservateurs. Idéale pour la détente et la digestion.',
-  },
-  {
-    id: 'jus-fruits', cat: 'maison', shop: 'mas-famille',
-    title: 'Jus de fruits naturel — bissap',
-    price: 1500, negotiable: false, condition: 'Neuf',
-    city: 'Libreville · London', posted: 'Hier', ref: 'OKB-MA-90013',
-    featured: false,
-    images: ['https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=800&q=80&auto=format&fit=crop'],
-    specs: [['Volume', '1 L'], ['Goût', 'Bissap'], ['Sucre', 'Naturel'], ['Conservateurs', 'Non']],
-    desc: 'Jus de bissap 100 % naturel, sans additifs ni conservateurs. Pressé localement par la coopérative.',
-  },
-  {
-    id: 'savon-charbon', cat: 'maison', shop: 'mas-famille',
-    title: 'Savon au charbon végétal',
-    price: 2800, negotiable: false, condition: 'Neuf',
-    city: 'Libreville · London', posted: 'Il y a 1 semaine', ref: 'OKB-MA-90014',
-    featured: false,
-    images: ['https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&q=80&auto=format&fit=crop'],
-    specs: [['Type', 'Charbon'], ['Poids', '120 g'], ['Peaux', 'Mixtes'], ['Naturel', '100 %']],
-    desc: 'Savon purifiant au charbon végétal, parfait pour les peaux mixtes à grasses. Fabrication artisanale gabonaise.',
-  },
-  {
-    id: 'savon-okoume', cat: 'maison', shop: 'mas-famille',
-    title: 'Savon à l’huile d’okoumé',
-    price: 3200, negotiable: false, condition: 'Neuf',
-    city: 'Libreville · London', posted: 'Il y a 1 semaine', ref: 'OKB-MA-90015',
-    featured: false,
-    images: ['https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=800&q=80&auto=format&fit=crop'],
-    specs: [['Type', 'Okoumé'], ['Poids', '120 g'], ['Naturel', '100 %'], ['Origine', 'Gabon']],
-    desc: 'Savon enrichi à l’huile d’okoumé, essence emblématique du Gabon. Sans additifs ni conservateurs.',
-  },
-  {
-    id: 'toyota-rav4', cat: 'auto', shop: 'okaba-motors',
-    title: 'Toyota RAV4 2019 — Full options',
-    price: 14500000, negotiable: true, condition: 'Occasion',
-    city: 'Libreville · Glass', posted: 'Il y a 2 jours', ref: 'OKB-AU-48217',
-    featured: true,
-    images: [
-      'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80&auto=format&fit=crop',
-    ],
-    specs: [['Année', '2019'], ['Kilométrage', '62 000 km'], ['Carburant', 'Essence'], ['Boîte', 'Automatique']],
-    desc: 'RAV4 2019 en excellent état, entretien à jour, climatisation, caméra de recul, jantes alu. Première main, papiers en règle. Reprise possible.',
-  },
-  {
-    id: 'villa-batterie', cat: 'immo', shop: 'libreville-immo',
-    title: 'Villa 4 chambres avec piscine — Batterie IV',
-    price: 850000, unit: '/ mois', negotiable: false, condition: 'À louer',
-    city: 'Libreville · Batterie IV', posted: 'Il y a 5 jours', ref: 'OKB-IM-30945',
-    featured: true,
-    images: [
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80&auto=format&fit=crop',
-    ],
-    specs: [['Chambres', '4'], ['Surface', '220 m²'], ['Salles d\u2019eau', '3'], ['Garage', 'Oui']],
-    desc: 'Magnifique villa meublée avec piscine et jardin clôturé dans un quartier calme et sécurisé. Cuisine équipée, groupe électrogène, forage. Idéale pour famille ou expatrié.',
-  },
-  {
-    id: 'iphone-14', cat: 'tech', shop: 'gabon-tech',
-    title: 'iPhone 14 Pro 256 Go — Reconditionné',
-    price: 520000, negotiable: true, condition: 'Reconditionné',
-    city: 'Libreville · Mont-Bouët', posted: 'Hier', ref: 'OKB-TE-77120',
-    featured: false,
-    images: [
-      'https://images.unsplash.com/photo-1632661674596-df8be070a5c5?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1592286927505-1def25115558?w=800&q=80&auto=format&fit=crop',
-    ],
-    specs: [['Stockage', '256 Go'], ['État', 'Très bon'], ['Batterie', '92 %'], ['Garantie', '6 mois']],
-    desc: 'iPhone 14 Pro reconditionné grade A, débloqué tous opérateurs. Livré avec chargeur et coque. Garantie boutique 6 mois. Possibilité de livraison à Libreville.',
-  },
-  {
-    id: 'ensemble-wax', cat: 'mode', shop: 'mama-style',
-    title: 'Ensemble pagne wax sur mesure — Femme',
-    price: 45000, negotiable: false, condition: 'Neuf',
+    id: 'ensemble-wax', cat: 'mode', shop: 'mama-style', madeInGabon: true,
+    title: 'Pagne pour mariage coutumier ',
+    price: 4500, negotiable: false, condition: 'Neuf',
     city: 'Libreville · Nombakélé', posted: 'Il y a 3 jours', ref: 'OKB-MO-19884',
     featured: false,
     images: [
-      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=80&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80&auto=format&fit=crop',
+      'assets/africa-wax-fabric-shop-1.jpg',
+      'assets/africa-wax-fabric-shop-2.jpg',
     ],
     specs: [['Tissu', 'Wax premium'], ['Tailles', '36 à 46'], ['Délai', '5 jours'], ['Sur mesure', 'Oui']],
     desc: 'Ensemble deux pièces en wax authentique, confectionné sur mesure. Choix du tissu et des finitions. Retouches offertes. Livraison Libreville sous 5 jours.',
-  },
-  {
-    id: 'macbook-air', cat: 'tech', shop: 'gabon-tech',
-    title: 'MacBook Air M2 — Neuf scellé',
-    price: 980000, negotiable: false, condition: 'Neuf',
-    city: 'Libreville · Mont-Bouët', posted: 'Il y a 4 jours', ref: 'OKB-TE-66301',
-    featured: false,
-    images: [
-      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&q=80&auto=format&fit=crop',
-    ],
-    specs: [['Puce', 'Apple M2'], ['RAM', '8 Go'], ['SSD', '256 Go'], ['Garantie', '12 mois']],
-    desc: 'MacBook Air M2 neuf sous blister, garantie internationale 12 mois. Clavier AZERTY. Facture fournie. Livraison gratuite Libreville.',
-  },
-  {
-    id: 'terrain-akanda', cat: 'immo', shop: 'libreville-immo',
-    title: 'Terrain titré 600 m² — Akanda',
-    price: 25000000, negotiable: true, condition: 'À vendre',
-    city: 'Libreville · Akanda', posted: 'Il y a 1 semaine', ref: 'OKB-IM-51002',
-    featured: false,
-    images: [
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80&auto=format&fit=crop',
-    ],
-    specs: [['Surface', '600 m²'], ['Titre', 'Foncier'], ['Viabilisé', 'Oui'], ['Accès', 'Bitumé']],
-    desc: 'Terrain plat et titré dans une zone résidentielle en plein essor à Akanda. Eau et électricité à proximité. Idéal construction villa.',
   },
   {
     id: 'pickup-hilux', cat: 'auto', shop: 'okaba-motors',
@@ -738,23 +615,169 @@ const LISTINGS = [
     price: 22000000, negotiable: true, condition: 'Occasion',
     city: 'Libreville · Glass', posted: 'Il y a 6 jours', ref: 'OKB-AU-40558',
     featured: false,
-    images: [
-      'https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&q=80&auto=format&fit=crop',
-    ],
+    images: ['assets/africa-hilux-4x4.jpg'],
     specs: [['Année', '2020'], ['Kilométrage', '48 000 km'], ['Carburant', 'Diesel'], ['Boîte', 'Manuelle']],
     desc: 'Hilux double cabine 4x4, parfait pour chantier ou usage familial. Pneus neufs, révision complète effectuée. Très robuste.',
   },
   {
-    id: 'canape-cuir', cat: 'maison', shop: 'mama-style',
-    title: 'Canapé d\u2019angle cuir — 6 places',
-    price: 380000, negotiable: true, condition: 'Neuf',
-    city: 'Libreville · Owendo', posted: 'Il y a 2 jours', ref: 'OKB-MA-22719',
+    id: 'iphone-14', cat: 'tech', shop: 'gabon-tech',
+    title: 'iPhone 14 Pro 256 Go — Reconditionné',
+    price: 520000, negotiable: true, condition: 'Reconditionné',
+    city: 'Libreville · Mont-Bouët', posted: 'Hier', ref: 'OKB-TE-77120',
     featured: false,
-    images: [
-      'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80&auto=format&fit=crop',
-    ],
-    specs: [['Places', '6'], ['Matière', 'Cuir PU'], ['Couleur', 'Marron'], ['Livraison', 'Oui']],
-    desc: 'Canapé d\u2019angle moderne en cuir, confortable et élégant. Livraison et installation à domicile sur Libreville. Stock limité.',
+    images: ['assets/iphone-14-pro.jpg'],
+    specs: [['Stockage', '256 Go'], ['État', 'Très bon'], ['Batterie', '92 %'], ['Garantie', '6 mois']],
+    desc: 'iPhone 14 Pro reconditionné grade A, débloqué tous opérateurs. Livré avec chargeur et coque. Garantie boutique 6 mois. Possibilité de livraison à Libreville.',
+  },
+  {
+    id: 'macbook-air', cat: 'tech', shop: 'gabon-tech',
+    title: 'MacBook Air M2 — Neuf scellé',
+    price: 980000, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Mont-Bouët', posted: 'Il y a 4 jours', ref: 'OKB-TE-66301',
+    featured: false,
+    images: ['assets/macbook-air-m2-open.png'],
+    specs: [['Puce', 'Apple M2'], ['RAM', '8 Go'], ['SSD', '256 Go'], ['Garantie', '12 mois']],
+    desc: 'MacBook Air M2 neuf sous blister, garantie internationale 12 mois. Clavier AZERTY. Facture fournie. Livraison gratuite Libreville.',
+  },
+  {
+    id: 'huile-de-palme', cat: 'maison', shop: 'mas-famille', madeInGabon: true, gabonPriority: 1,
+    title: 'Huile de palme rouge artisanale',
+    price: 2500, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 2 jours', ref: 'OKB-MA-90025',
+    featured: true,
+    images: ['assets/gabon-huile-palme.jpg'],
+    specs: [['Format', '1 L (bouteille consignée)'], ['Fabrication', 'Artisanale'], ['Origine', 'Gabon'], ['Additifs', 'Aucun']],
+    desc: 'Huile de palme rouge extraite et pressée de façon artisanale à partir de régimes de palme locaux. Parfaite pour le nkoumou, la sauce gombo ou le poulet nyembwe.',
+  },
+  {
+    id: 'atanga-safou', cat: 'maison', shop: 'mas-famille', madeInGabon: true, gabonPriority: 2,
+    title: 'Atanga le tas',
+    price: 1500, unit: '', negotiable: true, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 1 jour', ref: 'OKB-MA-90026',
+    featured: false,
+    images: ['assets/gabon-atanga-safou.jpg'],
+    specs: [['Origine', 'Gabon'], ['Saison', 'Juillet à septembre'], ['Conservation', '3 à 5 jours'], ['Additifs', 'Aucun']],
+    desc: 'Atanga fraîchement récolté, à déguster grillé ou passé à l’eau chaude. Cueilli et vendu directement par la coopérative, sans intermédiaire.',
+  },
+  {
+    id: 'baton-manioc', cat: 'maison', shop: 'mas-famille', madeInGabon: true, gabonPriority: 3,
+    title: 'Bâtons de manioc — lot de 6',
+    price: 3000, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 4 jours', ref: 'OKB-MA-90027',
+    featured: false,
+    images: ['assets/gabon-baton-manioc.jpg'],
+    specs: [['Quantité', '6 bâtons'], ['Fabrication', 'Artisanale'], ['Origine', 'Gabon'], ['Additifs', 'Aucun']],
+    desc: 'Manioc fermenté, pilé et cuit dans la feuille selon la méthode traditionnelle. Accompagne le poisson, la viande ou la sauce feuille.',
+  },
+  {
+    id: 'poisson-fume', cat: 'maison', shop: 'mas-famille', madeInGabon: true, gabonPriority: 4,
+    title: 'Poisson fumé du terroir — au kilo',
+    price: 4500, unit: '', negotiable: true, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 2 jours', ref: 'OKB-MA-90028',
+    featured: false,
+    images: ['assets/gabon-poisson-fume.jpg'],
+    specs: [['Fumage', 'Artisanal au bois'], ['Origine', 'Gabon'], ['Conservation', '2 semaines'], ['Additifs', 'Aucun']],
+    desc: 'Poisson pêché localement puis fumé au bois selon la méthode traditionnelle, pour une conservation longue et un goût fumé authentique.',
+  },
+  {
+    id: 'savon-noir-gabonais', cat: 'maison', shop: 'mas-famille', madeInGabon: true, gabonPriority: 5,
+    title: 'Véritable 1er Savon noir Gabonais',
+    price: 3500, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 5 jours', ref: 'OKB-MA-90030',
+    featured: false,
+    images: ['assets/mas-famille-savon-noir.jpg'],
+    specs: [['Format', 'Pot 100 % naturel'], ['Fabrication', 'Artisanale'], ['Origine', 'Gabon'], ['Additifs', 'Aucun']],
+    desc: 'Le véritable premier savon noir gabonais, 100 % naturel et fabriqué de façon artisanale par la coopérative. Nettoie et purifie l’épiderme : appliquer une cuillère à café, laisser poser quelques minutes puis rincer à l’eau tiède.',
+  },
+  {
+    id: 'huile-de-pain', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Huile de Pain — Magningou',
+    price: 2000, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 1 mois', ref: 'OKB-MA-90016',
+    featured: false,
+    images: ['assets/mas-famille-huile-de-pain.jpg'],
+    specs: [['Format', '10 g (aussi dispo 5000 F)'], ['Fabrication', 'Artisanale'], ['Origine', 'Gabon'], ['Additifs', 'Aucun']],
+    desc: 'C’est la saison sèche, le magningou tu l’as ? Vas chez MAS et Famille coopérative agricole et prends le tien. Ce format est à 2 000 FCFA et il existe aussi pour 5 000 FCFA.',
+  },
+  {
+    id: 'poudre-cacao', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Poudre de cacao 100 % naturelle',
+    price: 5000, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 3 jours', ref: 'OKB-MA-90017',
+    featured: false,
+    images: ['assets/mas-famille-poudre-cacao.jpg'],
+    specs: [['Poids', '500 g'], ['Fabrication', 'Artisanale'], ['Origine', 'Gabon'], ['Additifs', 'Aucun']],
+    desc: 'Poudre de cacao pure, transformée artisanalement par la coopérative à partir de fèves gabonaises. Idéale pour vos boissons chocolatées et pâtisseries maison.',
+  },
+  {
+    id: 'beurre-moabi', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Beurre de Moabi',
+    price: 3000, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 3 jours', ref: 'OKB-MA-90018',
+    featured: false,
+    images: ['assets/mas-famille-beurre-moabi.jpg'],
+    specs: [['Poids', '50 g'], ['Fabrication', 'Artisanale'], ['Origine', 'Gabon'], ['Additifs', 'Aucun']],
+    desc: 'Beurre de moabi 100 % naturel, fabriqué de façon artisanale. Nourrit intensément la peau et les cheveux secs.',
+  },
+  {
+    id: 'savon-tomate-pdt-riz', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Savon naturel Tomate, Pomme de Terre, Riz',
+    price: 2600, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 1 semaine', ref: 'OKB-MA-90019',
+    featured: false,
+    images: ['assets/mas-famille-savon-tomate-pdt-riz.jpg'],
+    specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Usage', 'Corps et visage'], ['Additifs', 'Aucun']],
+    desc: 'Savon artisanal à la tomate, pomme de terre et riz. 100 % artisanal, pour le corps et le visage.',
+  },
+  {
+    id: 'savon-carotte-curcuma', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Savon naturel à la Carotte et Curcuma',
+    price: 2700, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 1 semaine', ref: 'OKB-MA-90020',
+    featured: false,
+    images: ['assets/mas-famille-savon-carotte-curcuma.jpg'],
+    specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Peaux', 'Sensibles'], ['Additifs', 'Aucun']],
+    desc: 'Savon artisanal à la carotte et au curcuma, formulé pour les peaux sensibles. Corps et visage.',
+  },
+  {
+    id: 'savon-cafe', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Savon naturel Au Café',
+    price: 2900, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 1 semaine', ref: 'OKB-MA-90021',
+    featured: false,
+    images: ['assets/mas-famille-savon-cafe.jpg'],
+    specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Effet', 'Anti-odeur et exfoliant'], ['Additifs', 'Aucun']],
+    desc: 'Savon artisanal au café, anti-odeur et exfoliant. Corps et visage, fabrication 100 % artisanale.',
+  },
+  {
+    id: 'savon-palme-curcuma', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Savon naturel Huile de Palme et Curcuma',
+    price: 2600, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 2 semaines', ref: 'OKB-MA-90022',
+    featured: false,
+    images: ['assets/mas-famille-savon-palme-curcuma.jpg'],
+    specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Usage', 'Corps et visage'], ['Additifs', 'Aucun']],
+    desc: 'Savon artisanal à l’huile de palme et au curcuma. Corps et visage, sans additifs ni conservateurs.',
+  },
+  {
+    id: 'shampooing-biere-oeufs', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Shampooing 100 % naturel à la bière et aux œufs',
+    price: 4000, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 2 semaines', ref: 'OKB-MA-90023',
+    featured: false,
+    images: ['assets/mas-famille-shampooing-biere-oeufs.jpg'],
+    specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Usage', 'Tous types de cheveux'], ['Additifs', 'Aucun']],
+    desc: 'Shampooing artisanal 100 % naturel à la bière et aux œufs, pour tous types de cheveux.',
+  },
+  {
+    id: 'shampooing-shikakai', cat: 'maison', shop: 'mas-famille', madeInGabon: true,
+    title: 'Shampooing riche en poudre de Shikakaï',
+    price: 3500, negotiable: false, condition: 'Neuf',
+    city: 'Libreville · Gabon', posted: 'Il y a 2 semaines', ref: 'OKB-MA-90024',
+    featured: false,
+    images: ['assets/mas-famille-shampooing-shikakai.jpg'],
+    specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Usage', 'Cheveux secs'], ['Additifs', 'Aucun']],
+    desc: 'Shampooing artisanal riche en poudre de shikakaï, spécialement formulé pour les cheveux secs.',
   },
 ];
 
@@ -1368,7 +1391,7 @@ const APP_HEADER_TOP = '12px';
 const APP_HEADER_TOP_PLUS_2 = '14px';
 const APP_HEADER_TOP_PLUS_4 = '16px';
 const APP_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(14px, env(safe-area-inset-bottom))' : 20;
-const APP_DETAIL_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(16px, env(safe-area-inset-bottom))' : 26;
+const APP_DETAIL_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(16px, env(safe-area-inset-bottom))' : '26px';
 const APP_DETAIL_HEADER_HEIGHT = '68px';
 
 const StatusBar = ({ dark = false, time = '9:41' }) => {
@@ -1391,6 +1414,32 @@ const StatusBar = ({ dark = false, time = '9:41' }) => {
   );
 };
 
+// The mock status bar sits on the Screen background. Deriving its contrast
+// here prevents individual routes from accidentally leaving white symbols on
+// a light surface (the legacy statusDark flags are kept only as a fallback).
+function hasDarkStatusBackground(color, fallback = false) {
+  if (typeof color !== 'string') return fallback;
+
+  const value = color.trim();
+  const shortHex = value.match(/^#([\da-f]{3})$/i);
+  const longHex = value.match(/^#([\da-f]{6})(?:[\da-f]{2})?$/i);
+  let channels;
+
+  if (shortHex) {
+    channels = [...shortHex[1]].map(channel => parseInt(channel + channel, 16));
+  } else if (longHex) {
+    channels = [0, 2, 4].map(index => parseInt(longHex[1].slice(index, index + 2), 16));
+  } else {
+    const rgb = value.match(/^rgba?\(\s*(\d+(?:\.\d+)?)\s*[, ]\s*(\d+(?:\.\d+)?)\s*[, ]\s*(\d+(?:\.\d+)?)/i);
+    if (!rgb) return fallback;
+    channels = rgb.slice(1, 4).map(Number);
+  }
+
+  const [red, green, blue] = channels;
+  const perceivedLightness = (red * 299 + green * 587 + blue * 114) / 1000;
+  return perceivedLightness < 145;
+}
+
 // ── Action sheet « Publier » (cf. capture) ──────────────────
 const PUB_ACTIONS = [
   { id: 'annonce',    label: 'Publier une annonce',         icon: 'edit',      tone: '#0B7C39', screen: 'publier', primary: true },
@@ -1398,7 +1447,7 @@ const PUB_ACTIONS = [
   { id: 'etab',       label: 'Référencer un établissement', icon: 'shop',      tone: '#E0A400', screen: 'etab' },
   { id: 'event',      label: 'Créer un événement',          icon: 'calendar',  tone: '#5C6B7A' },
   { id: 'cv',         label: 'Soumettre mon CV / offre d’emploi', icon: 'doc',  tone: '#5C6B7A' },
-  { id: 'service',    label: 'Proposer un service',         icon: 'handshake', tone: '#0B7C39' },
+  { id: 'service',    label: 'Proposer un service',         icon: 'handshake', tone: '#0B7C39', screen: 'proposer-service' },
   { id: 'partenariat',  label: 'Demande de partenariat',    icon: 'handshake', tone: '#E0A400' },
 ];
 
@@ -1521,6 +1570,7 @@ function TabBar() {
 
 // ── Screen wrapper (gère le scroll + status bar + tab bar) ──
 function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, noScroll = false, scrollRef, footer, footerPad = 0 }) {
+  const statusBarOnDark = hasDarkStatusBackground(bg, statusDark);
   return (
     <div style={{
       position: 'absolute', inset: 0, background: bg,
@@ -1533,7 +1583,7 @@ function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, n
         background: IS_NATIVE_APP ? OK.green : bg,
       }}>
       {!USE_DEVICE_CHROME &&
-        <StatusBar dark={statusDark}/>
+        <StatusBar dark={statusBarOnDark}/>
       }
       </div>
       <div ref={scrollRef} style={{
@@ -1600,22 +1650,25 @@ function PhoneFrame({ render }) {
     <div id="okaba-phone" className="okaba-phone--mock" style={{
       position: 'relative', width: 390 + 28, height: 844 + 28,
     }}>
-      {/* Gold titanium bezel */}
-      <div style={{
+      {/* Graphite titanium bezel, used for browser screenshots. */}
+      <div className="okaba-device-bezel" style={{
         position: 'absolute', inset: 0, borderRadius: 68,
-        background: 'linear-gradient(135deg, #F4DCA0 0%, #E8BE6E 16%, #C8923C 40%, #9C6A22 55%, #D9AE5E 74%, #F6E2B0 100%)',
-        boxShadow: '0 40px 90px -20px rgba(60,40,10,0.55), 0 10px 30px rgba(0,0,0,0.25), inset 0 0 2px rgba(255,255,255,0.6)',
+        background: 'linear-gradient(135deg, #91979A 0%, #34393C 11%, #111416 31%, #060708 53%, #2E3336 77%, #9BA0A2 100%)',
+        border: '1px solid rgba(235,239,240,.72)',
+        boxShadow: '0 42px 85px -24px rgba(0,0,0,.68), 0 16px 34px rgba(0,0,0,.30), inset 0 0 0 1px rgba(255,255,255,.24)',
         padding: 14,
       }}>
         {/* Inner black rim */}
         <div style={{
-          position: 'absolute', inset: 9, borderRadius: 61,
-          background: '#1a1208',
+          position: 'absolute', inset: 7, borderRadius: 62,
+          background: '#050606',
+          boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.13), inset 0 0 0 5px #050606',
         }}/>
         {/* Screen */}
         <div style={{
           position: 'absolute', inset: 14, borderRadius: 56, overflow: 'hidden',
           background: OKABA.bg,
+          boxShadow: '0 0 0 1px rgba(255,255,255,.11)',
         }}>
           <div key={depth + ':' + top.screen} style={{ position: 'absolute', inset: 0 }}>
             {render(top)}
@@ -1626,8 +1679,15 @@ function PhoneFrame({ render }) {
           {/* Dynamic island */}
           <div style={{
             position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
-            width: 116, height: 33, borderRadius: 20, background: '#0a0a0a', zIndex: 70,
-          }}/>
+            width: 116, height: 33, borderRadius: 20, background: '#050505', zIndex: 70,
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.025)',
+          }}>
+            <span aria-hidden style={{
+              position: 'absolute', right: 12, top: 12, width: 8, height: 8,
+              borderRadius: 999, background: '#08111B',
+              boxShadow: 'inset 0 0 2px rgba(76,116,150,.55)',
+            }}/>
+          </div>
           {/* Home indicator */}
           <div style={{
             position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
@@ -1635,6 +1695,11 @@ function PhoneFrame({ render }) {
             pointerEvents: 'none',
           }}/>
         </div>
+        {/* Side controls complete the silhouette in exported screenshots. */}
+        <span className="okaba-device-button okaba-device-button--mute" aria-hidden/>
+        <span className="okaba-device-button okaba-device-button--volume-up" aria-hidden/>
+        <span className="okaba-device-button okaba-device-button--volume-down" aria-hidden/>
+        <span className="okaba-device-button okaba-device-button--power" aria-hidden/>
       </div>
     </div>
   );
@@ -1795,7 +1860,7 @@ const Price = ({ value, unit, size = 18 }) => (
 );
 
 // Carte annonce — grille (2 colonnes)
-const ListingCard = ({ item, onClick, fav, onFav }) => {
+const ListingCard = ({ item, onClick, fav, onFav, compact }) => {
   const shop = SHOPS[item.shop];
   return (
     <div role="button" tabIndex={0} onClick={onClick}
@@ -1805,30 +1870,30 @@ const ListingCard = ({ item, onClick, fav, onFav }) => {
           onClick && onClick();
         }
       }} style={{
-      textAlign: 'left', background: '#fff', borderRadius: 16, overflow: 'hidden',
+      textAlign: 'left', background: '#fff', borderRadius: compact ? 13 : 16, overflow: 'hidden',
       border: `1px solid ${OK.line}`, cursor: 'pointer', padding: 0,
       boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column',
     }}>
-      <div style={{ position: 'relative', aspectRatio: '4 / 3' }}>
+      <div style={{ position: 'relative', aspectRatio: compact ? '17 / 12' : '4 / 3' }}>
         <Img src={item.images[0]} style={{ position: 'absolute', inset: 0 }}/>
-        {item.featured && <div style={{ position: 'absolute', top: 8, left: 8 }}><FeaturedTag/></div>}
+        {item.featured && <div style={{ position: 'absolute', top: compact ? 6 : 8, left: compact ? 6 : 8 }}><FeaturedTag/></div>}
         <button onClick={(e) => { e.stopPropagation(); onFav && onFav(); }} style={{
-          position: 'absolute', top: 8, right: 8, width: 30, height: 30, borderRadius: 999,
+          position: 'absolute', top: compact ? 6 : 8, right: compact ? 6 : 8, width: compact ? 25 : 30, height: compact ? 25 : 30, borderRadius: 999,
           border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
         }}>
-          <Icon name={fav ? 'heart-f' : 'heart'} size={15} color={fav ? OK.red : OK.ink2} strokeWidth={2}/>
+          <Icon name={fav ? 'heart-f' : 'heart'} size={compact ? 12 : 15} color={fav ? OK.red : OK.ink2} strokeWidth={2}/>
         </button>
         <span style={{
-          position: 'absolute', bottom: 8, left: 8, padding: '3px 8px', borderRadius: 8,
-          background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 9.5, fontWeight: 700,
+          position: 'absolute', bottom: compact ? 6 : 8, left: compact ? 6 : 8, padding: compact ? '2px 6px' : '3px 8px', borderRadius: 8,
+          background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: compact ? 8.5 : 9.5, fontWeight: 700,
         }}>{item.condition}</span>
       </div>
-      <div style={{ padding: '10px 11px 12px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <Price value={item.price} unit={item.unit}/>
-        <div style={{ fontFamily: F, fontSize: 12.5, fontWeight: 700, color: OK.ink, lineHeight: 1.25,
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 32 }}>
+      <div style={{ padding: compact ? '8px 10px 9px' : '10px 11px 12px', display: 'flex', flexDirection: 'column', gap: compact ? 3 : 4 }}>
+        <Price value={item.price} unit={item.unit} size={compact ? 16 : 18}/>
+        <div style={{ fontFamily: F, fontSize: compact ? 11.5 : 12.5, fontWeight: 700, color: OK.ink, lineHeight: 1.25,
+          display: '-webkit-box', WebkitLineClamp: compact ? 1 : 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: compact ? 0 : 32 }}>
           {item.title}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 1 }}>
@@ -2111,7 +2176,7 @@ function HomeScreen() {
     if (activeBanner.target) navigate(activeBanner.target);
   };
   return (
-    <Screen bg={OK.bg2} statusDark={true} tabBar noScroll>
+    <Screen bg={OK.bg2} statusDark={false} tabBar noScroll>
       <div data-screen-label="Accueil" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Header vert */}
         <div data-fixed-header="home" style={{ position: 'relative', zIndex: 30, flexShrink: 0, background: OK.green,
@@ -2478,7 +2543,7 @@ function MarketScreen({ params }) {
   const items = cat === 'all'
     ? LISTINGS
     : cat === 'gabon'
-      ? LISTINGS.filter(l => ['mas-famille', 'mama-style'].includes(l.shop))
+      ? LISTINGS.filter(l => l.madeInGabon).sort((a, b) => (a.gabonPriority ?? 99) - (b.gabonPriority ?? 99))
       : LISTINGS.filter(l => l.cat === cat);
 
   return (
@@ -2948,6 +3013,13 @@ function ShopScreen({ params }) {
   const photosCount = shop.photosCount || listings.reduce((n, l) => n + l.images.length, 0);
   const avisCount = shop.avisCount || shop.reviews || 0;
   const photoPool = listings.flatMap(l => l.images).concat(shop.cover, shop.avatar);
+  // évite deux photos trop semblables (shampooings) côte à côte en tête de grille
+  const annoncesOrderFirst = ['beurre-moabi', 'poudre-cacao', 'huile-de-pain', 'savon-noir-gabonais'];
+  const reversedListings = [...listings].reverse();
+  const listingsForAnnonces = [
+    ...annoncesOrderFirst.map(id => reversedListings.find(l => l.id === id)).filter(Boolean),
+    ...reversedListings.filter(l => !annoncesOrderFirst.includes(l.id)),
+  ];
   const shopReviews = [
     { name: 'Jean-Pierre M.', rating: 5, time: 'Il y a 3 j', text: 'Produits naturels de grande qualité, savon au karité excellent. Je recommande vivement !' },
     { name: 'Aline N.', rating: 4, time: 'Il y a 1 sem', text: 'Très bon contact, livraison rapide. Les infusions sont délicieuses.' },
@@ -2957,7 +3029,7 @@ function ShopScreen({ params }) {
   const TABS_SHOP = [
     ['apropos', 'À propos'],
     ['annonces', `Annonces (${listings.length})`],
-    ['photos', `Photos (${photosCount})`],
+    ['photos', `Média (${photosCount})`],
     ['avis', `Avis (${avisCount})`],
   ];
 
@@ -2973,7 +3045,7 @@ function ShopScreen({ params }) {
       <div data-screen-label="Profil boutique" style={{ position: 'absolute', inset: 0, overflow: 'hidden', '--detail-hero-h': 'clamp(200px, 28vh, 230px)' }}>
         {/* Cover (épinglée en arrière-plan) */}
         <div data-fixed-hero="shop" style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, right: 0, height: 'var(--detail-hero-h)' }}>
-          <Img src={shop.cover} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,0.30) 0%, transparent 30%)"/>
+          <Img src={shop.cover} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,0.30) 0%, transparent 30%, transparent 55%, rgba(0,0,0,0.50) 100%)"/>
           {/* avatar logo coopérative */}
           <div style={{ position: 'absolute', left: 18, bottom: 24, width: 92, height: 92, borderRadius: 16, overflow: 'hidden',
             border: '3px solid #fff', background: '#fff', boxShadow: '0 4px 14px rgba(0,0,0,0.22)' }}>
@@ -3032,13 +3104,14 @@ function ShopScreen({ params }) {
         </div>
 
         {/* Tabs (pills) */}
-        <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '16px 18px 4px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: 6, padding: '16px 14px 4px' }}>
           {TABS_SHOP.map(([id, l]) => {
             const on = tab === id;
             return (
-              <button key={id} onClick={() => setTab(id)} style={{ flexShrink: 0, height: 34, padding: '0 14px', borderRadius: 999, cursor: 'pointer', whiteSpace: 'nowrap',
+              <button key={id} onClick={() => setTab(id)} style={{ flex: '0 0 auto', height: 34, padding: '0 10px', borderRadius: 999, cursor: 'pointer',
+                whiteSpace: 'nowrap',
                 border: on ? 'none' : `1px solid ${OK.line}`, background: on ? OK.green : OK.bg2, color: on ? '#fff' : OK.ink2,
-                fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 700 }}>{l}</button>
+                fontFamily: FONT_UI, fontSize: 12, fontWeight: 700 }}>{l}</button>
             );
           })}
         </div>
@@ -3065,15 +3138,15 @@ function ShopScreen({ params }) {
             </div>
           )}
           {tab === 'annonces' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-              {listings.map(item => <ListingCard key={item.id} item={item} onClick={() => navigate('listing', { id: item.id })}/>)}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+              {listingsForAnnonces.map(item => <ListingCard key={item.id} item={item} compact onClick={() => navigate('listing', { id: item.id })}/>)}
             </div>
           )}
           {tab === 'photos' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
               {photoPool.slice(0, photosCount).map((src, i) => (
                 <div key={i} style={{ aspectRatio: '1 / 1', borderRadius: 10, overflow: 'hidden' }}>
-                  <Img src={src} style={{ width: '100%', height: '100%' }}/>
+                  <Img src={src} style={{ width: '100%', height: '100%', backgroundSize: 'contain', backgroundColor: OK.bg2 }}/>
                 </div>
               ))}
             </div>
@@ -3116,15 +3189,17 @@ function ShopScreen({ params }) {
         </div>
 
         {/* Ligne contacts sociaux */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 9, padding: '22px 14px 0', flexWrap: 'nowrap' }}>
-          {SOCIALS.map((s, i) => (
-            <button key={i} onClick={() => s.ic === 'message' && navigate('chat', { id: shop.id })}
-              style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: s.bg, flexShrink: 0,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.14)' }}>
-              <Icon name={s.ic} size={20} color="#fff" strokeWidth={2}/>
-            </button>
-          ))}
-        </div>
+        {tab === 'apropos' && (
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 9, padding: '22px 14px 0', flexWrap: 'nowrap' }}>
+            {SOCIALS.map((s, i) => (
+              <button key={i} onClick={() => s.ic === 'message' && navigate('chat', { id: shop.id })}
+                style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: s.bg, flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.14)' }}>
+                <Icon name={s.ic} size={20} color="#fff" strokeWidth={2}/>
+              </button>
+            ))}
+          </div>
+        )}
 
         <div style={{ height: 36 }}/>
         </div>
@@ -3145,7 +3220,7 @@ const FA = "'Manrope', system-ui, sans-serif";
 // seule la FMCT représente le projet qu'elle pilote.
 const entityList = () => Object.values(ANNU_ENTITIES).filter(e => e.id !== 'baie-des-rois');
 // rubrique (ALL_CATEGORIES) correspondant au service d'une entité
-const SVC2RUB = { industries: 'industries', admin: 'admin', ministeres: 'tourisme', restaurants: 'restaurants', telecoms: 'telecom', sante: 'sante', banques: 'banques', loisirs: 'loisirs', shopping: 'shopping', hotels: 'hotels', services: 'services' };
+const SVC2RUB = { industries: 'industries', admin: 'admin', ministeres: 'tourisme', restaurants: 'restaurants', telecoms: 'telecom', sante: 'sante', banques: 'banques', loisirs: 'loisirs', shopping: 'shopping', hotels: 'hotels', services: 'services', proximite: 'proximite' };
 
 const tenantRubric = group => {
   if (['Restaurants', 'Bars & lounges'].includes(group)) return 'restaurants';
@@ -3158,6 +3233,7 @@ const tenantRubric = group => {
 // enseignes de la Baie et projet hôtelier confirmé.
 const directoryList = () => {
   const entities = entityList().map(e => ({ ...e, directoryMeta: e.directoryMeta || `${e.followers} abonnés`, directoryRoute: ['entity', { id: e.id }] }));
+  const proximity = proximityDirectoryEntries();
   const tenants = BAIE_TENANTS.map(t => ({
     ...t,
     service: tenantRubric(t.group),
@@ -3183,7 +3259,7 @@ const directoryList = () => {
     directoryPriority: 280,
     directoryRoute: ['baie-place', { cat: 'hotels', id: place.id }],
   }));
-  return [...entities, ...tenants, ...hotels];
+  return [...proximity, ...entities, ...tenants, ...hotels];
 };
 
 const sortDirectoryItems = items => [...items].sort((a, b) =>
@@ -3229,7 +3305,7 @@ function AnnuaireRow({ e, onClick }) {
       {/* logo */}
       <div style={{ width: 78, height: 78, flexShrink: 0, borderRadius: 14, background: tint,
         display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', border: `1px solid ${OK.line}` }}>
-        <img src={e.logo} alt={e.name} style={{ maxWidth: '78%', maxHeight: '78%', objectFit: 'contain' }}/>
+        <img src={e.logo} alt={e.name} style={e.type === 'proximity' ? { width: '100%', height: '100%', objectFit: 'cover' } : { maxWidth: '78%', maxHeight: '78%', objectFit: 'contain' }}/>
       </div>
       {/* infos */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -3242,7 +3318,7 @@ function AnnuaireRow({ e, onClick }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 2 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FA, fontSize: 11, color: OK.ink3, minWidth: 0 }}>
             <Icon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
-            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.city.split('·').pop().trim()}</span>
+            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.type === 'proximity' ? e.city : e.city.split('·').pop().trim()}</span>
           </span>
           {e.followers && <span style={{ fontFamily: FA, fontSize: 11, fontWeight: 700, color: OK.green, whiteSpace: 'nowrap' }}>· {e.followers}</span>}
         </div>
@@ -3256,8 +3332,17 @@ function AnnuaireRow({ e, onClick }) {
 function AnnuaireScreen({ params }) {
   const { back, navigate } = useNav();
   const [cat, setCat] = useState(params?.cat || 'tout');
+  const [serviceJob, setServiceJob] = useState('');
+  const [serviceZone, setServiceZone] = useState('');
+  const [serviceRating, setServiceRating] = useState('');
+  if (cat === 'proximite') return <ProximityServicesScreen/>;
   let items = directoryList();
   if (cat !== 'tout') items = items.filter(e => SVC2RUB[e.service] === cat);
+  if (cat === 'proximite') {
+    if (serviceJob) items = items.filter(e => (e.jobs || []).includes(serviceJob));
+    if (serviceZone) items = items.filter(e => (e.city || '').toLowerCase().includes(serviceZone.toLowerCase()));
+    if (serviceRating) items = items.filter(e => Number(e.rating || 0) >= Number(serviceRating));
+  }
   // Priorité : complexe, FMCT, enseignes et projets de la Baie, puis fiches à la une.
   items = sortDirectoryItems(items);
 
@@ -3275,7 +3360,7 @@ function AnnuaireScreen({ params }) {
           <button onClick={() => navigate('annuaire-search')} style={{ width: '100%', height: 48, background: '#fff', borderRadius: 12, border: `1px solid ${OK.line}`,
             display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', cursor: 'pointer', textAlign: 'left' }}>
             <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
-            <span style={{ flex: 1, fontFamily: FA, fontSize: 13, color: OK.ink3 }}>Mairie, ministère, entreprise…</span>
+            <span style={{ flex: 1, fontFamily: FA, fontSize: 13, color: OK.ink3 }}>{cat === 'proximite' ? 'Métier, prestataire ou quartier…' : 'Mairie, ministère, entreprise…'}</span>
           </button>
         </div>
 
@@ -3291,9 +3376,25 @@ function AnnuaireScreen({ params }) {
           ))}
         </div>
 
+        {cat === 'proximite' && <div style={{ display: 'flex', gap: 8, padding: '8px 16px 2px', overflowX: 'auto' }}>
+          <select aria-label="Filtrer par métier" value={serviceJob} onChange={event => setServiceJob(event.target.value)} style={{ height: 38, minWidth: 126, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', padding: '0 12px', fontFamily: FA, fontSize: 12, fontWeight: 700, color: OK.ink }}>
+            <option value="">Tous les métiers</option>
+            {PROXIMITY_JOBS.map(job => <option key={job} value={job}>{job}</option>)}
+          </select>
+          <select aria-label="Filtrer par quartier" value={serviceZone} onChange={event => setServiceZone(event.target.value)} style={{ height: 38, minWidth: 112, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', padding: '0 12px', fontFamily: FA, fontSize: 12, fontWeight: 700, color: OK.ink }}>
+            <option value="">Tous les quartiers</option>
+            {['Akanda', 'Glass', 'Louis', 'Nkembo', 'Nzeng-Ayong', 'Owendo'].map(zone => <option key={zone} value={zone}>{zone}</option>)}
+          </select>
+          <select aria-label="Filtrer par note" value={serviceRating} onChange={event => setServiceRating(event.target.value)} style={{ height: 38, minWidth: 96, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', padding: '0 12px', fontFamily: FA, fontSize: 12, fontWeight: 700, color: OK.ink }}>
+            <option value="">Toutes les notes</option>
+            <option value="4">4★ et +</option>
+            <option value="4.5">4,5★ et +</option>
+          </select>
+        </div>}
+
         {/* Compteur */}
         <div style={{ padding: '8px 18px 4px', fontFamily: FA, fontSize: 12.5, color: OK.ink2, fontWeight: 600 }}>
-          <strong style={{ color: OK.ink }}>{items.length}</strong> établissement{items.length > 1 ? 's' : ''}
+          <strong style={{ color: OK.ink }}>{items.length}</strong> fiche{items.length > 1 ? 's' : ''}
           {cat !== 'tout' && <span style={{ color: OK.ink3 }}> · {(ALL_CATEGORIES.find(c => c.id === cat) || {}).name}</span>}
         </div>
         </div>
@@ -3344,7 +3445,7 @@ function AnnuaireSearchScreen() {
   const inputRef = useRef(null);
   useEffect(() => { inputRef.current && inputRef.current.focus(); }, []);
   const searchable = sortDirectoryItems(directoryList());
-  const res = q.trim() ? searchable.filter(e => `${e.name} ${e.cat} ${e.city || ''}`.toLowerCase().includes(q.toLowerCase())) : searchable;
+  const res = q.trim() ? searchable.filter(e => `${e.name} ${e.cat} ${e.city || ''} ${(e.jobs || []).join(' ')}`.toLowerCase().includes(q.toLowerCase())) : searchable;
   return (
     <Screen bg={OK.bg2} statusDark={true}>
       <div data-screen-label="Annuaire recherche">
@@ -3354,7 +3455,7 @@ function AnnuaireSearchScreen() {
           </button>
           <div style={{ flex: 1, height: 44, background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 9 }}>
             <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
-            <input ref={inputRef} value={q} onChange={e => setQ(e.target.value)} placeholder="Rechercher une institution…"
+            <input ref={inputRef} value={q} onChange={e => setQ(e.target.value)} placeholder="Métier, entreprise, institution…"
               style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FA, fontSize: 14, color: OK.ink }}/>
           </div>
         </div>
@@ -4532,74 +4633,120 @@ function BaiePlaceScreen({ params }) {
 
 // ── SMART CITY — services connectés de la ville (style natif O'KABA) ──
 function EventImmersiveScreen({ params }) {
-  const { back } = useNav();
+  const { back, navigate } = useNav();
   const event = params?.event || EVENTS[0];
   const image = event.poster || event.img || 'assets/event-femoga.jpg';
-  const date = event.date || event.when || 'Date à venir';
-  const place = event.place || event.venue || 'Libreville';
-  const organizer = event.organizer || (place.includes('Baie des Rois') ? 'La Baie des Rois' : 'O’KABA Sorties');
   const media = [...new Set([image, ...(event.gallery || event.photos || [])].filter(Boolean))];
   const [mediaIndex, setMediaIndex] = useState(0);
-  const [interested, setInterested] = useState(false);
-  const [saved, setSaved] = useState(false);
   const currentImage = media[mediaIndex] || image;
   const knownEvent = [...BAIE_EVENTS, ...EVENTS].find(item => item.id === event.id || item.title === event.title);
   const offlineImage = event.fallbackImage || knownEvent?.poster || knownEvent?.img || 'assets/event-femoga.jpg';
   const displayImage = /^https?:\/\//i.test(currentImage) ? offlineImage : currentImage;
-  const actionButton = (label, icon, active, onClick, tone = '#fff') => (
-    <button data-event-action={label} aria-label={label} aria-pressed={active} onClick={onClick} style={{ width: 39, height: 39, padding: 0, border: 'none', borderRadius: 999, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-      <Icon name={icon} size={22} color={active ? OK.gold : tone} strokeWidth={2}/>
-    </button>
-  );
-  const shareEvent = async () => {
-    const text = `${event.title} · ${date} · ${place}`;
-    try {
-      if (navigator.share) await navigator.share({ title: event.title, text });
-      else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(text);
-        notifyDemo('Informations de l’événement copiées');
-      } else notifyDemo('Événement prêt à être partagé');
-    } catch {}
-  };
   const showPrevious = () => setMediaIndex(index => (index - 1 + media.length) % media.length);
   const showNext = () => setMediaIndex(index => (index + 1) % media.length);
   return <Screen bg="#041109" statusDark={true} noScroll>
-    <div data-screen-label={`Événement — ${event.title}`} style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#050505', color: '#fff' }}>
-      <header style={{ position: 'relative', zIndex: 10, height: 58, padding: '6px 12px 8px', flexShrink: 0, display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center', background: '#050505' }}>
-        <button onClick={back} aria-label="Fermer" style={{ width: 44, height: 44, padding: 0, border: 'none', borderRadius: 999, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="close" size={25} color="#fff" strokeWidth={2}/></button>
-        <strong data-event-counter style={{ justifySelf: 'center', fontFamily: FT, fontSize: 14, lineHeight: 1, fontWeight: 850, color: '#fff' }}>{mediaIndex + 1} sur {media.length}</strong>
-        <button onClick={() => notifyDemo('Options de l’événement')} aria-label="Plus d’options" style={{ justifySelf: 'end', width: 44, height: 44, padding: 0, border: 'none', borderRadius: 999, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><span style={{ display: 'flex', transform: 'rotate(90deg)' }}><Icon name="dots" size={22} color="#fff"/></span></button>
+    <div data-screen-label={`Événement — ${event.title}`} style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#050505', color: '#fff' }}>
+      <img src={displayImage} alt={`Affiche — ${event.title}`} onClick={media.length > 1 ? showNext : undefined} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = offlineImage; }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', cursor: media.length > 1 ? 'pointer' : 'default' }}/>
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 58%, rgba(0,0,0,.78) 100%)' }}/>
+
+      <header style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, height: 58, padding: '6px 12px 8px', display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center' }}>
+        <button onClick={back} aria-label="Fermer" style={{ width: 44, height: 44, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="close" size={25} color="#fff" strokeWidth={2}/></button>
+        {media.length > 1 && <strong data-event-counter style={{ justifySelf: 'center', fontFamily: FT, fontSize: 14, lineHeight: 1, fontWeight: 850, color: '#fff' }}>{mediaIndex + 1} sur {media.length}</strong>}
       </header>
 
-      <section data-event-media aria-label="Affiche de l’événement" style={{ position: 'relative', flex: '1 1 auto', minHeight: 0, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', background: '#050505' }}>
-        <img src={displayImage} alt={`Affiche — ${event.title}`} onClick={media.length > 1 ? showNext : undefined} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = offlineImage; }} style={{ width: '100%', height: '100%', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', objectPosition: 'center center', display: 'block', cursor: media.length > 1 ? 'pointer' : 'default' }}/>
-        {media.length > 1 && <>
-          <button onClick={showPrevious} aria-label="Affiche précédente" style={{ position: 'absolute', left: 7, top: '50%', transform: 'translateY(-50%)', width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="chev-l" size={23} color="#fff" strokeWidth={2.2}/></button>
-          <button onClick={showNext} aria-label="Affiche suivante" style={{ position: 'absolute', right: 7, top: '50%', transform: 'translateY(-50%)', width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="chev-r" size={23} color="#fff" strokeWidth={2.2}/></button>
-        </>}
-      </section>
+      {media.length > 1 && <>
+        <button onClick={showPrevious} aria-label="Affiche précédente" style={{ position: 'absolute', left: 7, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="chev-l" size={23} color="#fff" strokeWidth={2.2}/></button>
+        <button onClick={showNext} aria-label="Affiche suivante" style={{ position: 'absolute', right: 7, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="chev-r" size={23} color="#fff" strokeWidth={2.2}/></button>
+      </>}
 
-      <footer data-event-footer style={{ position: 'relative', zIndex: 10, flexShrink: 0, padding: '13px 16px calc(10px + env(safe-area-inset-bottom))', background: 'linear-gradient(180deg, #111 0%, #050505 100%)', borderTop: '1px solid rgba(255,255,255,.08)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 999, flexShrink: 0, background: 'linear-gradient(145deg, #0B7C39, #075526)', color: OK.gold, border: '1px solid rgba(245,184,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FX, fontSize: 15, fontWeight: 900 }}>{organizer.trim().charAt(0).toUpperCase()}</div>
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}><strong style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: FX, fontSize: 12.5, color: '#fff' }}>{organizer}</strong><Icon name="verified" size={13} color={OK.green}/></div>
-            <div style={{ marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: FT, fontSize: 9.5, color: 'rgba(255,255,255,.62)' }}>{date}{event.time ? ` · ${event.time}` : ''} · {place}</div>
-          </div>
-          {actionButton('Enregistrer', saved ? 'bookmark-f' : 'bookmark', saved, () => { setSaved(value => !value); notifyDemo(saved ? 'Événement retiré des favoris' : 'Événement enregistré'); })}
-        </div>
-
-        <h1 style={{ margin: '10px 0 0', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', fontFamily: FX, fontSize: 14, fontWeight: 800, lineHeight: 1.28, color: '#fff' }}>{event.title}</h1>
-
-        <div style={{ marginTop: 6, display: 'flex', alignItems: 'center', gap: 5 }}>
-          {actionButton('Intéressé', interested ? 'heart-f' : 'heart', interested, () => { setInterested(value => !value); notifyDemo(interested ? 'Retiré de vos événements' : 'Ajouté à vos événements'); }, '#fff')}
-          {actionButton('Commenter', 'message', false, () => notifyDemo('Commentaires bientôt disponibles'))}
-          {actionButton('Partager', 'share', false, shareEvent)}
-          <button onClick={() => notifyDemo(`${event.title} ajouté à votre agenda`)} style={{ height: 35, marginLeft: 'auto', padding: '0 12px', borderRadius: 999, border: '1px solid rgba(245,184,0,.46)', background: 'rgba(245,184,0,.12)', color: OK.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer', fontFamily: FT, fontSize: 9.5, fontWeight: 850 }}><Icon name="calendar" size={14} color={OK.gold} strokeWidth={2}/>Agenda</button>
-        </div>
+      <footer data-event-footer style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 10, padding: `16px 16px calc(16px + env(safe-area-inset-bottom))` }}>
+        <button onClick={() => navigate('event-ticket', { event })} style={{ width: '100%', height: 54, borderRadius: 16, border: 'none', background: `linear-gradient(135deg, ${OK.green} 0%, ${OK.greenDeep} 100%)`, color: '#fff', fontFamily: FX, fontSize: 15, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, cursor: 'pointer', boxShadow: '0 10px 26px rgba(0,0,0,.4)' }}><Icon name="ticket" size={19} color="#fff" strokeWidth={2}/>Réserver</button>
       </footer>
     </div>
   </Screen>;
+}
+
+function EventTicketScreen({ params }) {
+  const { back, navigate } = useNav();
+  const event = params?.event || EVENTS[0];
+  const date = event.date || event.when || 'Date à venir';
+  const place = event.place || event.venue || 'Libreville';
+  const isFree = /libre|gratuit/i.test(event.price || '');
+  const tiers = isFree ? [['standard', 'Entrée', 0]] : [['standard', 'Standard', 3000], ['vip', 'VIP', 8000]];
+  const [tier, setTier] = useState(tiers[0][0]);
+  const [qty, setQty] = useState(1);
+  const [step, setStep] = useState(1);
+  const [payment, setPayment] = useState('airtel');
+  const [bookingCode] = useState(() => `OKT-${Date.now().toString().slice(-6)}`);
+  const selectedTier = tiers.find(([id]) => id === tier) || tiers[0];
+  const total = selectedTier[2] * qty;
+  const payments = [
+    { id: 'airtel', label: 'Airtel Money', color: '#E32636', logo: 'assets/payments/airtel.svg' },
+    { id: 'moov', label: 'Moov Money', color: '#F36B21', logo: 'assets/payments/moov-money.png' },
+    { id: 'card', label: 'Carte bancaire', color: '#2866B1', logos: ['assets/payments/visa.svg', 'assets/payments/mastercard.svg'] },
+  ];
+  const goToRecap = () => setStep(total === 0 ? 3 : 2);
+  const confirm = () => setStep(3);
+  return (
+    <Screen bg={OK.bg2} statusDark={true}>
+      <div data-screen-label="Billetterie événement">
+        <GreenHeader title={step === 3 ? 'Billet confirmé' : 'Réserver un billet'} onBack={back}/>
+        {step < 3 && <div style={{ display: 'flex', gap: 6, padding: '14px 18px 0' }}>{[1, 2].map(item => <span key={item} style={{ flex: 1, height: 4, borderRadius: 999, background: item <= step ? OK.gold : '#D8E2DB', transition: 'background .2s ease' }}/>)}</div>}
+
+        {step === 1 && <div style={{ padding: '14px 16px 32px' }}>
+          <div style={{ padding: 14, borderRadius: 17, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(11,124,57,.1)', color: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="ticket" size={22} color={OK.green} strokeWidth={2}/></div>
+            <div style={{ flex: 1, minWidth: 0 }}><div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: FX, fontSize: 14, fontWeight: 850, color: OK.ink }}>{event.title}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 10.5, fontWeight: 650, color: OK.ink3 }}>{date}{event.time ? ` · ${event.time}` : ''} · {place}</div></div>
+          </div>
+
+          <div style={{ marginTop: 18, fontFamily: FX, fontSize: 13.5, fontWeight: 850, color: OK.ink }}>Catégorie de billet</div>
+          <div style={{ display: 'grid', gridTemplateColumns: tiers.length > 1 ? '1fr 1fr' : '1fr', gap: 8, marginTop: 9 }}>
+            {tiers.map(([id, label, price]) => <button key={id} onClick={() => setTier(id)} style={{ minHeight: 62, padding: '10px 12px', borderRadius: 14, border: tier === id ? `1.5px solid ${OK.green}` : `1px solid ${OK.line}`, background: tier === id ? 'rgba(11,124,57,.08)' : '#fff', cursor: 'pointer', textAlign: 'left' }}><div style={{ fontFamily: FX, fontSize: 12.5, fontWeight: 850, color: OK.ink }}>{label}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 10.5, fontWeight: 750, color: tier === id ? OK.green : OK.ink3 }}>{price ? fcfa(price) : 'Gratuit'}</div></button>)}
+          </div>
+
+          <div style={{ marginTop: 18, fontFamily: FX, fontSize: 13.5, fontWeight: 850, color: OK.ink }}>Nombre de billets</div>
+          <div style={{ marginTop: 9, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: 14, border: `1px solid ${OK.line}`, background: '#fff' }}>
+            <button onClick={() => setQty(value => Math.max(1, value - 1))} aria-label="Réduire" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: OK.bg2, color: OK.green, fontFamily: FX, fontSize: 18, fontWeight: 900, cursor: 'pointer' }}>−</button>
+            <strong style={{ fontFamily: FX, fontSize: 17, color: OK.ink }}>{qty}</strong>
+            <button onClick={() => setQty(value => Math.min(8, value + 1))} aria-label="Ajouter" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: OK.bg2, color: OK.green, fontFamily: FX, fontSize: 18, fontWeight: 900, cursor: 'pointer' }}>+</button>
+          </div>
+
+          <button onClick={goToRecap} style={{ width: '100%', height: 50, marginTop: 21, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer<Icon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
+        </div>}
+
+        {step === 2 && <div style={{ padding: '14px 16px 32px' }}>
+          <div style={{ padding: 15, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}` }}>
+            <div style={{ fontFamily: FX, fontSize: 14, fontWeight: 850, color: OK.ink }}>Récapitulatif</div>
+            {[
+              ['Événement', event.title], ['Date', `${date}${event.time ? ` · ${event.time}` : ''}`],
+              ['Catégorie', selectedTier[1]], ['Billets', String(qty)],
+            ].map(([label, value], index) => <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, padding: '12px 0', borderTop: index ? `1px solid ${OK.line}` : 'none', fontFamily: FT, fontSize: 11.5 }}><span style={{ color: OK.ink3 }}>{label}</span><strong style={{ color: OK.ink, textAlign: 'right' }}>{value}</strong></div>)}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: 13, borderTop: `1px solid ${OK.line}` }}><span style={{ fontFamily: FX, fontSize: 13, fontWeight: 850, color: OK.ink }}>Total</span><strong style={{ fontFamily: FX, fontSize: 21, fontWeight: 900, color: OK.green }}>{fcfa(total)}</strong></div>
+          </div>
+
+          <div style={{ marginTop: 18, fontFamily: FX, fontSize: 13.5, fontWeight: 850, color: OK.ink }}>Moyen de paiement</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 9 }}>
+            {payments.map(method => <button key={method.id} onClick={() => setPayment(method.id)} style={{ minHeight: 64, padding: '0 13px', borderRadius: 14, border: payment === method.id ? `1.5px solid ${method.color}` : `1px solid ${OK.line}`, background: payment === method.id ? `${method.color}10` : '#fff', display: 'flex', alignItems: 'center', gap: 11, cursor: 'pointer', textAlign: 'left' }}><span style={{ width: 58, height: 40, flexShrink: 0, padding: method.id === 'moov' ? 0 : 6, borderRadius: 10, overflow: 'hidden', background: method.id === 'moov' ? '#F36B21' : '#fff', border: '1px solid rgba(18,48,31,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, boxSizing: 'border-box' }}>{method.logo ? <img src={method.logo} alt={method.label} style={{ width: method.id === 'airtel' ? 35 : '100%', height: method.id === 'airtel' ? 35 : '100%', objectFit: 'contain', display: 'block' }}/> : method.logos.map((logo, index) => <img key={logo} src={logo} alt={index === 0 ? 'Visa' : 'Mastercard'} style={{ width: index === 0 ? 27 : 24, maxHeight: 24, objectFit: 'contain', display: 'block' }}/>)}</span><span style={{ flex: 1, fontFamily: FX, fontSize: 12.5, fontWeight: 800, color: OK.ink }}>{method.label}</span><span style={{ width: 18, height: 18, borderRadius: 999, border: `2px solid ${payment === method.id ? method.color : '#BAC7BF'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{payment === method.id && <span style={{ width: 8, height: 8, borderRadius: 999, background: method.color }}/>}</span></button>)}
+          </div>
+
+          <button onClick={confirm} style={{ width: '100%', height: 50, marginTop: 21, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer' }}>Confirmer · {fcfa(total)}</button>
+          <button onClick={() => setStep(1)} style={{ width: '100%', height: 42, marginTop: 7, border: 'none', background: 'transparent', color: OK.green, fontFamily: FT, fontSize: 11.5, fontWeight: 800, cursor: 'pointer' }}>Modifier la réservation</button>
+        </div>}
+
+        {step === 3 && <div style={{ padding: '24px 18px 34px', textAlign: 'center' }}>
+          <div style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(11,124,57,.05)' }}><Icon name="verified" size={38} color={OK.green} strokeWidth={2}/></div>
+          <h1 style={{ margin: '20px 0 0', fontFamily: FX, fontSize: 23, fontWeight: 900, color: OK.ink }}>Votre billet est confirmé</h1>
+          <p style={{ margin: '8px auto 0', maxWidth: 285, fontFamily: FT, fontSize: 12.5, lineHeight: 1.55, color: OK.ink3 }}>Présentez le code ci-dessous à l’entrée de « {event.title} ».</p>
+          <div style={{ marginTop: 20, padding: '21px 15px', borderRadius: 20, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 8px 24px rgba(18,51,31,.08)' }}>
+            <div style={{ fontFamily: FT, fontSize: 10, fontWeight: 750, letterSpacing: .7, color: OK.ink3 }}>CODE D’ACCÈS</div>
+            <div style={{ marginTop: 7, fontFamily: FX, fontSize: 29, fontWeight: 900, letterSpacing: 2, color: OK.green }}>{bookingCode}</div>
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px dashed ${OK.line}`, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, textAlign: 'left' }}><div><div style={{ fontFamily: FT, fontSize: 9.5, color: OK.ink3 }}>Catégorie</div><strong style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink }}>{selectedTier[1]}</strong></div><div><div style={{ fontFamily: FT, fontSize: 9.5, color: OK.ink3 }}>Billets</div><strong style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink }}>{qty}</strong></div></div>
+          </div>
+          <button onClick={() => navigate('events')} style={{ width: '100%', height: 50, marginTop: 22, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer' }}>Retour aux événements</button>
+        </div>}
+      </div>
+    </Screen>
+  );
 }
 
 const BAIE_NEWS = [
@@ -5915,23 +6062,23 @@ const PKG = [
 // ── RÉFÉRENCER UN ÉTABLISSEMENT ────────────────────────────
 // Synchronisé depuis Claude Design (révision du 28 juillet 2026).
 const ETAB_TYPES = {
-  resto: { label: 'Restaurant & bar', img: 'assets/etab-restaurant.jpg', rubriques: ['Restaurant', 'Bar & lounge', 'Fast-food', 'Pâtisserie'], namePh: 'Ex : Le Grill du Roi', fields: [
+  resto: { label: 'Restaurant & bar', img: 'assets/etab-restaurant-gabon.jpg', rubriques: ['Restaurant', 'Bar & lounge', 'Fast-food', 'Pâtisserie'], namePh: 'Ex : Le Grill du Roi', fields: [
     { k: 'cuisine', label: 'Cuisine', type: 'chips', opts: ['Gabonaise', 'Africaine', 'Européenne', 'Asiatique', 'Libanaise', 'Grillades'] },
     { k: 'gamme', label: 'Gamme de prix', type: 'chips', opts: ['€', '€€', '€€€'] },
     { k: 'places', label: 'Nombre de places', type: 'num', ph: 'Ex : 60' },
     { k: 'services', label: 'Services', type: 'chips', opts: ['Terrasse', 'Livraison', 'À emporter', 'Climatisé'] },
   ] },
-  hotel: { label: 'Hôtel', img: 'assets/etab-hotel.jpg', rubriques: ['Hôtel', 'Résidence meublée', 'Auberge'], namePh: 'Ex : Résidence Bord de Mer', fields: [
+  hotel: { label: 'Hôtel', img: 'assets/etab-hotel-pointe-denis.jpg', rubriques: ['Hôtel', 'Résidence meublée', 'Auberge'], namePh: 'Ex : Résidence Bord de Mer', fields: [
     { k: 'standing', label: 'Standing', type: 'chips', opts: ['2 ★', '3 ★', '4 ★', '5 ★'] },
     { k: 'chambres', label: 'Chambres', type: 'num', ph: 'Ex : 40' },
     { k: 'nuit', label: 'Prix / nuit (FCFA)', type: 'num', ph: 'Ex : 45 000' },
     { k: 'equip', label: 'Équipements', type: 'chips', opts: ['Piscine', 'Restaurant', 'Salle de sport', 'Navette', 'Wi-Fi'] },
   ] },
-  commerce: { label: 'Commerce', img: 'assets/etab-commerce.jpg', rubriques: ['Supermarché', 'Boutique', 'Mode', 'Électronique', 'Quincaillerie'], namePh: 'Ex : Galerie des Créateurs', fields: [
+  commerce: { label: 'Commerce', img: 'assets/etab-commerce-boutique-afrique.jpg', rubriques: ['Supermarché', 'Boutique', 'Mode', 'Électronique', 'Quincaillerie'], namePh: 'Ex : Galerie des Créateurs', fields: [
     { k: 'rayons', label: 'Rayons', type: 'chips', opts: ['Alimentation', 'Mode', 'Maison', 'Beauté', 'High-tech'] },
     { k: 'paiement', label: 'Paiement', type: 'chips', opts: ['Espèces', 'Mobile Money', 'Carte'] },
   ] },
-  sante: { label: 'Santé', img: 'assets/etab-sante.jpg', rubriques: ['Pharmacie', 'Clinique', 'Cabinet médical', 'Laboratoire'], namePh: 'Ex : Pharmacie du Komo', fields: [
+  sante: { label: 'Santé', img: 'assets/etab-sante-afrique.jpg', rubriques: ['Pharmacie', 'Clinique', 'Cabinet médical', 'Laboratoire'], namePh: 'Ex : Pharmacie du Komo', fields: [
     { k: 'garde', label: 'Garde de nuit', type: 'chips', opts: ['Oui', 'Non'] },
     { k: 'conv', label: 'Conventionné CNAMGS', type: 'chips', opts: ['Oui', 'Non'] },
     { k: 'spec', label: 'Spécialités', type: 'text', ph: 'Ex : Pédiatrie, dentaire' },
@@ -5941,15 +6088,15 @@ const ETAB_TYPES = {
     { k: 'mode', label: 'Prestation', type: 'chips', opts: ['À domicile', 'Sur place', 'En ligne'] },
     { k: 'zone', label: 'Zone d’intervention', type: 'text', ph: 'Ex : Libreville & Akanda' },
   ] },
-  loisir: { label: 'Loisirs & divertissement', img: 'assets/etab-loisirs.jpg', rubriques: ['Cinéma', 'Salle de sport', 'Espace jeux', 'Club de plage'], namePh: 'Ex : Ciné Baie des Rois', fields: [
+  loisir: { label: 'Loisirs & divertissement', img: 'assets/etab-loisirs-afrique.jpg', rubriques: ['Cinéma', 'Salle de sport', 'Espace jeux', 'Club de plage'], namePh: 'Ex : Ciné Baie des Rois', fields: [
     { k: 'ltype', label: 'Type', type: 'chips', opts: ['Cinéma', 'Sport', 'Jeux', 'Plage', 'Parc'] },
     { k: 'public', label: 'Public', type: 'chips', opts: ['Famille', 'Enfants', 'Adultes'] },
   ] },
-  instit: { label: 'Institution', img: 'assets/etab-institution.jpg', rubriques: ['Ministère', 'Mairie', 'Agence publique', 'Ambassade'], namePh: 'Ex : Mairie de Libreville', fields: [
+  instit: { label: 'Institution', img: 'assets/etab-institution-afrique.jpg', rubriques: ['Ministère', 'Mairie', 'Agence publique', 'Ambassade'], namePh: 'Ex : Mairie de Libreville', fields: [
     { k: 'itype', label: 'Nature', type: 'chips', opts: ['Ministère', 'Mairie', 'Agence', 'Ambassade'] },
     { k: 'tutelle', label: 'Tutelle', type: 'text', ph: 'Ex : Ministère de l’Intérieur' },
   ] },
-  complexe: { label: 'Complexe', img: 'assets/etab-hero-complexe.jpg', rubriques: ['Complexe de loisirs', 'Centre commercial', 'Marché'], namePh: 'Ex : La Baie des Rois', fields: [
+  complexe: { label: 'Complexe', img: 'assets/etab-complexe-afrique.jpg', rubriques: ['Complexe de loisirs', 'Centre commercial', 'Marché'], namePh: 'Ex : La Baie des Rois', fields: [
     { k: 'univers', label: 'Univers présents', type: 'chips', opts: ['Restaurants', 'Bars', 'Loisirs', 'Shopping', 'Hôtel'] },
     { k: 'enseignes', label: 'Nombre d’enseignes', type: 'num', ph: 'Ex : 12' },
   ] },
@@ -5966,6 +6113,88 @@ const ETAB_PKG = [
   { id: 'pro', name: 'Pro', priceStr: '5 000 F', per: '/ mois', tone: OK.green, popular: true, tag: 'Le plus choisi', perks: ['Badge établissement vérifié', 'Galerie illimitée + vidéos', 'Statistiques de visites', 'Mise en avant dans sa rubrique', 'Publication d’actualités'] },
   { id: 'business', name: 'Business', priceStr: '18 000 F', per: '/ mois', tone: '#B8860B', tag: 'Groupes & complexes', perks: ['Plusieurs établissements', 'Fiche certifiée', 'Gestion des enseignes', 'Éligible badge Made in Gabon', 'Support prioritaire'] },
 ];
+
+// Services de proximité : annuaire de personnes et de savoir-faire.
+const PROXIMITY_FAMILIES = [
+  { id: 'travaux', label: 'Bâtiment & travaux', img: 'assets/service-proximite-batiment-travaux.jpg', jobs: ['Maçon', 'Carreleur', 'Plombier', 'Électricien', 'Peintre', 'Menuisier', 'Soudeur / ferrailleur', 'Plaquiste', 'Vitrier', 'Couvreur', 'Puisatier', 'Terrassier'] },
+  { id: 'maison', label: 'Maison & entretien', img: 'assets/service-proximite-maison-entretien.jpg', cardPosition: 'center 28%', jobs: ['Ménage', 'Repassage / blanchisserie', 'Jardinier', 'Débroussaillage', 'Vidange de fosse', 'Dératisation', 'Déménagement', 'Manutention'] },
+  { id: 'technique', label: 'Froid & technique', img: 'assets/service-proximite-froid-technique.jpg', jobs: ['Climatisation', 'Frigoriste', 'Groupe électrogène', 'Antenne / parabole', 'Dépannage informatique', 'Réparation téléphone', 'Électroménager'] },
+  { id: 'auto', label: 'Auto & moto', img: 'assets/service-proximite-auto-moto.jpg', jobs: ['Mécanicien', 'Tôlier-peintre', 'Électricien auto', 'Vulcanisateur', 'Lavage auto', 'Dépannage / remorquage'] },
+  { id: 'aide', label: 'Garde & aide à la personne', img: 'assets/service-proximite-garde-aide-personne.jpg', cardPosition: 'center 22%', jobs: ['Nounou', 'Garde-malade', 'Aide aux personnes âgées', 'Cuisinière à domicile', 'Gardien / vigile'] },
+  { id: 'beaute', label: 'Beauté & bien-être', img: 'assets/service-proximite-beaute-bien-etre.jpg', cardPosition: 'center 24%', jobs: ['Coiffeuse', 'Mèches', 'Barbier', 'Esthéticienne', 'Ongles', 'Maquillage', 'Massage', 'Couturière / styliste'] },
+  { id: 'cours', label: 'Cours & soutien', img: 'assets/services/service-education.jpg', jobs: ['Répétiteur scolaire', 'Langues', 'Informatique', 'Musique', 'Sport / coaching', 'Code de la route'] },
+  { id: 'event', label: 'Événementiel & transport', img: 'assets/service-proximite-evenementiel-transport.webp', jobs: ['Traiteur', 'Pâtissière', 'Décoration', 'DJ / sono', 'Photographe', 'Chauffeur', 'Coursier / livreur', 'Location chaises / bâches'] },
+];
+const PROXIMITY_JOBS = PROXIMITY_FAMILIES.flatMap(family => family.jobs);
+const ProximityFamilyVisual = ({ item, selected }) => <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#17251c' }}>
+  <div style={{ position: 'absolute', inset: 0, backgroundImage: `url('${item.img}')`, backgroundSize: 'cover', backgroundPosition: item.cardPosition || 'center', backgroundRepeat: 'no-repeat' }}/>
+  <div style={{ position: 'absolute', inset: 0, background: selected ? 'linear-gradient(180deg, rgba(11,124,57,.05), rgba(3,47,22,.76))' : 'linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.7))' }}/>
+</div>;
+const PROXIMITY_STORE_KEY = 'okaba:proximity-services';
+const PROXIMITY_DEMOS = [
+  { id: 'demo-plomberie', name: 'Junior Plomberie', family: 'travaux', jobs: ['Plombier'], bio: 'Installation, fuite d’eau et dépannage rapide à domicile.', experience: '6 ans', city: 'Nzeng-Ayong · Libreville', zone: 'Libreville', phone: '+241 06 00 00 18', whatsapp: '+241 06 00 00 18', priceLabel: 'Dès 10 000 FCFA', availability: 'Lun – Sam · 08:00 – 19:00', emergency: true, verified: true, rating: 4.8, cover: 'assets/etab-service-artisan.jpg', photos: 3 },
+  { id: 'demo-nounou', name: 'Aïcha Garde d’enfants', family: 'aide', jobs: ['Nounou', 'Cuisinière à domicile'], bio: 'Garde d’enfants à domicile, ponctuelle ou régulière.', experience: '8 ans', city: 'Akanda · Libreville', zone: 'Akanda', phone: '+241 07 00 00 24', whatsapp: '+241 07 00 00 24', priceLabel: 'Sur devis', availability: 'Lun – Ven · 07:00 – 18:00', emergency: false, verified: true, rating: 4.7, cover: 'assets/services/service-education.jpg', photos: 2 },
+];
+
+// Dans l’application finale, ces données proviendront du profil actif renvoyé
+// par le compte. La maquette les centralise ici pour éviter de les redemander
+// pendant chaque publication de service.
+const CONNECTED_SERVICE_PROFILE = {
+  id: 'patricia-ondo',
+  name: `${USER.firstName} ${USER.lastName}`,
+  family: 'beaute',
+  jobs: ['Couturière / styliste'],
+  bio: 'Création sur mesure, retouches et confection de tenues en pagne pour toutes les occasions.',
+  experience: '6 ans',
+  phone: USER.phone,
+  whatsapp: USER.phone,
+  city: USER.city,
+  verified: true,
+  cover: 'assets/service-proximite-beaute-bien-etre.jpg',
+};
+
+function readProximityProviders() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(PROXIMITY_STORE_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) { return []; }
+}
+
+function saveProximityProvider(provider) {
+  const current = readProximityProviders().filter(item => item.id !== provider.id);
+  window.localStorage.setItem(PROXIMITY_STORE_KEY, JSON.stringify([provider, ...current]));
+  return provider;
+}
+
+function proximityProviderById(id) {
+  return [...readProximityProviders(), ...PROXIMITY_DEMOS].find(item => item.id === id);
+}
+
+function proximityDirectoryEntries() {
+  return [...readProximityProviders(), ...PROXIMITY_DEMOS].map(provider => ({
+    ...provider,
+    type: 'proximity',
+    service: 'proximite',
+    cat: `${provider.jobs?.[0] || 'Service'} · Service de proximité`,
+    logo: provider.cover || 'assets/proximite-artisan.jpg',
+    cover: provider.cover || 'assets/proximite-artisan.jpg',
+    followers: provider.rating ? `${String(provider.rating).replace('.', ',')} ★ · ${provider.priceLabel}` : `Nouveau · ${provider.priceLabel || 'Sur devis'}`,
+    directoryMeta: provider.priceLabel || 'Sur devis',
+    directoryPriority: provider.createdAt ? 420 : 330,
+    directoryRoute: ['proximity-profile', { id: provider.id }],
+  }));
+}
+
+function MultiChipRow({ opts, values, onChange, max }) {
+  const toggle = value => {
+    if (values.includes(value)) onChange(values.filter(item => item !== value));
+    else if (!max || values.length < max) onChange([...values, value]);
+  };
+  return <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{opts.map(option => {
+    const on = values.includes(option);
+    return <button key={option} type="button" onClick={() => toggle(option)} style={{ minHeight: 38, padding: '7px 13px', borderRadius: 11, cursor: 'pointer', border: on ? `1.5px solid ${OK.green}` : `1.5px solid ${OK.line}`, background: on ? 'rgba(11,124,57,.08)' : '#fff', color: on ? OK.green : OK.ink2, fontFamily: FX, fontSize: 12.5, fontWeight: on ? 800 : 600 }}>{on && '✓ '}{option}</button>;
+  })}</div>;
+}
 
 function EtabProgress({ steps, step }) {
   return (
@@ -6157,7 +6386,7 @@ function EtabScreen() {
           <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.green, margin: '14px 18px 0' }}>Quel type d’établissement ?</div>
           <p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>La fiche sera référencée dans l’annuaire O’KABA.</p>
           <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-            {Object.entries(ETAB_TYPES).map(([id, type]) => <button key={id} onClick={() => setSel(id)} style={{ position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', padding: 0, textAlign: 'left', border: sel === id ? `2.5px solid ${OK.green}` : 'none', boxShadow: '0 2px 8px rgba(0,0,0,.1)' }}><Img src={type.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.05) 28%, rgba(0,0,0,.68) 100%)"/>{sel === id && <span style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 11, right: 11, bottom: 10, fontFamily: FX, fontWeight: 800, fontSize: 13.5, color: '#fff' }}>{type.label}</span></button>)}
+            {Object.entries(ETAB_TYPES).map(([id, type]) => <button key={id} onClick={() => setSel(id)} style={{ position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', padding: 0, textAlign: 'left', border: sel === id ? `2.5px solid ${OK.green}` : 'none', boxShadow: '0 2px 8px rgba(0,0,0,.1)' }}><Img src={type.img} style={{ position: 'absolute', inset: 0, ...(id === 'loisir' ? { backgroundPosition: 'center 45%' } : {}) }} overlay="linear-gradient(180deg, rgba(0,0,0,.05) 28%, rgba(0,0,0,.68) 100%)"/>{sel === id && <span style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 11, right: 11, bottom: 10, fontFamily: FX, fontWeight: 800, fontSize: 13.5, color: '#fff' }}>{type.label}</span></button>)}
           </div>
         </div>}
 
@@ -6197,6 +6426,416 @@ function EtabScreen() {
   );
 }
 
+const PROXIMITY_PKG = [
+  { id: 'free', name: 'Free', priceStr: 'Gratuit', tone: '#1F73C4', tag: 'Pour démarrer', perks: ['Fiche dans l’annuaire', 'Coordonnées et horaires', '3 photos', 'Demandes de devis'] },
+  { id: 'pro', name: 'Pro', priceStr: '5 000 F', per: '/ mois', tone: OK.green, tag: 'Le plus choisi', perks: ['Priorité dans les résultats', 'Galerie illimitée', 'Statistiques de visites', 'Badge Pro après vérification'] },
+  { id: 'business', name: 'Business', priceStr: '18 000 F', per: '/ mois', tone: '#B8860B', tag: 'Ateliers & équipes', perks: ['Plusieurs intervenants', 'Plusieurs zones d’intervention', 'Gestion des demandes', 'Support prioritaire'] },
+];
+
+function ProximityServicesScreen() {
+  const { back, navigate } = useNav();
+  const [query, setQuery] = useState('');
+  const providers = [...readProximityProviders(), ...PROXIMITY_DEMOS];
+  const filtered = query.trim() ? providers.filter(provider => `${provider.name} ${(provider.jobs || []).join(' ')} ${provider.city || ''}`.toLowerCase().includes(query.toLowerCase())) : providers;
+  return (
+    <Screen bg={OK.bg2} statusDark tabBar noScroll>
+      <div data-screen-label="Services de proximité" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <GreenHeader title="Services de proximité" onBack={back}/>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', paddingBottom: 112 }}>
+          <div style={{ padding: '16px 16px 0' }}>
+            <div style={{ fontFamily: FX, fontSize: 19, fontWeight: 800, color: OK.ink, lineHeight: 1.25 }}>De qui avez-vous besoin ?</div>
+            <p style={{ margin: '4px 0 13px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Trouvez un savoir-faire disponible près de chez vous.</p>
+            <div style={{ height: 50, borderRadius: 15, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', gap: 10, padding: '0 14px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+              <Icon name="search" size={17} color={OK.ink3}/>
+              <input value={query} onChange={event => setQuery(event.target.value)} placeholder="Plombier, nounou, carreleur…" style={{ flex: 1, minWidth: 0, border: 0, outline: 0, background: 'transparent', fontFamily: FX, fontSize: 13.5, color: OK.ink }}/>
+              {query && <button onClick={() => setQuery('')} aria-label="Effacer" style={{ width: 28, height: 28, borderRadius: 999, border: 0, background: OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={13} color={OK.ink2}/></button>}
+            </div>
+          </div>
+
+          <div style={{ padding: '20px 16px 0' }}>
+            <div style={{ fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink }}>{query ? 'Résultats' : 'Prestataires près de vous'}</div>
+            <div style={{ display: 'grid', gap: 11, marginTop: 10 }}>
+              {filtered.map(provider => <button key={provider.id} onClick={() => navigate('proximity-profile', { id: provider.id })} style={{ width: '100%', minHeight: 108, padding: 11, borderRadius: 18, border: `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left', cursor: 'pointer', boxShadow: '0 3px 12px rgba(0,0,0,.055)' }}>
+                <div style={{ width: 86, height: 86, flexShrink: 0, borderRadius: 17, overflow: 'hidden', background: OK.bg2 }}><Img src={provider.cover || 'assets/proximite-artisan.jpg'} style={{ width: '100%', height: '100%' }}/></div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: FX, fontSize: 11, fontWeight: 800, color: OK.green, textTransform: 'uppercase', letterSpacing: .25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{provider.jobs?.[0] || 'Service de proximité'}</div>
+                  <div style={{ marginTop: 4, fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink, lineHeight: 1.25 }}>{provider.name}</div>
+                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}><Icon name="pin" size={13} color={OK.ink3}/><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{provider.city}</span></div>
+                </div>
+                <span style={{ width: 34, height: 34, borderRadius: 999, background: 'rgba(11,124,57,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="chev-r" size={16} color={OK.green}/></span>
+              </button>)}
+              {!filtered.length && <div style={{ padding: '30px 20px', borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}`, textAlign: 'center' }}><div style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>Aucun prestataire trouvé</div><div style={{ marginTop: 4, fontFamily: FX, fontSize: 12, color: OK.ink2 }}>Essayez un autre métier ou un autre quartier.</div></div>}
+            </div>
+          </div>
+          <div style={{ height: 30 }}/>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function ProximityVitrine({ provider, preview = false }) {
+  const family = PROXIMITY_FAMILIES.find(item => item.id === provider.family);
+  const photo = provider.cover || family?.img || 'assets/proximite-artisan.jpg';
+  const cleanPhone = (provider.phone || '').replace(/[^+\d]/g, '');
+  const whatsapp = (provider.whatsapp || provider.phone || '').replace(/\D/g, '');
+  const action = callback => preview ? notifyDemo('Disponible après publication') : callback();
+  return <div style={{ padding: '18px 16px 28px' }}>
+    <div style={{ padding: '20px 16px 17px', borderRadius: 22, background: 'linear-gradient(145deg, #EAF6EE, #FFF8E1)', textAlign: 'center', border: '1px solid rgba(11,124,57,.12)' }}>
+      <div style={{ width: 104, height: 104, margin: '0 auto', borderRadius: 999, overflow: 'hidden', border: '4px solid #fff', boxShadow: '0 6px 18px rgba(0,0,0,.14)' }}><Img src={photo} style={{ width: '100%', height: '100%' }}/></div>
+      <div style={{ marginTop: 12, fontFamily: FX, fontSize: 11, fontWeight: 800, color: OK.green, textTransform: 'uppercase', letterSpacing: .4 }}>{provider.jobs?.[0]}</div>
+      <div style={{ marginTop: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}><h1 style={{ margin: 0, fontFamily: FX, fontSize: 21, color: OK.ink }}>{provider.name}</h1>{provider.verified && <Icon name="verified" size={18} color={OK.green}/>}</div>
+      <div style={{ marginTop: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}><Icon name="pin" size={13} color={OK.ink3}/><span style={{ fontFamily: FX, fontSize: 12, color: OK.ink2 }}>{provider.city}</span></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', marginTop: 17, paddingTop: 15, borderTop: '1px solid rgba(11,124,57,.13)' }}>
+        {[[provider.rating ? String(provider.rating).replace('.', ',') : '—', 'Note'], [provider.experience || 'Nouveau', 'Expérience'], [provider.verified ? 'Vérifiée' : 'À vérifier', 'Identité']].map(([value, label], index) => <div key={label} style={{ borderLeft: index ? '1px solid rgba(11,124,57,.13)' : 'none' }}><div style={{ fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.ink }}>{value}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 9.5, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div></div>)}
+      </div>
+    </div>
+    <div style={{ display: 'flex', gap: 9, marginTop: 12 }}>
+      {cleanPhone && <button onClick={() => action(() => openProfileLink(`tel:${cleanPhone}`))} style={{ flex: 1, height: 48, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13.5, fontWeight: 800 }}>Appeler</button>}
+      {whatsapp && <button onClick={() => action(() => openProfileLink(`https://wa.me/${whatsapp}`))} style={{ flex: 1, height: 48, border: 0, borderRadius: 14, background: OK.wa, color: '#fff', fontFamily: FX, fontSize: 13.5, fontWeight: 800 }}>WhatsApp</button>}
+      <button onClick={() => action(() => notifyDemo(`Demande de devis envoyée à ${provider.name}`))} style={{ flex: 1, height: 48, border: `1.5px solid ${OK.green}`, borderRadius: 14, background: '#fff', color: OK.green, fontFamily: FX, fontSize: 13.5, fontWeight: 800 }}>Devis</button>
+    </div>
+    <div style={{ marginTop: 14, padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>À propos</div><p style={{ margin: '8px 0 0', fontFamily: FX, fontSize: 13, lineHeight: 1.6, color: OK.ink2 }}>{provider.bio}</p>{provider.jobs?.length > 1 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 12 }}>{provider.jobs.map(job => <span key={job} style={{ padding: '6px 10px', borderRadius: 999, background: 'rgba(11,124,57,.08)', color: OK.green, fontFamily: FX, fontSize: 10.5, fontWeight: 800 }}>{job}</span>)}</div>}</div>
+    <div style={{ marginTop: 12, padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>Disponibilité et tarif</div><div style={{ display: 'grid', gap: 13, marginTop: 13 }}>{[['clock', 'Disponibilité', provider.availability || 'Sur rendez-vous'], ['pin', 'Zone d’intervention', provider.zone || provider.city], ['wallet', 'Tarif indicatif', provider.priceLabel || 'Sur devis']].map(([icon, label, value]) => <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 11 }}><span style={{ width: 36, height: 36, borderRadius: 11, background: OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={16} color={OK.green}/></span><div><div style={{ fontFamily: FX, fontSize: 10, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ marginTop: 1, fontFamily: FX, fontSize: 12.5, fontWeight: 650, color: OK.ink }}>{value}</div></div></div>)}</div></div>
+    <div style={{ marginTop: 15 }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink, marginBottom: 9 }}>Réalisations</div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: Math.max(1, Math.min(provider.photos || 1, 6)) }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 13, overflow: 'hidden' }}><Img src={photo} style={{ position: 'absolute', inset: 0, backgroundPosition: index % 2 ? 'center 35%' : 'center' }}/></div>)}</div></div>
+  </div>;
+}
+
+function ProximityProviderScreen({ params }) {
+  const { back } = useNav();
+  const provider = proximityProviderById(params?.id);
+  if (!provider) return <Screen bg={OK.bg2} statusDark><GreenHeader title="Profil introuvable" onBack={back}/></Screen>;
+  return <Screen bg={OK.bg2} statusDark tabBar><div data-screen-label="Profil prestataire de proximité"><GreenHeader title="Profil du prestataire" onBack={back}/><ProximityVitrine provider={provider}/></div></Screen>;
+}
+
+function ProximityProfileScreen({ params }) {
+  const { back } = useNav();
+  const provider = proximityProviderById(params?.id);
+  if (!provider) return <Screen bg={OK.bg2} statusDark><GreenHeader title="Fiche introuvable" onBack={back}/></Screen>;
+  const family = PROXIMITY_FAMILIES.find(item => item.id === provider.family);
+  const cleanPhone = (provider.phone || '').replace(/[^+\d]/g, '');
+  const whatsapp = (provider.whatsapp || provider.phone || '').replace(/\D/g, '');
+  return (
+    <Screen bg={OK.bg2} statusDark tabBar>
+      <div data-screen-label="Fiche service de proximité">
+        <GreenHeader title="Service de proximité" onBack={back}/>
+        <div style={{ position: 'relative', height: 190 }}>
+          <Img src={provider.cover || family?.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.5))"/>
+          {provider.emergency && <span style={{ position: 'absolute', left: 16, bottom: 14, background: '#C8302E', color: '#fff', borderRadius: 999, padding: '5px 11px', fontFamily: FX, fontSize: 10.5, fontWeight: 800 }}>Urgences 24/7</span>}
+        </div>
+        <div style={{ padding: '0 16px 28px', marginTop: -24, position: 'relative' }}>
+          <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 18, padding: 16, boxShadow: '0 6px 20px rgba(0,0,0,.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <div style={{ width: 62, height: 62, borderRadius: 16, overflow: 'hidden', border: '3px solid #fff', background: OK.bg2, flexShrink: 0, marginTop: -36, boxShadow: '0 3px 12px rgba(0,0,0,.14)' }}><Img src={provider.cover || family?.img} style={{ width: '100%', height: '100%' }}/></div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><h1 style={{ margin: 0, fontFamily: FX, fontSize: 19, lineHeight: 1.2, color: OK.ink }}>{provider.name}</h1>{provider.verified && <Icon name="verified" size={17} color={OK.green}/>}</div>
+                <div style={{ marginTop: 4, fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: OK.green, textTransform: 'uppercase' }}>{provider.jobs?.join(' · ')}</div>
+              </div>
+            </div>
+            <p style={{ margin: '13px 0 0', fontFamily: FX, fontSize: 13, lineHeight: 1.55, color: OK.ink2 }}>{provider.bio}</p>
+            <div style={{ display: 'flex', gap: 8, marginTop: 13, flexWrap: 'wrap' }}>
+              {provider.rating ? <span style={{ padding: '6px 10px', borderRadius: 999, background: 'rgba(245,184,0,.18)', color: '#715500', fontSize: 11, fontWeight: 800 }}>★ {String(provider.rating).replace('.', ',')}</span> : <span style={{ padding: '6px 10px', borderRadius: 999, background: OK.bg2, color: OK.ink2, fontSize: 11, fontWeight: 800 }}>Nouveau</span>}
+              {provider.verified && <span style={{ padding: '6px 10px', borderRadius: 999, background: 'rgba(11,124,57,.09)', color: OK.green, fontSize: 11, fontWeight: 800 }}>Identité vérifiée</span>}
+              {provider.experience && <span style={{ padding: '6px 10px', borderRadius: 999, background: OK.bg2, color: OK.ink2, fontSize: 11, fontWeight: 800 }}>{provider.experience} d’expérience</span>}
+            </div>
+            <div style={{ display: 'flex', gap: 9, marginTop: 15 }}>
+              {cleanPhone && <button onClick={() => openProfileLink(`tel:${cleanPhone}`)} style={{ flex: 1, height: 44, border: 'none', borderRadius: 12, background: OK.green, color: '#fff', fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>Appeler</button>}
+              {whatsapp && <button onClick={() => openProfileLink(`https://wa.me/${whatsapp}`)} style={{ flex: 1, height: 44, border: 'none', borderRadius: 12, background: OK.wa, color: '#fff', fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>WhatsApp</button>}
+              <button onClick={() => notifyDemo(`Demande de devis envoyée à ${provider.name}`)} style={{ flex: 1.25, height: 44, border: `1.5px solid ${OK.green}`, borderRadius: 12, background: '#fff', color: OK.green, fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>Devis</button>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 12, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 16, overflow: 'hidden' }}>
+            {[
+              ['pin', 'Zone d’intervention', provider.city || provider.zone],
+              ['clock', 'Disponibilité', provider.availability || 'Sur rendez-vous'],
+              ['wallet', 'Tarif', provider.priceLabel || 'Sur devis'],
+              ['message', 'Langue de service', 'Français'],
+            ].map(([icon, label, value], index) => <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: index ? `1px solid ${OK.line}` : 'none' }}><span style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(11,124,57,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={16} color={OK.green}/></span><div><div style={{ fontFamily: FX, fontSize: 10, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 12.5, fontWeight: 650, color: OK.ink }}>{value}</div></div></div>)}
+          </div>
+
+          <div style={{ marginTop: 14 }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink, marginBottom: 9 }}>Réalisations</div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: Math.max(1, Math.min(provider.photos || 1, 6)) }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 12, overflow: 'hidden' }}><Img src={provider.cover || family?.img} style={{ position: 'absolute', inset: 0, backgroundPosition: index % 2 ? 'center 35%' : 'center' }}/></div>)}</div></div>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function PublicationIntroScreen({ label, hero, heroPosition = 'center', title, subtitle, choices, steps, onBack }) {
+  return (
+    <Screen bg={OK.bg2} statusDark={false}>
+      <div data-screen-label={label}>
+        <div style={{ position: 'relative', minHeight: 300, padding: '52px 20px 34px', borderRadius: '0 0 26px 26px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <Img src={hero} style={{ position: 'absolute', inset: 0, backgroundPosition: heroPosition }} overlay="linear-gradient(180deg, rgba(4,26,14,0.38) 0%, rgba(6,42,24,0.3) 42%, rgba(4,26,14,0.84) 100%)"/>
+          <button onClick={onBack} aria-label="Retour" style={{ position: 'relative', width: 38, height: 38, borderRadius: 999, border: '1px solid rgba(255,255,255,0.22)', cursor: 'pointer', background: 'rgba(255,255,255,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+          </button>
+          <h1 style={{ margin: 'auto 0 0', position: 'relative', maxWidth: 285, fontFamily: FX, fontWeight: 800, fontSize: 28, lineHeight: 1.12, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{title}</h1>
+          <p style={{ margin: '10px 0 0', position: 'relative', fontFamily: FX, fontSize: 13, color: 'rgba(255,255,255,0.9)', lineHeight: 1.5, maxWidth: 300 }}>{subtitle}</p>
+        </div>
+
+        <div style={{ padding: '18px 16px 0', display: 'flex', flexDirection: 'column', gap: 13 }}>
+          {choices.map(choice => (
+            <button key={choice.title} onClick={choice.onClick} style={{ minHeight: 76, textAlign: 'left', cursor: 'pointer', padding: 0, overflow: 'hidden', background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 20, boxShadow: '0 4px 16px rgba(0,0,0,0.07)', display: 'flex', alignItems: 'stretch' }}>
+              <div style={{ position: 'relative', width: 106, flexShrink: 0 }}><Img src={choice.img} style={{ position: 'absolute', inset: 0, backgroundPosition: choice.imgPosition || 'center' }}/></div>
+              <div style={{ flex: 1, minWidth: 0, padding: '16px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink }}>{choice.title}</div>
+                  <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, marginTop: 5, lineHeight: 1.4 }}>{choice.sub}</div>
+                </div>
+                <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2.4}/>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div style={{ padding: '24px 16px 28px' }}>
+          <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 18, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 11 }}>
+            {steps.map((text, index) => (
+              <div key={text} style={{ display: 'flex', gap: 11, alignItems: 'center' }}>
+                <span style={{ width: 20, height: 20, flexShrink: 0, borderRadius: 999, background: 'rgba(11,124,57,0.1)', color: OK.green, fontFamily: FX, fontSize: 10.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{index + 1}</span>
+                <span style={{ fontFamily: FX, fontSize: 12.5, fontWeight: 600, color: OK.ink2 }}>{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function LegacyProposerServiceScreen() {
+  const { back, navigate, canBack } = useNav();
+  const steps = ['Métier', 'Profil', 'Zone', 'Tarif', 'Confiance'];
+  const [started, setStarted] = useState(false);
+  const [step, setStep] = useState(0);
+  const [jobPhase, setJobPhase] = useState('family');
+  const [familyId, setFamilyId] = useState(null);
+  const [jobSearch, setJobSearch] = useState('');
+  const [mainJob, setMainJob] = useState('');
+  const [secondaryJobs, setSecondaryJobs] = useState([]);
+  const [customJob, setCustomJob] = useState('');
+  const [name, setName] = useState('');
+  const [experience, setExperience] = useState('');
+  const [bio, setBio] = useState('');
+  const languages = ['Français'];
+  const [phone, setPhone] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [city, setCity] = useState('Libreville');
+  const [quarter, setQuarter] = useState('');
+  const [radius, setRadius] = useState('10 km');
+  const [days, setDays] = useState(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']);
+  const [hours, setHours] = useState('08:00 – 18:00');
+  const [emergency, setEmergency] = useState(false);
+  const [priceMode, setPriceMode] = useState('Sur devis');
+  const [priceMin, setPriceMin] = useState('');
+  const [priceMax, setPriceMax] = useState('');
+  const [freeTravel, setFreeTravel] = useState(false);
+  const [photos, setPhotos] = useState(1);
+  const [identity, setIdentity] = useState(false);
+  const [references, setReferences] = useState('');
+  const [preview, setPreview] = useState(false);
+  const [offer, setOffer] = useState(false);
+  const [pkg, setPkg] = useState('free');
+  const [submittedId, setSubmittedId] = useState(null);
+
+  const family = PROXIMITY_FAMILIES.find(item => item.id === familyId);
+  const cover = family?.img || 'assets/proximite-artisan.jpg';
+  const searchedJobs = jobSearch.trim() ? PROXIMITY_JOBS.filter(job => job.toLowerCase().includes(jobSearch.toLowerCase())) : (family?.jobs || []);
+  const amountSuffix = priceMode === 'À l’heure' ? 'FCFA / h' : priceMode === 'À la journée' ? 'FCFA / jour' : priceMode === 'Au m²' ? 'FCFA / m²' : 'FCFA';
+  const priceLabel = priceMode === 'Sur devis' ? 'Sur devis' : priceMin && priceMax ? `${Number(priceMin).toLocaleString('fr-FR')} – ${Number(priceMax).toLocaleString('fr-FR')} ${amountSuffix}` : priceMin ? `Dès ${Number(priceMin).toLocaleString('fr-FR')} ${amountSuffix}` : priceMode;
+  const valid = [Boolean(mainJob), Boolean(name.trim() && bio.trim() && phone.trim()), Boolean(city.trim() && days.length), Boolean(priceMode === 'Sur devis' || priceMin), Boolean(photos)][step];
+
+  const pickFamily = id => {
+    setFamilyId(id);
+    setJobSearch('');
+    if (mainJob && !PROXIMITY_FAMILIES.find(item => item.id === id)?.jobs.includes(mainJob)) {
+      setMainJob('');
+      setSecondaryJobs([]);
+    }
+  };
+  const toggleSecondary = job => {
+    if (job === mainJob) return;
+    setSecondaryJobs(current => current.includes(job) ? current.filter(item => item !== job) : current.length < 2 ? [...current, job] : current);
+  };
+  const chooseMain = job => {
+    setMainJob(job);
+    setSecondaryJobs(current => current.filter(item => item !== job));
+  };
+  const goBack = () => {
+    if (offer) { setOffer(false); setPreview(true); return; }
+    if (preview) { setPreview(false); return; }
+    if (step === 0 && jobPhase === 'jobs') { setJobPhase('family'); return; }
+    if (step > 0) { setStep(current => current - 1); return; }
+    if (started) { setStarted(false); return; }
+    if (canBack) back(); else navigate('home');
+  };
+  const submit = () => {
+    const id = `service-${Date.now()}`;
+    saveProximityProvider({
+      id, createdAt: Date.now(), name: name.trim(), family: familyId, jobs: [mainJob, ...secondaryJobs], bio: bio.trim(), experience: experience ? `${experience} an${experience === '1' ? '' : 's'}` : '', languages,
+      phone, whatsapp, city: [quarter.trim(), city.trim()].filter(Boolean).join(' · '), zone: `${city.trim()} · rayon ${radius}`, availability: `${days.join(', ')} · ${hours}`, emergency,
+      priceMode, priceLabel, freeTravel, photos, verified: identity, references: references.trim(), cover, pkg, rating: 0,
+    });
+    setSubmittedId(id);
+  };
+
+  if (!started) return <PublicationIntroScreen
+    label="Introduction proposer un service"
+    hero="assets/service-entry-hero-africa.jpg"
+    heroPosition="center 46%"
+    title="Proposer un service"
+    subtitle="Mettez votre savoir-faire en avant et trouvez des clients près de chez vous."
+    onBack={() => canBack ? back() : navigate('home')}
+    choices={[
+      { title: 'Créer mon profil', sub: 'Présentez votre métier, vos tarifs et vos réalisations', img: 'assets/service-entry-create-africa.jpg', imgPosition: 'center 42%', onClick: () => setStarted(true) },
+    ]}
+    steps={['Vous présentez votre métier', 'Vous complétez votre profil', 'Votre service devient visible']}
+  />;
+
+  if (submittedId) return <Screen bg={OK.bg2} statusDark><div data-screen-label="Service créé" style={{ position: 'absolute', inset: 0, padding: '0 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}><div style={{ width: 92, height: 92, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,.3)' }}><Icon name="check" size={46} color="#fff" strokeWidth={3}/></div><h1 style={{ margin: '22px 0 0', fontFamily: FX, fontSize: 24, color: OK.ink }}>Service créé</h1><p style={{ margin: '10px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Votre profil <strong style={{ color: OK.ink }}>{name}</strong> apparaît maintenant dans les Services de proximité.</p>{identity && <span style={{ marginTop: 12, padding: '5px 11px', borderRadius: 999, background: 'rgba(245,184,0,.18)', color: '#745700', fontFamily: FX, fontSize: 10.5, fontWeight: 800 }}>Identité en cours de validation</span>}<div style={{ width: '100%', display: 'grid', gap: 10, marginTop: 24 }}><button onClick={() => navigate('proximity-profile', { id: submittedId })} style={{ height: 52, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir mon profil</button><button onClick={() => navigate('proximity-services')} style={{ height: 52, border: `1.5px solid ${OK.line}`, borderRadius: 14, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir les services de proximité</button></div></div></Screen>;
+
+  if (preview) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, display: 'flex', gap: 10, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff' }}><button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FX, fontWeight: 800 }}>Modifier</button><button onClick={() => { setPreview(false); setOffer(true); }} style={{ flex: 1.35, height: 52, borderRadius: 14, border: 0, background: OK.green, color: '#fff', fontFamily: FX, fontWeight: 800 }}>Choisir mon forfait</button></div>}><div data-screen-label="Aperçu service"><GreenHeader title="Aperçu de la fiche" onBack={() => setPreview(false)}/><div style={{ position: 'relative', height: 190 }}><Img src={cover} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.5))"/></div><div style={{ padding: '0 16px 24px', marginTop: -26, position: 'relative' }}><PubCard><div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ width: 58, height: 58, borderRadius: 15, overflow: 'hidden', border: '3px solid #fff', marginTop: -34 }}><Img src={cover} style={{ width: '100%', height: '100%' }}/></div><div><div style={{ display: 'flex', gap: 5, alignItems: 'center' }}><strong style={{ fontFamily: FX, fontSize: 18, color: OK.ink }}>{name}</strong>{identity && <Icon name="verified" size={16} color={OK.green}/>}</div><div style={{ color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800, textTransform: 'uppercase' }}>{[mainJob, ...secondaryJobs].join(' · ')}</div></div></div><p style={{ fontFamily: FX, fontSize: 13, color: OK.ink2, lineHeight: 1.55 }}>{bio}</p><div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>{[priceLabel, `${quarter || city} · ${radius}`, emergency && 'Urgences 24/7'].filter(Boolean).map(item => <span key={item} style={{ padding: '6px 9px', borderRadius: 999, background: OK.bg2, fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink2 }}>{item}</span>)}</div></PubCard><div style={{ marginTop: 12 }}><PubCard title="Disponibilités & contact" icon="clock"><div style={{ fontFamily: FX, fontSize: 12.5, lineHeight: 1.7, color: OK.ink2 }}>{days.join(', ')} · {hours}<br/>{phone}{whatsapp && whatsapp !== phone ? ` · WhatsApp ${whatsapp}` : ''}</div></PubCard></div><div style={{ marginTop: 12 }}><PubCard title="Portfolio" icon="camera"><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: photos }).slice(0, 6).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/></div>)}</div></PubCard></div></div></div></Screen>;
+
+  if (offer) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<PubBar label="Soumettre pour validation" icon="check" onClick={submit}/>}><div data-screen-label="Forfait service"><GreenHeader title="Votre forfait" onBack={goBack}/><div style={{ padding: '16px' }}><h2 style={{ margin: 0, fontFamily: FX, fontSize: 19, color: OK.green }}>Choisissez votre visibilité</h2><p style={{ margin: '5px 0 14px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Une fiche simple est gratuite. Vous pourrez changer de forfait plus tard.</p><div style={{ display: 'grid', gap: 11 }}>{PROXIMITY_PKG.map(item => { const on = pkg === item.id; return <button key={item.id} onClick={() => setPkg(item.id)} style={{ padding: '14px 15px', textAlign: 'left', borderRadius: 16, border: on ? `2px solid ${item.tone}` : `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer' }}><div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}><strong style={{ flex: 1, fontFamily: FX, fontSize: 16, color: OK.ink }}>{item.name}</strong><strong style={{ fontFamily: FX, fontSize: 19, color: OK.ink }}>{item.priceStr}</strong>{item.per && <span style={{ fontFamily: FX, fontSize: 10.5, color: OK.ink3 }}>{item.per}</span>}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 11, color: OK.ink3 }}>{item.tag}</div>{on && <div style={{ display: 'grid', gap: 6, marginTop: 11, paddingTop: 10, borderTop: `1px solid ${OK.line}` }}>{item.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>✓ {perk}</span>)}</div>}</button>; })}</div></div></div></Screen>;
+
+  if (step === 0) {
+    const footer = jobPhase === 'family'
+      ? <PubBar label="Choisir mon métier" disabled={!familyId} onClick={() => familyId && setJobPhase('jobs')}/>
+      : <PubBar label="Continuer" disabled={!mainJob} onClick={() => mainJob && setStep(1)}/>;
+    return (
+      <Screen bg={OK.bg2} statusDark footerPad={92} footer={footer}>
+        <div data-screen-label={jobPhase === 'family' ? 'Famille de service' : 'Choix du métier'}>
+          <GreenHeader title="Proposer un service" onBack={goBack}/>
+          <EtabProgress steps={steps} step={0}/>
+          {jobPhase === 'family' ? <div>
+            <div style={{ margin: '12px 18px 0', fontFamily: FX, fontSize: 18, fontWeight: 800, color: OK.green }}>Dans quel domaine ?</div>
+            <p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, lineHeight: 1.45, color: OK.ink2 }}>Choisissez la famille qui correspond le mieux à votre activité.</p>
+            <div style={{ padding: '13px 16px 0', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 11 }}>
+              {PROXIMITY_FAMILIES.map(item => <button key={item.id} onClick={() => pickFamily(item.id)} style={{ position: 'relative', height: 118, padding: 0, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', border: familyId === item.id ? `3px solid ${OK.green}` : `1px solid ${OK.line}`, textAlign: 'left', boxShadow: familyId === item.id ? '0 5px 15px rgba(11,124,57,.2)' : '0 2px 7px rgba(0,0,0,.07)' }}>
+                <ProximityFamilyVisual item={item} selected={familyId === item.id}/>
+                {familyId === item.id && <span style={{ position: 'absolute', top: 8, right: 8, width: 25, height: 25, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></span>}
+                <span style={{ position: 'absolute', left: 11, right: 9, bottom: 10, color: '#fff', fontFamily: FX, fontSize: 13, lineHeight: 1.2, fontWeight: 800 }}>{item.label}</span>
+              </button>)}
+            </div>
+          </div> : <div>
+            <div style={{ margin: '12px 18px 0', display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button onClick={() => setJobPhase('family')} style={{ width: 42, height: 42, padding: 0, borderRadius: 11, overflow: 'hidden', border: `1px solid ${OK.line}`, position: 'relative', flexShrink: 0 }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/></button>
+              <div><div style={{ fontFamily: FX, fontSize: 17, fontWeight: 800, color: OK.green }}>Choisissez votre métier</div><div style={{ marginTop: 1, fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>{family?.label}</div></div>
+            </div>
+            <div style={{ margin: '12px 16px 0', height: 46, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 13, display: 'flex', alignItems: 'center', gap: 9, padding: '0 13px' }}><Icon name="search" size={16} color={OK.ink3}/><input value={jobSearch} onChange={event => setJobSearch(event.target.value)} placeholder="Rechercher un métier…" style={{ flex: 1, border: 0, outline: 0, fontFamily: FX, fontSize: 13.5, color: OK.ink }}/></div>
+            <div style={{ padding: '12px 16px 0', display: 'grid', gap: 8 }}>
+              {searchedJobs.map(job => { const primary = mainJob === job; const secondary = secondaryJobs.includes(job); return <div key={job} style={{ minHeight: 56, padding: '7px 8px 7px 14px', borderRadius: 14, border: primary || secondary ? `2px solid ${OK.green}` : `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button onClick={() => chooseMain(job)} style={{ flex: 1, alignSelf: 'stretch', textAlign: 'left', border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 13.5, fontWeight: primary ? 800 : 650, color: primary ? OK.green : OK.ink }}>{job}{primary && <span style={{ display: 'block', marginTop: 2, fontSize: 9.5, color: OK.green }}>MÉTIER PRINCIPAL SÉLECTIONNÉ</span>}</button>
+                {mainJob && !primary && <button onClick={() => toggleSecondary(job)} aria-label={`Ajouter ${job} comme métier secondaire`} style={{ minWidth: 38, height: 38, padding: '0 9px', borderRadius: 11, border: secondary ? 0 : `1px solid ${OK.line}`, background: secondary ? OK.green : OK.bg2, color: secondary ? '#fff' : OK.green, fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>{secondary ? '✓' : '+'}</button>}
+              </div>; })}
+              {searchedJobs.length === 0 && <PubCard><label style={PUB_LABEL}>Mon métier n’est pas dans la liste</label><div style={{ display: 'flex', gap: 8 }}><input value={customJob} onChange={event => setCustomJob(event.target.value)} placeholder="Saisissez votre métier" style={PUB_FIELD}/><button onClick={() => customJob.trim() && chooseMain(customJob.trim())} style={{ width: 86, border: 0, borderRadius: 12, background: OK.green, color: '#fff', fontWeight: 800 }}>Ajouter</button></div></PubCard>}
+              <div style={{ fontFamily: FX, fontSize: 11, color: OK.ink3, lineHeight: 1.45 }}>Touchez d’abord votre métier principal. Vous pourrez ensuite ajouter jusqu’à 2 activités secondaires avec le bouton +.</div>
+            </div>
+          </div>}
+          <div style={{ height: 24 }}/>
+        </div>
+      </Screen>
+    );
+  }
+
+  const footer = <PubBar label={step === 4 ? 'Voir l’aperçu' : 'Continuer'} disabled={!valid} onClick={() => valid && (step === 4 ? setPreview(true) : setStep(current => current + 1))}/>;
+  return (
+    <Screen bg={OK.bg2} statusDark footerPad={92} footer={footer}>
+      <div data-screen-label="Proposer un service">
+        <GreenHeader title="Proposer un service" onBack={goBack}/>
+        <EtabProgress steps={steps} step={step}/>
+
+        {step === 0 && <div><div style={{ margin: '12px 18px 0', fontFamily: FX, fontSize: 18, fontWeight: 800, color: OK.green }}>Quel est votre métier ?</div><p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, lineHeight: 1.45, color: OK.ink2 }}>Choisissez une famille, puis 1 métier principal et jusqu’à 2 métiers secondaires.</p><div style={{ margin: '13px 16px 0', height: 46, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 13, display: 'flex', alignItems: 'center', gap: 9, padding: '0 13px' }}><Icon name="search" size={16} color={OK.ink3}/><input value={jobSearch} onChange={event => setJobSearch(event.target.value)} placeholder="Rechercher maçon, nounou, plombier…" style={{ flex: 1, border: 0, outline: 0, fontFamily: FX, fontSize: 13.5, color: OK.ink }}/></div>{!jobSearch && <div style={{ padding: '12px 16px 0', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 11 }}>{PROXIMITY_FAMILIES.map(item => <button key={item.id} onClick={() => pickFamily(item.id)} style={{ position: 'relative', height: 106, padding: 0, borderRadius: 15, overflow: 'hidden', cursor: 'pointer', border: familyId === item.id ? `2.5px solid ${OK.green}` : `1px solid ${OK.line}`, textAlign: 'left' }}><ProximityFamilyVisual item={item} selected={familyId === item.id}/>{familyId === item.id && <span style={{ position: 'absolute', top: 7, right: 7, width: 23, height: 23, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={13} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 10, right: 9, bottom: 9, color: '#fff', fontFamily: FX, fontSize: 12.5, lineHeight: 1.2, fontWeight: 800 }}>{item.label}</span></button>)}</div>}{(family || jobSearch) && <div style={{ padding: '14px 16px 0' }}><div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}><strong style={{ fontFamily: FX, fontSize: 14, color: OK.ink }}>{jobSearch ? 'Résultats' : family.label}</strong><span style={{ fontFamily: FX, fontSize: 10.5, color: OK.ink3 }}>{secondaryJobs.length}/2 secondaires</span></div><div style={{ display: 'grid', gap: 7 }}>{searchedJobs.map(job => { const primary = mainJob === job; const secondary = secondaryJobs.includes(job); return <div key={job} style={{ minHeight: 50, padding: '7px 8px 7px 13px', borderRadius: 13, border: primary || secondary ? `1.5px solid ${OK.green}` : `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}><button onClick={() => chooseMain(job)} style={{ flex: 1, textAlign: 'left', border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 13, fontWeight: primary ? 800 : 650, color: primary ? OK.green : OK.ink }}>{job}{primary && <span style={{ display: 'block', marginTop: 1, fontSize: 9.5, color: OK.green }}>MÉTIER PRINCIPAL</span>}</button>{!primary && <button onClick={() => toggleSecondary(job)} aria-label={`Métier secondaire ${job}`} style={{ minWidth: 34, height: 34, padding: '0 9px', borderRadius: 10, border: secondary ? 0 : `1px solid ${OK.line}`, background: secondary ? OK.green : OK.bg2, color: secondary ? '#fff' : OK.green, fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>{secondary ? '✓' : '+'}</button>}</div>; })}{searchedJobs.length === 0 && <div style={{ padding: 12, background: '#fff', borderRadius: 13, border: `1px solid ${OK.line}` }}><label style={PUB_LABEL}>Mon métier n’est pas dans la liste</label><div style={{ display: 'flex', gap: 8 }}><input value={customJob} onChange={event => setCustomJob(event.target.value)} placeholder="Saisissez votre métier" style={PUB_FIELD}/><button onClick={() => customJob.trim() && chooseMain(customJob.trim())} style={{ width: 86, border: 0, borderRadius: 12, background: OK.green, color: '#fff', fontWeight: 800 }}>Ajouter</button></div></div>}</div></div>}</div>}
+
+        {step === 1 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Votre profil" icon="user"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Nom ou atelier</label><input value={name} onChange={event => setName(event.target.value)} placeholder="Ex : Junior Plomberie" style={PUB_FIELD}/></div><div><label style={PUB_LABEL}>Années d’expérience</label><input value={experience} onChange={event => setExperience(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Ex : 5" style={PUB_FIELD}/></div><div><label style={PUB_LABEL}>Présentation courte</label><textarea value={bio} onChange={event => setBio(event.target.value)} rows={4} placeholder="Présentez votre savoir-faire et les travaux que vous réalisez…" style={{ ...PUB_FIELD, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.5 }}/></div><div><label style={PUB_LABEL}>Langue de service</label><div style={{ height: 46, padding: '0 14px', borderRadius: 12, border: `1px solid ${OK.line}`, background: OK.bg2, display: 'flex', alignItems: 'center', gap: 9, fontFamily: FX, fontSize: 13, fontWeight: 700, color: OK.ink2 }}><Icon name="message" size={16} color={OK.green}/> Français</div></div></div></PubCard><PubCard title="Contact" icon="phone"><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Téléphone</label><input value={phone} onChange={event => setPhone(event.target.value)} placeholder="+241…" inputMode="tel" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>WhatsApp</label><input value={whatsapp} onChange={event => setWhatsapp(event.target.value)} placeholder="+241…" inputMode="tel" style={PUB_FIELD}/></div></div></PubCard></div>}
+
+        {step === 2 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Zone d’intervention" icon="pin"><div style={{ display: 'grid', gap: 13 }}><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Ville</label><input value={city} onChange={event => setCity(event.target.value)} style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Quartier de départ</label><input value={quarter} onChange={event => setQuarter(event.target.value)} placeholder="Ex : Nkembo" style={PUB_FIELD}/></div></div><div><label style={PUB_LABEL}>Rayon de déplacement</label><ChipRow opts={['5 km', '10 km', '25 km', 'Toute la ville', 'Hors ville']} value={radius} onPick={setRadius}/></div></div></PubCard><PubCard title="Disponibilité" icon="clock"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Jours</label><MultiChipRow opts={['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']} values={days} onChange={setDays}/></div><div><label style={PUB_LABEL}>Créneaux</label><input value={hours} onChange={event => setHours(event.target.value)} placeholder="Ex : 08:00 – 18:00" style={PUB_FIELD}/></div><button onClick={() => setEmergency(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderRadius: 13, border: `1.5px solid ${emergency ? '#C8302E' : OK.line}`, background: emergency ? 'rgba(200,48,46,.06)' : '#fff', textAlign: 'left' }}><Toggle on={emergency}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Urgences 24/7</strong><span style={{ fontFamily: FX, fontSize: 11, color: OK.ink3 }}>À activer seulement si vous intervenez réellement à toute heure.</span></div></button></div></PubCard></div>}
+
+        {step === 3 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Mode de tarification" icon="wallet"><ChipRow opts={['Sur devis', 'À l’heure', 'À la journée', 'Au m²', 'Forfait']} value={priceMode} onPick={setPriceMode}/>{priceMode !== 'Sur devis' && <div style={{ display: 'flex', gap: 10, marginTop: 14 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix minimum</label><input value={priceMin} onChange={event => setPriceMin(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="0" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix maximum</label><input value={priceMax} onChange={event => setPriceMax(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Facultatif" style={PUB_FIELD}/></div></div>}<div style={{ marginTop: 13, padding: 12, borderRadius: 12, background: 'rgba(11,124,57,.07)', fontFamily: FX, fontSize: 12, lineHeight: 1.45, color: OK.ink2 }}>Tarif affiché : <strong style={{ color: OK.green }}>{priceLabel}</strong></div></PubCard><button onClick={() => setFreeTravel(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14, borderRadius: 15, border: `1px solid ${OK.line}`, background: '#fff', textAlign: 'left' }}><Toggle on={freeTravel}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13.5, color: OK.ink }}>Déplacement gratuit</strong><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>Dans la zone indiquée</span></div></button></div>}
+
+        {step === 4 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Photos de réalisations" icon="camera"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, lineHeight: 1.5, color: OK.ink2 }}>Le portfolio est essentiel pour montrer la qualité de votre travail.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>{Array.from({ length: photos }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/>{photos > 1 && <button onClick={() => setPhotos(value => value - 1)} style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, border: 0, borderRadius: 999, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={11} color="#fff"/></button>}</div>)}{photos < 6 && <button onClick={() => setPhotos(value => value + 1)} style={{ aspectRatio: '1', borderRadius: 11, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.05)', color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800 }}>+ Photo</button>}</div></PubCard><PubCard title="Confiance" icon="verified"><button onClick={() => setIdentity(value => !value)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, padding: 12, borderRadius: 13, border: `1.5px solid ${identity ? OK.green : OK.line}`, background: identity ? 'rgba(11,124,57,.06)' : '#fff', textAlign: 'left' }}><Toggle on={identity}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Ajouter ma pièce d’identité</strong><span style={{ fontFamily: FX, fontSize: 11, lineHeight: 1.4, color: OK.ink3 }}>Facultatif · débloque le badge « Identité vérifiée » après contrôle.</span></div></button><div style={{ marginTop: 13 }}><label style={PUB_LABEL}>Référence ou recommandation</label><textarea value={references} onChange={event => setReferences(event.target.value)} rows={3} placeholder="Ex : contact d’un ancien client, chantier réalisé…" style={{ ...PUB_FIELD, height: 'auto', padding: '11px 13px', resize: 'none' }}/></div></PubCard></div>}
+        <div style={{ height: 22 }}/>
+      </div>
+    </Screen>
+  );
+}
+
+// Parcours allégé : les informations déjà connues du profil connecté sont
+// réutilisées automatiquement. Seules les données propres à cette offre sont
+// demandées ici.
+function ProposerServiceScreen() {
+  const { back, navigate, canBack } = useNav();
+  const steps = ['Zone', 'Tarif', 'Réalisations'];
+  const linked = CONNECTED_SERVICE_PROFILE;
+  const family = PROXIMITY_FAMILIES.find(item => item.id === linked.family);
+  const [step, setStep] = useState(0);
+  const [quarter, setQuarter] = useState('');
+  const [radius, setRadius] = useState('10 km');
+  const [days, setDays] = useState(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']);
+  const [hours, setHours] = useState('08:00 – 18:00');
+  const [emergency, setEmergency] = useState(false);
+  const [priceMode, setPriceMode] = useState('Sur devis');
+  const [priceMin, setPriceMin] = useState('');
+  const [priceMax, setPriceMax] = useState('');
+  const [freeTravel, setFreeTravel] = useState(false);
+  const [photos, setPhotos] = useState(1);
+  const [references, setReferences] = useState('');
+  const [preview, setPreview] = useState(false);
+  const [offer, setOffer] = useState(false);
+  const [pkg, setPkg] = useState('free');
+  const [submittedId, setSubmittedId] = useState(null);
+
+  const city = linked.city;
+  const cover = linked.cover || family?.img || 'assets/proximite-artisan.jpg';
+  const amountSuffix = priceMode === 'À l’heure' ? 'FCFA / h' : priceMode === 'À la journée' ? 'FCFA / jour' : priceMode === 'Au m²' ? 'FCFA / m²' : 'FCFA';
+  const priceLabel = priceMode === 'Sur devis' ? 'Sur devis' : priceMin && priceMax ? `${Number(priceMin).toLocaleString('fr-FR')} – ${Number(priceMax).toLocaleString('fr-FR')} ${amountSuffix}` : priceMin ? `Dès ${Number(priceMin).toLocaleString('fr-FR')} ${amountSuffix}` : priceMode;
+  const valid = [Boolean(city.trim() && days.length), Boolean(priceMode === 'Sur devis' || priceMin), Boolean(photos)][step];
+  const goBack = () => {
+    if (offer) { setOffer(false); setPreview(true); return; }
+    if (preview) { setPreview(false); return; }
+    if (step > 0) { setStep(current => current - 1); return; }
+    if (canBack) back(); else navigate('home');
+  };
+  const draftProvider = {
+    ...linked,
+    city: [quarter.trim(), city.trim()].filter(Boolean).join(' · '),
+    zone: `${city.trim()} · rayon ${radius}`,
+    availability: `${days.join(', ')} · ${hours}`,
+    emergency,
+    priceMode,
+    priceLabel,
+    freeTravel,
+    photos,
+    references: references.trim(),
+    pkg,
+    rating: 0,
+  };
+  const submit = () => {
+    const id = `service-${Date.now()}`;
+    saveProximityProvider({ ...draftProvider, id, createdAt: Date.now() });
+    setSubmittedId(id);
+  };
+
+  if (submittedId) return <Screen bg={OK.bg2} statusDark><div data-screen-label="Service créé" style={{ position: 'absolute', inset: 0, padding: '0 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}><div style={{ width: 92, height: 92, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,.3)' }}><Icon name="check" size={46} color="#fff" strokeWidth={3}/></div><h1 style={{ margin: '22px 0 0', fontFamily: FX, fontSize: 24, color: OK.ink }}>Service créé</h1><p style={{ margin: '10px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Votre service lié au profil <strong style={{ color: OK.ink }}>{linked.name}</strong> apparaît maintenant dans les Services de proximité.</p><div style={{ width: '100%', display: 'grid', gap: 10, marginTop: 24 }}><button onClick={() => navigate('proximity-profile', { id: submittedId })} style={{ height: 52, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir ma vitrine</button><button onClick={() => navigate('proximity-services')} style={{ height: 52, border: `1.5px solid ${OK.line}`, borderRadius: 14, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir les services de proximité</button></div></div></Screen>;
+
+  if (preview) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, display: 'flex', gap: 10, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff' }}><button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FX, fontWeight: 800 }}>Modifier</button><button onClick={() => { setPreview(false); setOffer(true); }} style={{ flex: 1.35, height: 52, borderRadius: 14, border: 0, background: OK.green, color: '#fff', fontFamily: FX, fontWeight: 800 }}>Choisir mon forfait</button></div>}><div data-screen-label="Aperçu de la vitrine"><GreenHeader title="Aperçu de la vitrine" onBack={() => setPreview(false)}/><ProximityVitrine provider={draftProvider} preview/></div></Screen>;
+
+  if (offer) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<PubBar label="Publier mon service" icon="check" onClick={submit}/>}><div data-screen-label="Forfait service"><GreenHeader title="Votre forfait" onBack={goBack}/><div style={{ padding: '16px' }}><h2 style={{ margin: 0, fontFamily: FX, fontSize: 19, color: OK.green }}>Choisissez votre visibilité</h2><p style={{ margin: '5px 0 14px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Une vitrine simple est gratuite. Vous pourrez changer de forfait plus tard.</p><div style={{ display: 'grid', gap: 11 }}>{PROXIMITY_PKG.map(item => { const on = pkg === item.id; return <button key={item.id} onClick={() => setPkg(item.id)} style={{ padding: '14px 15px', textAlign: 'left', borderRadius: 16, border: on ? `2px solid ${item.tone}` : `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer' }}><div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}><strong style={{ flex: 1, fontFamily: FX, fontSize: 16, color: OK.ink }}>{item.name}</strong><strong style={{ fontFamily: FX, fontSize: 19, color: OK.ink }}>{item.priceStr}</strong>{item.per && <span style={{ fontFamily: FX, fontSize: 10.5, color: OK.ink3 }}>{item.per}</span>}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 11, color: OK.ink3 }}>{item.tag}</div>{on && <div style={{ display: 'grid', gap: 6, marginTop: 11, paddingTop: 10, borderTop: `1px solid ${OK.line}` }}>{item.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>✓ {perk}</span>)}</div>}</button>; })}</div></div></div></Screen>;
+
+  const footer = <PubBar label={step === 2 ? 'Voir l’aperçu' : 'Continuer'} disabled={!valid} onClick={() => valid && (step === 2 ? setPreview(true) : setStep(current => current + 1))}/>;
+  return <Screen bg={OK.bg2} statusDark footerPad={92} footer={footer}><div data-screen-label="Proposer un service"><GreenHeader title="Proposer un service" onBack={goBack}/><EtabProgress steps={steps} step={step}/>
+    {step === 0 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}>
+      <div style={{ padding: '13px 14px', display: 'flex', alignItems: 'center', gap: 11, borderRadius: 16, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ width: 48, height: 48, borderRadius: 14, overflow: 'hidden', flexShrink: 0 }}><Img src={linked.cover} style={{ width: '100%', height: '100%' }}/></div><div style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>Profil lié</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>{linked.name}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 11.5, color: OK.green }}>{linked.jobs.join(' · ')}</div></div><Icon name="verified" size={17} color={OK.green}/></div>
+      <PubCard title="Zone d’intervention" icon="pin"><div style={{ display: 'grid', gap: 13 }}><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Ville</label><div style={{ ...PUB_FIELD, display: 'flex', alignItems: 'center', color: OK.ink2 }}>{city}</div></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Quartier de départ</label><input value={quarter} onChange={event => setQuarter(event.target.value)} placeholder="Ex : Nkembo" style={PUB_FIELD}/></div></div><div><label style={PUB_LABEL}>Rayon de déplacement</label><ChipRow opts={['5 km', '10 km', '25 km', 'Toute la ville', 'Hors ville']} value={radius} onPick={setRadius}/></div></div></PubCard>
+      <PubCard title="Disponibilité" icon="clock"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Jours</label><MultiChipRow opts={['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']} values={days} onChange={setDays}/></div><div><label style={PUB_LABEL}>Créneaux</label><input value={hours} onChange={event => setHours(event.target.value)} placeholder="Ex : 08:00 – 18:00" style={PUB_FIELD}/></div><button onClick={() => setEmergency(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderRadius: 13, border: `1.5px solid ${emergency ? '#C8302E' : OK.line}`, background: emergency ? 'rgba(200,48,46,.06)' : '#fff', textAlign: 'left' }}><Toggle on={emergency}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Urgences 24/7</strong><span style={{ fontFamily: FX, fontSize: 11, color: OK.ink3 }}>À activer seulement si vous intervenez réellement à toute heure.</span></div></button></div></PubCard>
+    </div>}
+    {step === 1 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Mode de tarification" icon="wallet"><ChipRow opts={['Sur devis', 'À l’heure', 'À la journée', 'Au m²', 'Forfait']} value={priceMode} onPick={setPriceMode}/>{priceMode !== 'Sur devis' && <div style={{ display: 'flex', gap: 10, marginTop: 14 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix minimum</label><input value={priceMin} onChange={event => setPriceMin(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="0" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix maximum</label><input value={priceMax} onChange={event => setPriceMax(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Facultatif" style={PUB_FIELD}/></div></div>}<div style={{ marginTop: 13, padding: 12, borderRadius: 12, background: 'rgba(11,124,57,.07)', fontFamily: FX, fontSize: 12, lineHeight: 1.45, color: OK.ink2 }}>Tarif affiché : <strong style={{ color: OK.green }}>{priceLabel}</strong></div></PubCard><button onClick={() => setFreeTravel(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14, borderRadius: 15, border: `1px solid ${OK.line}`, background: '#fff', textAlign: 'left' }}><Toggle on={freeTravel}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13.5, color: OK.ink }}>Déplacement gratuit</strong><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>Dans la zone indiquée</span></div></button></div>}
+    {step === 2 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Photos de réalisations" icon="camera"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, lineHeight: 1.5, color: OK.ink2 }}>Le portfolio du profil est conservé et vous pouvez ajouter les réalisations de ce service.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>{Array.from({ length: photos }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/>{photos > 1 && <button onClick={() => setPhotos(value => value - 1)} aria-label="Supprimer la photo" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, border: 0, borderRadius: 999, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={11} color="#fff"/></button>}</div>)}{photos < 6 && <button onClick={() => setPhotos(value => value + 1)} style={{ aspectRatio: '1', borderRadius: 11, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.05)', color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800 }}>+ Photo</button>}</div></PubCard><PubCard title="Référence ou recommandation" icon="verified"><textarea value={references} onChange={event => setReferences(event.target.value)} rows={3} placeholder="Ex : contact d’un ancien client, chantier réalisé…" style={{ ...PUB_FIELD, height: 'auto', padding: '11px 13px', resize: 'none' }}/></PubCard></div>}
+    <div style={{ height: 22 }}/>
+  </div></Screen>;
+}
+
 function PublierScreen() {
   const { back, navigate, canBack } = useNav();
   const cats = MARKET_CATS.filter(c => !['all', 'gabon', 'services', 'events'].includes(c.id));
@@ -6228,7 +6867,7 @@ function PublierScreen() {
 
   React.useEffect(() => { if (cfg) setPriceMode(cfg.priceModes[0]); }, [sel]);
 
-  const goBack = () => { if (step === 0) { canBack ? back() : navigate('home'); } else setStep(s => s - 1); };
+  const goBack = () => { if (step === 0) { if (canBack) back(); else navigate('home'); } else setStep(s => s - 1); };
 
 
   const iCat = 0, iDet = 1, iMedia = 2, iLoc = needsLoc ? 3 : -1, iOffer = needsLoc ? 4 : 3;
@@ -6763,7 +7402,7 @@ function CompteScreen() {
   );
 }
 
-Object.assign(window, { PublierScreen, EtabScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen });
+Object.assign(window, { PublierScreen, EtabScreen, ProposerServiceScreen, ProximityServicesScreen, ProximityProviderScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen });
 
 
 // ===================== 11-app =====================
@@ -6796,6 +7435,7 @@ function renderScreen(entry) {
     case 'baie-place':    return <BaiePlaceScreen params={params}/>;
     case 'events':        return <EventsScreen/>;
     case 'event':         return <EventImmersiveScreen params={params}/>;
+    case 'event-ticket':  return <EventTicketScreen params={params}/>;
     case 'smartcity':     return <SmartCityScreen/>;
     case 'traffic-3d':    return <TrafficRealMapScreen/>;
     case 'weather':       return <WeatherScreen/>;
@@ -6807,6 +7447,9 @@ function renderScreen(entry) {
     case 'baie-article':  return <BaieArticleScreen params={params}/>;
     case 'publier':       return <PublierScreen/>;
     case 'etab':          return <EtabScreen/>;
+    case 'proposer-service': return <ProposerServiceScreen/>;
+    case 'proximity-services': return <ProximityServicesScreen/>;
+    case 'proximity-profile': return <ProximityProviderScreen params={params}/>;
     case 'notifications': return <NotificationsScreen/>;
     case 'messages':      return <MessagesScreen/>;
     case 'chat':          return <ChatScreen params={params}/>;

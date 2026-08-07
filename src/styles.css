@@ -37,6 +37,49 @@ select {
   background: #faf6ec;
 }
 
+.okaba-phone--mock {
+  flex: 0 0 auto;
+  transform-origin: center;
+}
+
+.okaba-device-button {
+  position: absolute;
+  width: 4px;
+  border: 1px solid rgba(222, 227, 229, 0.52);
+  background: linear-gradient(90deg, #0a0b0c, #555b5e 58%, #171a1c);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.okaba-device-button--mute {
+  top: 116px;
+  left: -3px;
+  height: 31px;
+  border-radius: 3px 0 0 3px;
+}
+
+.okaba-device-button--volume-up,
+.okaba-device-button--volume-down {
+  left: -3px;
+  height: 64px;
+  border-radius: 3px 0 0 3px;
+}
+
+.okaba-device-button--volume-up {
+  top: 172px;
+}
+
+.okaba-device-button--volume-down {
+  top: 250px;
+}
+
+.okaba-device-button--power {
+  top: 190px;
+  right: -3px;
+  height: 94px;
+  border-radius: 0 3px 3px 0;
+}
+
 html.okaba-native,
 html.okaba-native body,
 html.okaba-native #root,
@@ -67,6 +110,18 @@ html.okaba-native .okaba-app-shell {
   to { opacity: 1; }
 }
 
+@media (min-width: 601px) and (min-height: 701px) and (max-height: 870px) {
+  .okaba-phone--mock {
+    transform: scale(0.9);
+  }
+}
+
+@media (min-width: 601px) and (min-height: 701px) and (max-height: 800px) {
+  .okaba-phone--mock {
+    transform: scale(0.82);
+  }
+}
+
 @media (max-width: 600px), (max-height: 700px) {
   .okaba-app-shell {
     padding: 0;
@@ -84,6 +139,10 @@ html.okaba-native .okaba-app-shell {
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
+  }
+
+  .okaba-device-button {
+    display: none !important;
   }
 
   #okaba-phone.okaba-phone--mock > div > div:nth-child(1) {

@@ -34,32 +34,54 @@ await mkdir('test-results', { recursive: true });
 await page.screenshot({ path: 'test-results/event-immersive.png' });
 const result = await page.evaluate(() => {
   const screen = document.querySelector('[data-screen-label^="Événement"]');
-  const media = screen.querySelector('[data-event-media]');
   const footer = screen.querySelector('[data-event-footer]');
+  const reserveButton = [...footer.querySelectorAll('button')].find(button => button.textContent.includes('Réserver'));
   const images = [...screen.querySelectorAll('img')];
   const foreground = images.at(-1);
   const rect = screen.getBoundingClientRect();
-  const mediaRect = media.getBoundingClientRect();
   const imageRect = foreground.getBoundingClientRect();
-  const footerRect = footer.getBoundingClientRect();
-  const centerDelta = {
-    x: Math.abs((imageRect.left + imageRect.width / 2) - (mediaRect.left + mediaRect.width / 2)),
-    y: Math.abs((imageRect.top + imageRect.height / 2) - (mediaRect.top + mediaRect.height / 2)),
-  };
+  const coversScreen = Math.abs(imageRect.width - rect.width) <= 1 && Math.abs(imageRect.height - rect.height) <= 1
+    && Math.abs(imageRect.left - rect.left) <= 1 && Math.abs(imageRect.top - rect.top) <= 1;
   return {
     label: screen.getAttribute('data-screen-label'),
     screen: { width: Math.round(rect.width), height: Math.round(rect.height) },
     imageFit: getComputedStyle(foreground).objectFit,
     image: { naturalWidth: foreground.naturalWidth, naturalHeight: foreground.naturalHeight },
-    centerDelta: { x: Math.round(centerDelta.x), y: Math.round(centerDelta.y) },
-    footerInsideScreen: footerRect.bottom <= rect.bottom + 1,
+    coversScreen,
+    hasReserveButton: Boolean(reserveButton),
+    hasOldFooterText: /FEMOGA|Esplanade|18h00/.test(footer.textContent),
     darkBackground: getComputedStyle(screen).backgroundColor === 'rgb(5, 5, 5)',
     brokenImages: images.filter(image => image.complete && !image.naturalWidth).length,
   };
 });
-const audit = { ...result, runtimeErrors: errors };
+await page.evaluate(() => {
+  const footer = document.querySelector('[data-event-footer]');
+  const reserveButton = [...footer.querySelectorAll('button')].find(button => button.textContent.includes('Réserver'));
+  reserveButton.click();
+});
+await page.waitForTimeout(300);
+await page.screenshot({ path: 'test-results/event-ticket-step1.png' });
+const ticketStep1 = await page.evaluate(() => document.querySelector('[data-screen-label="Billetterie événement"]')?.getAttribute('data-screen-label') || null);
+await page.evaluate(() => {
+  const buttons = [...document.querySelectorAll('button')];
+  buttons.find(button => button.textContent.includes('Continuer')).click();
+});
+await page.waitForTimeout(300);
+await page.screenshot({ path: 'test-results/event-ticket-step2.png' });
+await page.evaluate(() => {
+  const buttons = [...document.querySelectorAll('button')];
+  buttons.find(button => button.textContent.includes('Confirmer')).click();
+});
+await page.waitForTimeout(300);
+await page.screenshot({ path: 'test-results/event-ticket-step3.png' });
+const ticketStep3 = await page.evaluate(() => ({
+  label: document.querySelector('[data-screen-label="Billetterie événement"]')?.getAttribute('data-screen-label') || null,
+  hasCode: /OKT-/.test(document.body.innerText),
+}));
+
+const audit = { ...result, ticketStep1, ticketStep3, runtimeErrors: errors };
 console.log(JSON.stringify(audit, null, 2));
-if (audit.imageFit !== 'contain' || audit.centerDelta.x > 1 || audit.centerDelta.y > 1 || !audit.footerInsideScreen || !audit.darkBackground || audit.brokenImages || audit.runtimeErrors.length) {
-  throw new Error('Le visualiseur d’événement ne respecte pas la mise en page immersive attendue.');
+if (audit.imageFit !== 'cover' || !audit.coversScreen || !audit.hasReserveButton || audit.hasOldFooterText || !audit.darkBackground || audit.brokenImages || !ticketStep1 || !ticketStep3.hasCode || audit.runtimeErrors.length) {
+  throw new Error('Le visualiseur d’événement ou le workflow de billetterie ne respecte pas le comportement attendu.');
 }
 await browser.close();
