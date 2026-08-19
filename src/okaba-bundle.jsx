@@ -1649,7 +1649,7 @@ function IntroParticles() {
 
   React.useEffect(() => {
     if (phase !== 'run') return;
-    const t = setTimeout(done, 3000);
+    const t = setTimeout(done, 4200);
     return () => clearTimeout(t);
   }, [phase]);
 
@@ -1692,7 +1692,7 @@ function IntroParticles() {
         return {
           tx: ox + x, ty: oy + y,
           sx: cx + Math.cos(ang) * r, sy: cy + Math.sin(ang) * r,
-          delay: Math.random() * 0.32,
+          delay: Math.random() * 0.6,
           size: gold ? 2.4 : 1.9,
           col: gold ? GOLD : GREEN,
         };
@@ -1706,7 +1706,7 @@ function IntroParticles() {
       const W = canvas.clientWidth, H = canvas.clientHeight;
       const el = (now - startT) / 1000;
       ctx.clearRect(0, 0, W, H);
-      const DUR = 1.15;
+      const DUR = 2.3;
       for (const p of particles) {
         const raw = (el - p.delay) / (DUR - p.delay);
         const t = raw <= 0 ? 0 : raw >= 1 ? 1 : easeOut(raw);
@@ -1718,7 +1718,7 @@ function IntroParticles() {
         ctx.fillRect(x, y, p.size, p.size);
       }
       ctx.globalAlpha = 1;
-      if (el < 1.6) raf = requestAnimationFrame(loop);
+      if (el < 2.7) raf = requestAnimationFrame(loop);
     };
 
     const img = new Image();
@@ -7670,9 +7670,11 @@ function Router() {
 }
 
 function App() {
-  const initialScreen = hasOkabaDemoSession() ? 'home' : 'splash';
+  // On démarre directement sur l'accueil : l'intro animée (IntroAnimation)
+  // joue par-dessus puis se dissout. Les écrans splash / welcome (choix) /
+  // inscription / connexion ne sont plus dans le parcours de lancement.
   return (
-    <NavProvider initial={initialScreen}>
+    <NavProvider initial="home">
       <Router/>
     </NavProvider>
   );
