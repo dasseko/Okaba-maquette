@@ -177,3 +177,302 @@ html.okaba-native .okaba-app-shell {
     }
   }
 }
+
+/* ============================================================
+   INTRO / SPLASH — animation du logo au lancement
+   Concept #1 : « Trait qui se dessine »
+   ============================================================ */
+
+/* Angle animable pour le balayage circulaire (draw-on) */
+@property --okaba-draw {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Le symbole (anneau + K) se révèle par balayage horaire */
+.okaba-intro-mark {
+  --okaba-draw: 0deg;
+  -webkit-mask-image: conic-gradient(from -90deg, #000 var(--okaba-draw), rgba(0, 0, 0, 0) 0deg);
+          mask-image: conic-gradient(from -90deg, #000 var(--okaba-draw), rgba(0, 0, 0, 0) 0deg);
+  animation:
+    okaba-mark-draw 0.95s cubic-bezier(0.4, 0, 0.2, 1) 0.15s forwards,
+    okaba-mark-settle 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 1.05s both;
+}
+@keyframes okaba-mark-draw {
+  from { --okaba-draw: 0deg; }
+  to   { --okaba-draw: 360deg; }
+}
+@keyframes okaba-mark-settle {
+  0%   { transform: scale(0.93); }
+  60%  { transform: scale(1.045); }
+  100% { transform: scale(1); }
+}
+/* Repli : si @property indisponible, on révèle en fondu+zoom */
+@supports not (background: conic-gradient(from 0deg, #000 var(--okaba-draw), #000 0deg)) {
+  .okaba-intro-mark {
+    -webkit-mask-image: none;
+            mask-image: none;
+    opacity: 0;
+    animation: okaba-mark-fade 0.7s ease-out 0.15s forwards, okaba-mark-settle 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s both;
+  }
+}
+@keyframes okaba-mark-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Le mot « O'KABA » monte et apparaît */
+.okaba-intro-word {
+  opacity: 0;
+  animation: okaba-word-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) 1.35s forwards;
+}
+@keyframes okaba-word-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reflet doré qui balaie le mot à la fin */
+.okaba-intro-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.85) 50%, transparent 60%);
+  background-size: 220% 100%;
+  background-position: 160% 0;
+  mix-blend-mode: overlay;
+  animation: okaba-shine 0.9s ease-in-out 1.75s both;
+}
+@keyframes okaba-shine {
+  from { background-position: 160% 0; }
+  to   { background-position: -60% 0; }
+}
+
+/* Texte de l'intro : plus gras pour bien ressortir */
+.okaba-intro-word span {
+  font-weight: 900 !important;
+}
+
+/* ============================================================
+   INTRO — Concept #2 : « Allumage / power-on »
+   ============================================================ */
+
+/* Le symbole s'allume : petit + éteint (gris) → grand + vert + halo */
+.okaba-intro-mark--power {
+  opacity: 0;
+  animation: okaba-power-in 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+}
+@keyframes okaba-power-in {
+  0%   { opacity: 0; transform: scale(0.55); filter: grayscale(1) brightness(1.7); }
+  45%  { opacity: 1; transform: scale(1.1);  filter: grayscale(0.35) brightness(1.2); }
+  70%  { transform: scale(0.98); filter: grayscale(0) brightness(1.12) drop-shadow(0 0 28px rgba(46, 204, 113, 0.75)); }
+  100% { opacity: 1; transform: scale(1);    filter: grayscale(0) brightness(1) drop-shadow(0 0 12px rgba(46, 204, 113, 0.35)); }
+}
+
+/* Onde lumineuse qui pulse depuis le centre */
+.okaba-intro-halo {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(46, 204, 113, 0.55) 0%, rgba(46, 204, 113, 0) 68%);
+  opacity: 0;
+  transform: scale(0.4);
+  animation: okaba-halo 1s ease-out 0.55s;
+}
+@keyframes okaba-halo {
+  0%   { opacity: 0;   transform: scale(0.4); }
+  30%  { opacity: 0.9; }
+  100% { opacity: 0;   transform: scale(2.4); }
+}
+
+/* Le mot s'illumine */
+.okaba-intro-word--power {
+  opacity: 0;
+  animation: okaba-word-ignite 0.7s ease-out 1.25s forwards;
+}
+@keyframes okaba-word-ignite {
+  0%   { opacity: 0; transform: translateY(10px); filter: brightness(2.2); }
+  100% { opacity: 1; transform: translateY(0);    filter: brightness(1); }
+}
+
+/* ============================================================
+   INTRO — Concept #3 : « Reflet doré / shine »
+   ============================================================ */
+
+/* Le symbole apparaît (point → zoom + rebond doux) */
+.okaba-intro-mark--shine {
+  opacity: 0;
+  animation: okaba-shine-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+}
+@keyframes okaba-shine-pop {
+  0%   { opacity: 0; transform: scale(0.4); }
+  60%  { opacity: 1; transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Le mot monte et apparaît (réutilise la montée douce) */
+.okaba-intro-word--shine {
+  opacity: 0;
+  animation: okaba-word-rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) 0.75s forwards;
+}
+
+/* Balayage de lumière dorée sur tout le logo (symbole + mot) */
+.okaba-intro-goldsweep {
+  position: absolute;
+  inset: -30% -25%;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 42%,
+    rgba(255, 244, 190, 0.55) 48%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(252, 209, 22, 0.55) 52%,
+    rgba(255, 255, 255, 0) 58%
+  );
+  background-size: 250% 100%;
+  background-position: 175% 0;
+  mix-blend-mode: screen;
+  animation: okaba-goldsweep 1.05s ease-in-out 1.35s both;
+}
+@keyframes okaba-goldsweep {
+  from { background-position: 175% 0; }
+  to   { background-position: -75% 0; }
+}
+
+/* ============================================================
+   INTRO — Concept #4 : « Signature » (director's cut)
+   Draw-on net + étincelle sur la goutte + bloom + sortie douce
+   ============================================================ */
+
+/* Bloom vert qui respire derrière le logo */
+.okaba-sig-bloom {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(0, 102, 0, 0.12) 0%, rgba(0, 102, 0, 0) 66%);
+  opacity: 0;
+  transform: scale(0.6);
+  animation: okaba-sig-bloom 1.8s ease-out 0.1s forwards;
+}
+@keyframes okaba-sig-bloom {
+  0%   { opacity: 0;   transform: scale(0.6); }
+  45%  { opacity: 1; }
+  100% { opacity: 0.7; transform: scale(1); }
+}
+
+/* Le symbole se trace, en sortant net d'un léger flou, puis se cale */
+.okaba-sig-mark {
+  --okaba-draw: 0deg;
+  -webkit-mask-image: conic-gradient(from -90deg, #000 var(--okaba-draw), rgba(0, 0, 0, 0) 0deg);
+          mask-image: conic-gradient(from -90deg, #000 var(--okaba-draw), rgba(0, 0, 0, 0) 0deg);
+  animation:
+    okaba-mark-draw 1s cubic-bezier(0.45, 0.05, 0.15, 1) 0.15s forwards,
+    okaba-sig-clarify 1s ease-out 0.15s both,
+    okaba-mark-settle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1.05s both;
+}
+@keyframes okaba-sig-clarify {
+  0%   { filter: blur(5px); }
+  100% { filter: blur(0); }
+}
+
+/* Étincelle dorée qui jaillit de la goutte du K */
+.okaba-sig-spark {
+  position: absolute;
+  left: 66%;
+  top: 48%;
+  width: 66px;
+  height: 66px;
+  margin: -33px 0 0 -33px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 245, 200, 0.98) 0%, rgba(252, 209, 22, 0.55) 34%, rgba(252, 209, 22, 0) 70%);
+  opacity: 0;
+  transform: scale(0.2);
+  animation: okaba-sig-spark 0.75s ease-out 1s both;
+}
+@keyframes okaba-sig-spark {
+  0%   { opacity: 0;    transform: scale(0.2); }
+  28%  { opacity: 0.95; transform: scale(1); }
+  100% { opacity: 0;    transform: scale(1.9); }
+}
+
+/* Le mot monte en sortant net d'un flou */
+.okaba-sig-word {
+  opacity: 0;
+  animation: okaba-sig-word 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.35s forwards;
+}
+@keyframes okaba-sig-word {
+  0%   { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+/* ============================================================
+   INTRO — Concept #5 : « Particules » (le logo s'assemble)
+   Canvas de particules vertes + dorées qui convergent
+   ============================================================ */
+.okaba-p5-flash {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(252, 209, 22, 0.55) 0%, rgba(252, 209, 22, 0.28) 30%, rgba(252, 209, 22, 0) 66%);
+  opacity: 0;
+  transform: scale(0.3);
+  animation: okaba-p5-flash 0.95s ease-out 1.15s both;
+}
+@keyframes okaba-p5-flash {
+  0%   { opacity: 0;    transform: scale(0.3); }
+  22%  { opacity: 0.95; transform: scale(1); }
+  100% { opacity: 0;    transform: scale(1.75); }
+}
+/* Les particules se dissolvent... */
+.okaba-p5-canvas {
+  animation: okaba-p5-canvas-out 0.55s ease-out 1.2s forwards;
+}
+@keyframes okaba-p5-canvas-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+/* ...et laissent place au logo net */
+.okaba-p5-solid {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+  animation: okaba-p5-solid-in 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s forwards;
+}
+@keyframes okaba-p5-solid-in {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  60%  { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.okaba-p5-word {
+  opacity: 0;
+  animation: okaba-p5-word 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 1.45s forwards;
+}
+@keyframes okaba-p5-word {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.96); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0) scale(1);       filter: blur(0); }
+}
+
+/* Balayage doré sur tout le lock-up, plus tardif */
+.okaba-sig-sweep {
+  position: absolute;
+  inset: -30% -25%;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    rgba(255, 255, 255, 0) 42%,
+    rgba(255, 244, 190, 0.5) 48%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(252, 209, 22, 0.5) 52%,
+    rgba(255, 255, 255, 0) 58%
+  );
+  background-size: 250% 100%;
+  background-position: 175% 0;
+  mix-blend-mode: screen;
+  animation: okaba-goldsweep 1.05s ease-in-out 1.95s both;
+}

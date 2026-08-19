@@ -1629,6 +1629,209 @@ function DemoToast() {
   );
 }
 
+// ── Intro / splash — animation du logo au lancement ─────────
+// Overlay plein écran joué une fois par ouverture. Skip au tap.
+// Concept sélectionnable via INTRO_CONCEPT.
+//   1 = « Trait qui se dessine »  (draw-on sur fond blanc + reflet doré)
+//   2 = « Allumage / power-on »   (le logo s'allume sur fond sombre)
+//   3 = « Reflet doré / shine »   (apparition + balayage doré, fond crème)
+//   4 = « Signature » (director's cut) : draw-on net + étincelle + bloom + sortie douce
+//   5 = « Particules » : le symbole s'assemble à partir de centaines de particules
+const INTRO_CONCEPT = 5;
+
+// Concept #5 — Assemblage par particules (canvas + requestAnimationFrame).
+// Le symbole vert est échantillonné en points ; des particules vertes et
+// dorées convergent depuis l'extérieur et se calent sur leur cible.
+function IntroParticles() {
+  const canvasRef = React.useRef(null);
+  const [phase, setPhase] = React.useState('run');
+  const done = () => setPhase(p => (p === 'done' ? p : 'out'));
+
+  React.useEffect(() => {
+    if (phase !== 'run') return;
+    const t = setTimeout(done, 3000);
+    return () => clearTimeout(t);
+  }, [phase]);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let raf = 0, particles = [], startT = 0, alive = true;
+
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    const GREEN = [0, 102, 0], GOLD = [252, 209, 22];
+
+    const build = () => {
+      const W = canvas.clientWidth, H = canvas.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      // Échantillonne le symbole en points-cibles
+      const SIZE = Math.min(190, W * 0.5);
+      const cx = W / 2, cy = H * 0.42;
+      const off = document.createElement('canvas');
+      off.width = SIZE; off.height = SIZE;
+      const octx = off.getContext('2d');
+      octx.drawImage(img, 0, 0, SIZE, SIZE);
+      const data = octx.getImageData(0, 0, SIZE, SIZE).data;
+      const step = 3;
+      const pts = [];
+      for (let y = 0; y < SIZE; y += step) {
+        for (let x = 0; x < SIZE; x += step) {
+          if (data[(y * SIZE + x) * 4 + 3] > 128) pts.push([x, y]);
+        }
+      }
+      const ox = cx - SIZE / 2, oy = cy - SIZE / 2;
+      const maxR = Math.hypot(W, H) * 0.6;
+      particles = pts.map(([x, y], i) => {
+        const ang = (i * 2.399) + Math.random() * 0.5;           // dispersion en spirale
+        const r = SIZE * 0.9 + Math.random() * maxR;
+        const gold = Math.random() < 0.16;
+        return {
+          tx: ox + x, ty: oy + y,
+          sx: cx + Math.cos(ang) * r, sy: cy + Math.sin(ang) * r,
+          delay: Math.random() * 0.32,
+          size: gold ? 2.4 : 1.9,
+          col: gold ? GOLD : GREEN,
+        };
+      });
+      startT = performance.now();
+      raf = requestAnimationFrame(loop);
+    };
+
+    const loop = (now) => {
+      if (!alive) return;
+      const W = canvas.clientWidth, H = canvas.clientHeight;
+      const el = (now - startT) / 1000;
+      ctx.clearRect(0, 0, W, H);
+      const DUR = 1.15;
+      for (const p of particles) {
+        const raw = (el - p.delay) / (DUR - p.delay);
+        const t = raw <= 0 ? 0 : raw >= 1 ? 1 : easeOut(raw);
+        const x = p.sx + (p.tx - p.sx) * t;
+        const y = p.sy + (p.ty - p.sy) * t;
+        const a = Math.min(1, 0.25 + t);
+        ctx.globalAlpha = a;
+        ctx.fillStyle = `rgb(${p.col[0]},${p.col[1]},${p.col[2]})`;
+        ctx.fillRect(x, y, p.size, p.size);
+      }
+      ctx.globalAlpha = 1;
+      if (el < 1.6) raf = requestAnimationFrame(loop);
+    };
+
+    const img = new Image();
+    img.onload = build;
+    img.src = 'assets/okaba-mark-green.png';
+
+    return () => { alive = false; cancelAnimationFrame(raf); };
+  }, []);
+
+  if (phase === 'done') return null;
+  return (
+    <div
+      onClick={done}
+      style={{
+        position: 'absolute', inset: 0, zIndex: 200, cursor: 'pointer',
+        background: 'radial-gradient(circle at 50% 42%, #FFFFFF 0%, #FBFAF6 70%, #F3EEE2 100%)',
+        opacity: phase === 'out' ? 0 : 1,
+        transform: phase === 'out' ? 'scale(1.04)' : 'scale(1)',
+        transition: 'opacity 600ms ease, transform 700ms cubic-bezier(0.4,0,0.2,1)',
+      }}
+      onTransitionEnd={() => phase === 'out' && setPhase('done')}
+    >
+      <canvas ref={canvasRef} className="okaba-p5-canvas" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <span className="okaba-p5-flash" aria-hidden style={{ left: '50%', top: '42%', marginLeft: -180, marginTop: -180 }} />
+      {/* Logo net qui se révèle une fois les particules assemblées */}
+      <img className="okaba-p5-solid" src="assets/okaba-mark-green.png" alt="O'KABA"
+        style={{ width: 190, height: 190, objectFit: 'contain' }} />
+      <div className="okaba-p5-word" style={{ position: 'absolute', left: 0, right: 0, top: '58%', display: 'flex', justifyContent: 'center' }}>
+        <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ width: 236, height: 'auto', display: 'block' }} />
+      </div>
+    </div>
+  );
+}
+
+function IntroAnimation() {
+  if (INTRO_CONCEPT === 5) return <IntroParticles />;
+  const [phase, setPhase] = React.useState('run'); // 'run' → 'out' → 'done'
+  const done = () => setPhase(p => (p === 'done' ? p : 'out'));
+
+  // Auto-dismiss une fois l'animation terminée, puis fondu.
+  React.useEffect(() => {
+    if (phase !== 'run') return;
+    const t = setTimeout(done, INTRO_CONCEPT === 4 ? 2800 : 2600);
+    return () => clearTimeout(t);
+  }, [phase]);
+
+  if (phase === 'done') return null;
+
+  const markSrc = 'assets/okaba-mark-green.png';
+  const isPower = INTRO_CONCEPT === 2;
+  const isShine = INTRO_CONCEPT === 3;
+  const isSig = INTRO_CONCEPT === 4;
+
+  const bg = isPower
+    ? 'radial-gradient(circle at 50% 46%, #0d2a19 0%, #071912 55%, #04100a 100%)'
+    : isShine
+      ? 'radial-gradient(circle at 50% 44%, #FFFDF7 0%, #F7F1E1 60%, #F0E9D6 100%)'
+      : isSig
+        ? 'radial-gradient(circle at 50% 43%, #FFFFFF 0%, #FBFAF5 68%, #F3EEE2 100%)'
+        : '#FFFFFF';
+
+  const markClass = isPower ? 'okaba-intro-mark--power'
+    : isShine ? 'okaba-intro-mark--shine'
+    : isSig ? 'okaba-sig-mark'
+    : 'okaba-intro-mark';
+
+  const wordClass = isPower ? 'okaba-intro-word okaba-intro-word--power'
+    : isShine ? 'okaba-intro-word okaba-intro-word--shine'
+    : isSig ? 'okaba-sig-word'
+    : 'okaba-intro-word';
+
+  return (
+    <div
+      onClick={done}
+      style={{
+        position: 'absolute', inset: 0, zIndex: 200, cursor: 'pointer', background: bg,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 26,
+        opacity: phase === 'out' ? 0 : 1,
+        transform: phase === 'out' && isSig ? 'scale(1.05)' : 'scale(1)',
+        transition: isSig ? 'opacity 600ms ease, transform 700ms cubic-bezier(0.4,0,0.2,1)' : 'opacity 550ms ease',
+      }}
+      onTransitionEnd={() => phase === 'out' && setPhase('done')}
+    >
+      {/* Groupe logo — le balayage doré (#3/#4) couvre symbole + mot */}
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 26 }}>
+        {/* Symbole (anneau + K) */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {isPower && <span className="okaba-intro-halo" aria-hidden />}
+          {isSig && <span className="okaba-sig-bloom" aria-hidden />}
+          <img
+            className={markClass}
+            src={markSrc}
+            alt="O'KABA"
+            style={{ width: 168, height: 168, objectFit: 'contain', position: 'relative' }}
+          />
+          {isSig && <span className="okaba-sig-spark" aria-hidden />}
+        </div>
+        {/* Mot O'KABA — image officielle (police exacte du logo) */}
+        <div className={wordClass} style={{ position: 'relative' }}>
+          <img
+            src={isPower ? 'assets/okaba-wordmark-light.png' : 'assets/okaba-wordmark.png'}
+            alt="O'KABA"
+            style={{ width: 232, height: 'auto', display: 'block' }}
+          />
+          {INTRO_CONCEPT === 1 && <span className="okaba-intro-shine" aria-hidden />}
+        </div>
+        {isShine && <span className="okaba-intro-goldsweep" aria-hidden />}
+        {isSig && <span className="okaba-sig-sweep" aria-hidden />}
+      </div>
+    </div>
+  );
+}
+
 // ── Gold iPhone bezel + render active screen ────────────────
 function PhoneFrame({ render }) {
   const { top, dir, depth, pubSheet, setPubSheet } = useNav();
@@ -1643,6 +1846,7 @@ function PhoneFrame({ render }) {
         </div>
         <PublishSheet open={pubSheet} onClose={() => setPubSheet(false)}/>
         <DemoToast/>
+        <IntroAnimation/>
       </div>
     );
   }
@@ -1676,6 +1880,7 @@ function PhoneFrame({ render }) {
           {/* Action sheet Publier — dans l'écran pour rester dans le cadre */}
           <PublishSheet open={pubSheet} onClose={() => setPubSheet(false)}/>
           <DemoToast/>
+          <IntroAnimation/>
           {/* Dynamic island */}
           <div style={{
             position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',

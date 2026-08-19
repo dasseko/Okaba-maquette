@@ -4,6 +4,7 @@ node_modules/
 # Vite and Capacitor generated output
 dist/
 .tmp/
+tmp/
 test-results/
 
 # Local logs and transient files
