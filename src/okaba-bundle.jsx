@@ -2847,19 +2847,16 @@ function LoginScreen() {
   return (
     <Screen bg="#fff" statusDark={true} lightStatus>
       <div data-screen-label="Connexion">
-        <div style={{ padding: `${APP_HEADER_TOP} 14px 6px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+        {/* En-tête : flèche retour + logo O'KABA centré (même ligne) */}
+        <div style={{ padding: `${APP_HEADER_TOP} 14px 4px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           <button onClick={back} style={{ position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
             background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
           </button>
-          <span style={{ fontFamily: FAU, fontWeight: 800, fontSize: 16, color: OK.ink }}>Connexion</span>
+          <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 30, width: 'auto', display: 'block' }}/>
         </div>
 
-        <div style={{ padding: '12px 22px 0' }}>
-          {/* Logo */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 34, width: 'auto', display: 'block' }}/>
-          </div>
+        <div style={{ padding: '4px 22px 0' }}>
           <IconCircle name="lock"/>
 
           <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 24, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Bienvenue de retour&nbsp;!</h1>
