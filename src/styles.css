@@ -495,11 +495,22 @@ html.okaba-native .okaba-app-shell {
   /* Délai ~= durée de l'intro, pour que l'entrée soit visible après l'intro */
   animation: okaba-welcome-in 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) 4.7s both;
 }
-/* Bascule des accroches publicitaires (annuaire) */
-@keyframes okaba-promo-in {
-  0%   { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+/* Bascule des accroches publicitaires (annuaire) — kinetic type */
+/* Sortie du texte courant : fondu + montée + flou */
+@keyframes okaba-promo-out {
+  from { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  to   { opacity: 0; transform: translateY(-12px); filter: blur(4px); }
+}
+.okaba-promo-out {
+  animation: okaba-promo-out 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+/* Entrée : chaque mot monte à la suite (stagger) en sortant net d'un flou */
+@keyframes okaba-promo-word {
+  0%   { opacity: 0; transform: translateY(18px); filter: blur(5px); }
   100% { opacity: 1; transform: translateY(0);    filter: blur(0); }
 }
-.okaba-welcome-promo {
-  animation: okaba-promo-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+.okaba-promo-word {
+  display: inline-block;
+  opacity: 0;
+  animation: okaba-promo-word 0.55s cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }

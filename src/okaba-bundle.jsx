@@ -2562,15 +2562,25 @@ const WELCOME_PROMOS = [
 
 function WelcomePromo() {
   const [i, setI] = React.useState(0);
+  const [phase, setPhase] = React.useState('in'); // 'in' → 'out' → (swap) 'in'
   React.useEffect(() => {
-    const t = setInterval(() => setI(v => (v + 1) % WELCOME_PROMOS.length), 3400);
-    return () => clearInterval(t);
+    const cycle = setInterval(() => {
+      setPhase('out');
+      setTimeout(() => { setI(v => (v + 1) % WELCOME_PROMOS.length); setPhase('in'); }, 400);
+    }, 4200);
+    return () => clearInterval(cycle);
   }, []);
+  const words = WELCOME_PROMOS[i].split(' ');
   return (
-    <p key={i} className="okaba-welcome-promo" style={{ margin: '14px auto 0', maxWidth: 300, minHeight: 42,
-      fontFamily: FAU, fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.92)', lineHeight: 1.5,
-      textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>
-      {WELCOME_PROMOS[i]}
+    <p className={phase === 'out' ? 'okaba-promo-out' : undefined}
+      style={{ margin: '14px auto 0', maxWidth: 300, minHeight: 42,
+        fontFamily: FAU, fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.92)', lineHeight: 1.5,
+        textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>
+      {phase === 'in'
+        ? words.map((w, k) => (
+            <span key={`${i}-${k}`} className="okaba-promo-word" style={{ animationDelay: `${k * 55}ms` }}>{w}&nbsp;</span>
+          ))
+        : words.map((w, k) => <span key={`o-${k}`}>{w}&nbsp;</span>)}
     </p>
   );
 }
