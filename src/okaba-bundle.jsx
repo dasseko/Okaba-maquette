@@ -2526,36 +2526,67 @@ function AuBtn({ label, onClick, disabled, icon }) {
 }
 
 // ── BIENVENUE (landing auth) ────────────────────────────────
+// Boutons sociaux (ronds blancs) — style du modèle
+const SocialGoogle = () => (
+  <svg viewBox="0 0 48 48" width="23" height="23" aria-hidden>
+    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+    <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+    <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+  </svg>
+);
+const SocialFacebook = () => (
+  <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden>
+    <path fill="#1877F2" d="M24 12c0-6.627-5.373-12-12-12S0 5.373 0 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078V12h3.047V9.356c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874V12h3.328l-.532 3.469h-2.796v8.385C19.612 22.954 24 17.99 24 12z"/>
+  </svg>
+);
+const SocialApple = () => (
+  <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden>
+    <path fill="#111" d="M17.05 12.04c-.03-2.65 2.16-3.92 2.26-3.98-1.23-1.8-3.15-2.05-3.83-2.08-1.63-.16-3.18.96-4 .96-.83 0-2.1-.94-3.46-.91-1.78.03-3.42 1.03-4.34 2.62-1.85 3.21-.47 7.95 1.33 10.55.88 1.27 1.93 2.7 3.31 2.65 1.33-.05 1.83-.86 3.44-.86 1.6 0 2.05.86 3.46.83 1.43-.02 2.33-1.3 3.2-2.58 1.01-1.48 1.42-2.91 1.44-2.98-.03-.01-2.76-1.06-2.79-4.2zM14.5 4.5c.73-.89 1.22-2.12 1.09-3.35-1.05.04-2.32.7-3.07 1.58-.67.78-1.26 2.03-1.1 3.23 1.17.09 2.36-.6 3.08-1.46z"/>
+  </svg>
+);
+
 function WelcomeScreen() {
   const { navigate } = useNav();
+  const socialBtn = { width: 52, height: 52, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.06)' };
   return (
-    <Screen statusDark={true} bg={OK.greenDeep} noScroll>
-      <div data-screen-label="Bienvenue" style={{ position: 'absolute', inset: 0,
-        background: `radial-gradient(circle at 50% 38%, #15924b 0%, #0c7338 36%, #075028 64%, ${OK.greenDeep} 100%)`,
-        display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 26px' }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <div aria-hidden style={{ position: 'absolute', width: 250, height: 250, borderRadius: 999, marginTop: -40,
-            background: 'radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 68%)' }}/>
-          <img src="assets/okaba-mark-white.png" alt="O'KABA" style={{ width: 132, height: 132, objectFit: 'contain',
-            filter: 'drop-shadow(0 10px 26px rgba(0,0,0,0.4))', position: 'relative' }}/>
-          <div style={{ marginTop: 22, fontFamily: FAU, fontWeight: 800, fontSize: 24, color: '#fff', textAlign: 'center', letterSpacing: -0.3 }}>
-            Bienvenue sur O’KABA
+    <Screen statusDark={true} bg="#04120A" noScroll>
+      <div data-screen-label="Bienvenue" style={{ position: 'absolute', inset: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        {/* Zone photo (haut) */}
+        <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
+          <div aria-hidden style={{ position: 'absolute', inset: 0,
+            backgroundImage: "url('assets/okaba-welcome-hero.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}/>
+          <div aria-hidden style={{ position: 'absolute', inset: 0,
+            background: 'linear-gradient(180deg, rgba(4,16,10,0.35) 0%, rgba(4,16,10,0.05) 34%, rgba(3,13,8,0.45) 74%, rgba(2,9,5,0.85) 100%)' }}/>
+          {/* Titre sur la photo — centré, style du modèle */}
+          <div style={{ position: 'absolute', left: 24, right: 24, bottom: 40, textAlign: 'center' }}>
+            <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 32, lineHeight: 1.12, color: '#fff',
+              letterSpacing: -0.6, textShadow: '0 2px 16px rgba(0,0,0,0.5)' }}>
+              Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>Okaba</span>
+            </h1>
+            <p style={{ margin: '12px auto 0', maxWidth: 300, fontFamily: FAU, fontSize: 14, fontWeight: 500,
+              color: 'rgba(255,255,255,0.9)', lineHeight: 1.5, textShadow: '0 1px 8px rgba(0,0,0,0.45)' }}>
+              Trouvez, découvrez et profitez des meilleurs services, produits et commerce locaux
+            </p>
+            <div style={{ margin: '18px auto 0', width: 54, height: 4, borderRadius: 999, background: '#22B24F' }}/>
           </div>
-          <p style={{ margin: '10px 0 0', fontFamily: FAU, fontSize: 13.5, color: 'rgba(255,255,255,0.88)', textAlign: 'center', lineHeight: 1.55, maxWidth: 280 }}>
-            La marketplace et l’annuaire du Gabon. Achetez, vendez et découvrez le pays autrement.
-          </p>
         </div>
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 44 }}>
-          <button onClick={() => navigate('signup')} style={{ width: '100%', height: 54, borderRadius: 14, border: 'none',
-            background: OK.gold, color: '#3a2c00', cursor: 'pointer', fontFamily: FAU, fontSize: 15.5, fontWeight: 800,
-            boxShadow: '0 10px 26px rgba(245,184,0,0.36)' }}>
-            Créer un compte
+
+        {/* Carte blanche arrondie (bas) */}
+        <div style={{ position: 'relative', background: '#fff', borderTopLeftRadius: 28, borderTopRightRadius: 28,
+          marginTop: -26, padding: '46px 22px 46px', boxShadow: '0 -10px 30px rgba(0,0,0,0.18)' }}>
+          <button onClick={() => navigate('signup')} style={{ width: '100%', height: 58, borderRadius: 30, border: 'none', cursor: 'pointer',
+            background: `linear-gradient(135deg, #18A64C 0%, ${OK.green} 100%)`, color: '#fff',
+            fontFamily: FAU, fontSize: 15.5, fontWeight: 800,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+            boxShadow: '0 12px 28px rgba(10,106,47,0.35)' }}>
+            Créer un compte <Icon name="arrow-r" size={19} color="#fff" strokeWidth={2.4}/>
           </button>
-          <button onClick={() => navigate('login')} style={{ width: '100%', height: 54, borderRadius: 14,
-            border: '1.5px solid rgba(255,255,255,0.6)', background: 'transparent', color: '#fff', cursor: 'pointer',
-            fontFamily: FAU, fontSize: 15.5, fontWeight: 800 }}>
+          <div onClick={() => navigate('login')} style={{ marginTop: 22, textAlign: 'center', fontFamily: FAU, fontSize: 14, fontWeight: 700,
+            color: OK.ink, cursor: 'pointer' }}>
             J’ai déjà un compte
-          </button>
+          </div>
         </div>
       </div>
     </Screen>
@@ -2574,109 +2605,197 @@ function AuHeader({ onBack }) {
   );
 }
 
-// ── INSCRIPTION (3 étapes : tél → OTP → infos) ──────────────
+// Cercle d'icône (fond vert clair) — en-tête d'étape auth
+function IconCircle({ name }) {
+  return (
+    <div style={{ width: 78, height: 78, borderRadius: 999, margin: '4px auto 18px',
+      background: 'rgba(11,124,57,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Icon name={name} size={34} color={OK.green} strokeWidth={1.9}/>
+    </div>
+  );
+}
+
+// Pavé numérique (OTP / code PIN)
+function NumKeypad({ onKey, onBack }) {
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'back'];
+  const cell = { height: 56, borderRadius: 14, border: 'none', cursor: 'pointer', background: OK.bg2,
+    fontFamily: FAU, fontWeight: 800, fontSize: 23, color: OK.ink, display: 'flex', alignItems: 'center', justifyContent: 'center' };
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 8 }}>
+      {keys.map((k, i) => {
+        if (k === '') return <div key={i}/>;
+        if (k === 'back') return (
+          <button key={i} aria-label="Effacer" onClick={onBack} style={{ ...cell, background: 'transparent', fontSize: 24 }}>⌫</button>
+        );
+        return <button key={i} onClick={() => onKey(k)} style={cell}>{k}</button>;
+      })}
+    </div>
+  );
+}
+
+// ── INSCRIPTION (tél → OTP → PIN → infos) ───────────────────
 function SignupScreen() {
-  const { back, reset } = useNav();
-  const [step, setStep] = useState(0);
+  const { reset } = useNav();
+  const [step, setStep] = useState(0); // 0 tél · 1 OTP · 2 PIN · 3 infos
   const [phone, setPhone] = useState('');
-  const [code, setCode] = useState(['', '', '', '', '']);
+  const [otp, setOtp] = useState('');
+  const [pin, setPin] = useState('');
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
-  const [ville, setVille] = useState('');
-  const [quartier, setQuartier] = useState('');
+  const [age, setAge] = useState('');
+  const [email, setEmail] = useState('');
+  const [adresse, setAdresse] = useState('');
+  const [timer, setTimer] = useState(45);
 
-  const goBack = () => { if (step === 0) reset('home'); else setStep(s => s - 1); };
+  // Compte à rebours de renvoi du code (étape OTP)
+  useEffect(() => {
+    if (step !== 1) return;
+    setTimer(45);
+    const t = setInterval(() => setTimer(s => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, [step]);
+
+  // Avance auto quand l'OTP (6) ou le PIN (4) est complet
+  useEffect(() => { if (step === 1 && otp.length === 6) { const t = setTimeout(() => setStep(2), 260); return () => clearTimeout(t); } }, [otp, step]);
+  useEffect(() => { if (step === 2 && pin.length === 4) { const t = setTimeout(() => setStep(3), 260); return () => clearTimeout(t); } }, [pin, step]);
+
+  const goBack = () => { if (step === 0) reset('welcome'); else setStep(s => s - 1); };
   const phoneOk = phone.replace(/\D/g, '').length >= 8;
-  const codeOk = code.every(c => c !== '');
-  const infosOk = nom.trim() && prenom.trim() && ville.trim();
-
-  const setDigit = (i, v) => {
-    const d = v.replace(/\D/g, '').slice(-1);
-    setCode(c => { const n = [...c]; n[i] = d; return n; });
-    if (d && i < 4) { const nx = document.getElementById('otp-' + (i + 1)); nx && nx.focus(); }
-  };
+  const infosOk = nom.trim() && prenom.trim();
+  const finish = () => { saveOkabaDemoSession(); reset('home'); };
+  const mm = String(Math.floor(timer / 60)).padStart(2, '0');
+  const ss = String(timer % 60).padStart(2, '0');
 
   return (
     <Screen bg="#fff" statusDark={true} noScroll={false}>
       <div data-screen-label={`Inscription ${step + 1}`}>
-        <AuHeader onBack={goBack}/>
-        <div style={{ padding: '8px 22px 0' }}>
-          {/* progression points */}
-          <div style={{ display: 'flex', gap: 6, marginBottom: 26 }}>
-            {[0, 1, 2].map(i => (
-              <div key={i} style={{ flex: 1, height: 4, borderRadius: 4, background: i <= step ? OK.green : OK.line }}/>
-            ))}
-          </div>
+        {/* En-tête : flèche retour + logo O'KABA (comme le modèle) */}
+        <div style={{ padding: `${APP_HEADER_TOP} 14px 8px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+          <button onClick={goBack} style={{ position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
+            background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+          </button>
+          <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 24, width: 'auto', display: 'block' }}/>
+        </div>
+        <div style={{ padding: '14px 22px 30px' }}>
 
+          {/* Étape 1a — Numéro de téléphone */}
           {step === 0 && (
             <div>
-              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 25, color: OK.ink, letterSpacing: -0.4 }}>Quel est votre numéro&nbsp;?</h1>
-              <p style={{ margin: '10px 0 28px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>
-                Nous vous enverrons un code de confirmation par SMS.
+              <IconCircle name="phone"/>
+              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 23, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Entrez votre numéro de téléphone</h1>
+              <p style={{ margin: '10px 0 26px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, textAlign: 'center' }}>
+                Nous allons vous envoyer un code pour vérifier votre numéro.
               </p>
-              <label style={AU_LABEL}>Numéro de téléphone</label>
               <div style={{ ...AU_FIELD, display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: FAU, fontWeight: 800, fontSize: 14.5, color: OK.ink, paddingRight: 10, borderRight: `1px solid ${OK.line}` }}>
                   🇬🇦 +241
                 </span>
-                <input value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9 ]/g, ''))} placeholder="06 00 00 00" inputMode="numeric"
+                <input value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9 ]/g, ''))} placeholder="07 12 34 56" inputMode="numeric"
                   style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FAU, fontSize: 15, fontWeight: 600, color: OK.ink }}/>
               </div>
-              <div style={{ marginTop: 28 }}><AuBtn label="Recevoir le code" icon="arrow-r" disabled={!phoneOk} onClick={() => phoneOk && setStep(1)}/></div>
+              <div style={{ marginTop: 26 }}><AuBtn label="Envoyer le code OTP" icon="arrow-r" disabled={!phoneOk} onClick={() => phoneOk && setStep(1)}/></div>
+              <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                <Icon name="lock" size={13} color={OK.ink3} strokeWidth={2}/>
+                <span style={{ fontFamily: FAU, fontSize: 12, color: OK.ink3 }}>Vos informations sont sécurisées et ne seront jamais partagées.</span>
+              </div>
             </div>
           )}
 
+          {/* Étape 1b — Code OTP */}
           {step === 1 && (
             <div>
-              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 25, color: OK.ink, letterSpacing: -0.4 }}>Code de confirmation</h1>
-              <p style={{ margin: '10px 0 28px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>
-                Saisissez le code à 5 chiffres envoyé au <strong style={{ color: OK.ink }}>+241 {phone || '06 00 00 00'}</strong>.
+              <IconCircle name="shield"/>
+              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 23, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Entrez le code OTP</h1>
+              <p style={{ margin: '10px 0 24px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, textAlign: 'center' }}>
+                Nous avons envoyé un code à <strong style={{ color: OK.ink }}>+241 {phone || '07 12 34 56'}</strong>
               </p>
-              <div style={{ display: 'flex', gap: 10, justifyContent: 'space-between' }}>
-                {code.map((c, i) => (
-                  <input key={i} id={'otp-' + i} value={c} onChange={e => setDigit(i, e.target.value)} inputMode="numeric" maxLength={1}
-                    style={{ width: 54, height: 62, textAlign: 'center', borderRadius: 13, border: `1.5px solid ${c ? OK.green : OK.line}`,
-                      background: c ? 'rgba(11,124,57,0.05)' : '#fff', fontFamily: FAU, fontWeight: 800, fontSize: 26, color: OK.ink, outline: 'none' }}/>
+              <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} style={{ width: 46, height: 56, borderRadius: 12, border: `1.5px solid ${otp[i] ? OK.green : OK.line}`,
+                    background: otp[i] ? 'rgba(11,124,57,0.05)' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontFamily: FAU, fontWeight: 800, fontSize: 24, color: OK.ink }}>{otp[i] || ''}</div>
                 ))}
               </div>
-              <div style={{ marginTop: 22, fontFamily: FAU, fontSize: 12.5, color: OK.ink2, textAlign: 'center' }}>
-                Pas reçu&nbsp;? <span style={{ color: OK.green, fontWeight: 800 }}>Renvoyer le code</span>
+              <div style={{ margin: '18px 0 4px', fontFamily: FAU, fontSize: 12.5, color: OK.ink2, textAlign: 'center' }}>
+                {timer > 0
+                  ? <>Renvoyer le code dans <strong style={{ color: OK.ink }}>{mm}:{ss}</strong></>
+                  : <span onClick={() => setTimer(45)} style={{ color: OK.green, fontWeight: 800, cursor: 'pointer' }}>Renvoyer le code</span>}
               </div>
-              <div style={{ marginTop: 26 }}><AuBtn label="Valider" icon="check" disabled={!codeOk} onClick={() => codeOk && setStep(2)}/></div>
+              <NumKeypad onKey={d => setOtp(o => (o.length < 6 ? o + d : o))} onBack={() => setOtp(o => o.slice(0, -1))}/>
             </div>
           )}
 
+          {/* Étape 2 — Code PIN */}
           {step === 2 && (
             <div>
-              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 25, color: OK.ink, letterSpacing: -0.4 }}>Vos informations</h1>
-              <p style={{ margin: '10px 0 24px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>
-                Ces informations apparaîtront sur votre profil O’KABA.
+              <IconCircle name="lock"/>
+              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 23, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Créez votre code PIN</h1>
+              <p style={{ margin: '10px 0 26px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, textAlign: 'center' }}>
+                Choisissez un code PIN à 4 chiffres pour sécuriser votre compte.
               </p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginBottom: 8 }}>
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} style={{ width: 18, height: 18, borderRadius: 999,
+                    background: i < pin.length ? OK.green : 'transparent', border: `2px solid ${i < pin.length ? OK.green : OK.line}` }}/>
+                ))}
+              </div>
+              <NumKeypad onKey={d => setPin(p => (p.length < 4 ? p + d : p))} onBack={() => setPin(p => p.slice(0, -1))}/>
+              <div style={{ marginTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                <Icon name="shield" size={13} color={OK.ink3} strokeWidth={2}/>
+                <span style={{ fontFamily: FAU, fontSize: 12, color: OK.ink3 }}>Ce code PIN vous sera demandé à chaque connexion.</span>
+              </div>
+            </div>
+          )}
+
+          {/* Étape 3 — Informations */}
+          {step === 3 && (
+            <div>
+              <IconCircle name="user"/>
+              <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 23, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Complétez vos informations</h1>
+              <p style={{ margin: '10px 0 22px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, textAlign: 'center' }}>
+                Ces informations nous permettent de mieux personnaliser votre expérience.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={AU_LABEL}>Prénom</label>
-                    <input value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Patricia" style={AU_FIELD}/>
-                  </div>
                   <div style={{ flex: 1 }}>
                     <label style={AU_LABEL}>Nom</label>
                     <input value={nom} onChange={e => setNom(e.target.value)} placeholder="Ndong" style={AU_FIELD}/>
                   </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={AU_LABEL}>Prénom</label>
+                    <input value={prenom} onChange={e => setPrenom(e.target.value)} placeholder="Patricia" style={AU_FIELD}/>
+                  </div>
                 </div>
                 <div>
-                  <label style={AU_LABEL}>Ville</label>
-                  <input value={ville} onChange={e => setVille(e.target.value)} placeholder="Libreville" style={AU_FIELD}/>
+                  <label style={AU_LABEL}>Âge</label>
+                  <div style={{ position: 'relative' }}>
+                    <select value={age} onChange={e => setAge(e.target.value)}
+                      style={{ ...AU_FIELD, appearance: 'none', WebkitAppearance: 'none', MozAppearance: 'none', paddingRight: 38,
+                        cursor: 'pointer', color: age ? OK.ink : OK.ink3 }}>
+                      <option value="" disabled>Sélectionnez votre âge</option>
+                      {Array.from({ length: 83 }, (_, i) => i + 13).map(a => <option key={a} value={a}>{a} ans</option>)}
+                    </select>
+                    <span style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', display: 'flex' }}>
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke={OK.ink3} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </span>
+                  </div>
                 </div>
                 <div>
-                  <label style={AU_LABEL}>Quartier</label>
-                  <input value={quartier} onChange={e => setQuartier(e.target.value)} placeholder="Glass, Batterie IV…" style={AU_FIELD}/>
+                  <label style={AU_LABEL}>Email <span style={{ color: OK.ink3, fontWeight: 600 }}>(optionnel)</span></label>
+                  <input value={email} onChange={e => setEmail(e.target.value)} placeholder="patricia.ndong@email.com" style={AU_FIELD}/>
                 </div>
                 <div>
-                  <label style={AU_LABEL}>Mot de passe</label>
-                  <input type="password" placeholder="••••••••" style={AU_FIELD}/>
+                  <label style={AU_LABEL}>Adresse <span style={{ color: OK.ink3, fontWeight: 600 }}>(optionnel)</span></label>
+                  <input value={adresse} onChange={e => setAdresse(e.target.value)} placeholder="Libreville, Akanda" style={AU_FIELD}/>
                 </div>
               </div>
-              <div style={{ margin: '26px 0 30px' }}><AuBtn label="Créer mon compte" icon="check" disabled={!infosOk} onClick={() => { if (infosOk) { saveOkabaDemoSession(); reset('home'); } }}/></div>
+              <div style={{ marginTop: 24 }}><AuBtn label="Continuer" icon="arrow-r" disabled={!infosOk} onClick={() => infosOk && finish()}/></div>
+              <button onClick={finish} style={{ width: '100%', height: 50, marginTop: 12, borderRadius: 14, cursor: 'pointer',
+                border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FAU, fontSize: 14.5, fontWeight: 800 }}>
+                Passer pour l’instant
+              </button>
+              <div style={{ marginTop: 10, textAlign: 'center', fontFamily: FAU, fontSize: 12, color: OK.ink3 }}>Vous pourrez compléter plus tard</div>
             </div>
           )}
         </div>
@@ -2685,24 +2804,39 @@ function SignupScreen() {
   );
 }
 
-// ── CONNEXION (tél + mot de passe) ──────────────────────────
+// ── CONNEXION (tél + code PIN) ──────────────────────────────
 function LoginScreen() {
   const { back, navigate, reset } = useNav();
   const [phone, setPhone] = useState('');
-  const [pwd, setPwd] = useState('');
-  const ok = phone.replace(/\D/g, '').length >= 8 && pwd.length >= 4;
+  const [pin, setPin] = useState('');
+  const [showPin, setShowPin] = useState(false);
+  const ok = phone.replace(/\D/g, '').length >= 8 && pin.length === 4;
   return (
     <Screen bg="#fff" statusDark={true}>
       <div data-screen-label="Connexion">
-        <AuHeader onBack={back}/>
-        <div style={{ padding: '14px 22px 0' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8 }}>
-            <Wordmark size={34} onLight/>
+        <div style={{ padding: `${APP_HEADER_TOP} 14px 6px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+          <button onClick={back} style={{ position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
+            background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+          </button>
+          <span style={{ fontFamily: FAU, fontWeight: 800, fontSize: 16, color: OK.ink }}>Connexion</span>
+        </div>
+
+        <div style={{ padding: '12px 22px 0' }}>
+          {/* Logo + accroche */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 34, width: 'auto', display: 'block' }}/>
+            <div style={{ marginTop: 8, fontFamily: FAU, fontSize: 10.5, fontWeight: 800, letterSpacing: 1, color: OK.ink2 }}>
+              TOUT LE <span style={{ color: OK.green }}>GABON</span> DANS VOTRE MAIN
+            </div>
           </div>
-          <h1 style={{ margin: '18px 0 0', fontFamily: FAU, fontWeight: 800, fontSize: 25, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Connexion</h1>
-          <p style={{ margin: '10px 0 28px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, textAlign: 'center' }}>
-            Heureux de vous revoir sur O’KABA.
+          <IconCircle name="lock"/>
+
+          <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 24, color: OK.ink, letterSpacing: -0.4, textAlign: 'center' }}>Bienvenue de retour&nbsp;!</h1>
+          <p style={{ margin: '8px 0 24px', fontFamily: FAU, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, textAlign: 'center' }}>
+            Connectez-vous pour accéder à votre compte et retrouver tout votre univers O’KABA.
           </p>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>
               <label style={AU_LABEL}>Numéro de téléphone</label>
@@ -2710,19 +2844,44 @@ function LoginScreen() {
                 <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: FAU, fontWeight: 800, fontSize: 14.5, color: OK.ink, paddingRight: 10, borderRight: `1px solid ${OK.line}` }}>
                   🇬🇦 +241
                 </span>
-                <input value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9 ]/g, ''))} placeholder="06 00 00 00" inputMode="numeric"
+                <input value={phone} onChange={e => setPhone(e.target.value.replace(/[^0-9 ]/g, ''))} placeholder="07 12 34 56" inputMode="numeric"
                   style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FAU, fontSize: 15, fontWeight: 600, color: OK.ink }}/>
               </div>
             </div>
             <div>
-              <label style={AU_LABEL}>Mot de passe</label>
-              <input type="password" value={pwd} onChange={e => setPwd(e.target.value)} placeholder="••••••••" style={AU_FIELD}/>
-              <div style={{ marginTop: 8, textAlign: 'right', fontFamily: FAU, fontSize: 12.5, fontWeight: 700, color: OK.green }}>Mot de passe oublié&nbsp;?</div>
+              <label style={AU_LABEL}>Code PIN (4 chiffres)</label>
+              <div style={{ ...AU_FIELD, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px' }}>
+                <input value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))} inputMode="numeric"
+                  placeholder="••••" type={showPin ? 'text' : 'password'}
+                  style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FAU, fontSize: 16, fontWeight: 700, letterSpacing: 4, color: OK.ink }}/>
+                <button onClick={() => setShowPin(s => !s)} aria-label="Afficher le code" style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 4, display: 'flex' }}>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke={OK.ink3} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/>
+                    {!showPin && <path d="M3 3l18 18"/>}
+                  </svg>
+                </button>
+              </div>
+              <div style={{ marginTop: 8, textAlign: 'right', fontFamily: FAU, fontSize: 12.5, fontWeight: 700, color: OK.green, cursor: 'pointer' }}>Mot de passe oublié&nbsp;?</div>
             </div>
           </div>
-          <div style={{ marginTop: 26 }}><AuBtn label="Se connecter" disabled={!ok} onClick={() => { if (ok) { saveOkabaDemoSession(); reset('home'); } }}/></div>
-          <div style={{ marginTop: 22, textAlign: 'center', fontFamily: FAU, fontSize: 13, color: OK.ink2 }}>
-            Pas encore de compte&nbsp;? <span onClick={() => navigate('signup')} style={{ color: OK.green, fontWeight: 800, cursor: 'pointer' }}>S’inscrire</span>
+
+          <div style={{ marginTop: 24 }}><AuBtn label="Se connecter" disabled={!ok} onClick={() => { if (ok) { saveOkabaDemoSession(); reset('home'); } }}/></div>
+
+          {/* Séparateur OU */}
+          <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ flex: 1, height: 1, background: OK.line }}/>
+            <span style={{ fontFamily: FAU, fontSize: 12, fontWeight: 700, color: OK.ink3 }}>OU</span>
+            <span style={{ flex: 1, height: 1, background: OK.line }}/>
+          </div>
+          <button onClick={() => navigate('signup')} style={{ width: '100%', height: 52, borderRadius: 14, cursor: 'pointer',
+            border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontFamily: FAU, fontSize: 14.5, fontWeight: 800,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <Icon name="phone" size={17} color={OK.green} strokeWidth={2.2}/> Se connecter avec un autre numéro
+          </button>
+
+          <div style={{ margin: '22px 0 30px', padding: '14px', borderRadius: 14, background: OK.bg2, textAlign: 'center', fontFamily: FAU, fontSize: 13, color: OK.ink2 }}>
+            Vous n’avez pas encore de compte&nbsp;?{' '}
+            <span onClick={() => navigate('signup')} style={{ color: OK.green, fontWeight: 800, cursor: 'pointer' }}>S’inscrire maintenant&nbsp;›</span>
           </div>
         </div>
       </div>
@@ -7670,11 +7829,13 @@ function Router() {
 }
 
 function App() {
-  // On démarre directement sur l'accueil : l'intro animée (IntroAnimation)
-  // joue par-dessus puis se dissout. Les écrans splash / welcome (choix) /
-  // inscription / connexion ne sont plus dans le parcours de lancement.
+  // Pendant la conception de l'onboarding, on entre TOUJOURS sur l'écran de
+  // bienvenue après l'intro (pour toujours voir le parcours, même si une
+  // session démo traîne dans le navigateur).
+  // TODO onboarding fini : remettre  hasOkabaDemoSession() ? 'home' : 'welcome'
+  const initialScreen = 'welcome';
   return (
-    <NavProvider initial="home">
+    <NavProvider initial={initialScreen}>
       <Router/>
     </NavProvider>
   );
