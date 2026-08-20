@@ -2558,9 +2558,6 @@ const SocialApple = () => (
 const WELCOME_PROMOS = [
   'Trouvez, découvrez et profitez des meilleurs services, produits et commerces locaux',
   'Découvrez les meilleurs établissements du Gabon',
-  'Restaurants, boutiques, hôtels… tout le Gabon dans votre poche',
-  'Des milliers de commerces et services près de chez vous',
-  'L’annuaire et la marketplace 100 % gabonais',
 ];
 
 function WelcomePromo() {
