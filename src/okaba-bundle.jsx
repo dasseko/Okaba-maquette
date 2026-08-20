@@ -2856,12 +2856,9 @@ function LoginScreen() {
         </div>
 
         <div style={{ padding: '12px 22px 0' }}>
-          {/* Logo + accroche */}
+          {/* Logo */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 34, width: 'auto', display: 'block' }}/>
-            <div style={{ marginTop: 8, fontFamily: FAU, fontSize: 10.5, fontWeight: 800, letterSpacing: 1, color: OK.ink2 }}>
-              TOUT LE <span style={{ color: OK.green }}>GABON</span> DANS VOTRE MAIN
-            </div>
           </div>
           <IconCircle name="lock"/>
 
