@@ -482,3 +482,23 @@ html.okaba-native .okaba-app-shell {
   mix-blend-mode: screen;
   animation: okaba-goldsweep 1.05s ease-in-out 1.95s both;
 }
+
+/* ============================================================
+   ÉCRAN BIENVENUE — animations du texte
+   ============================================================ */
+/* Entrée du bloc titre + sous-titre */
+@keyframes okaba-welcome-in {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.okaba-welcome-title {
+  animation: okaba-welcome-in 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+/* Bascule des accroches publicitaires (annuaire) */
+@keyframes okaba-promo-in {
+  0%   { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+.okaba-welcome-promo {
+  animation: okaba-promo-in 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}

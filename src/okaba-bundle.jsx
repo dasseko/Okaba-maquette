@@ -2554,6 +2554,30 @@ const SocialApple = () => (
   </svg>
 );
 
+// Accroches publicitaires de l'annuaire — défilent sur l'écran de bienvenue
+const WELCOME_PROMOS = [
+  'Trouvez, découvrez et profitez des meilleurs services, produits et commerces locaux',
+  'Découvrez les meilleurs établissements du Gabon',
+  'Restaurants, boutiques, hôtels… tout le Gabon dans votre poche',
+  'Des milliers de commerces et services près de chez vous',
+  'L’annuaire et la marketplace 100 % gabonais',
+];
+
+function WelcomePromo() {
+  const [i, setI] = React.useState(0);
+  React.useEffect(() => {
+    const t = setInterval(() => setI(v => (v + 1) % WELCOME_PROMOS.length), 3400);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <p key={i} className="okaba-welcome-promo" style={{ margin: '14px auto 0', maxWidth: 300, minHeight: 42,
+      fontFamily: FAU, fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.92)', lineHeight: 1.5,
+      textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>
+      {WELCOME_PROMOS[i]}
+    </p>
+  );
+}
+
 function WelcomeScreen() {
   const { navigate } = useNav();
   return (
@@ -2565,16 +2589,14 @@ function WelcomeScreen() {
         <div aria-hidden style={{ position: 'absolute', inset: 0,
           background: 'linear-gradient(180deg, rgba(3,13,8,0.45) 0%, rgba(3,13,8,0.22) 38%, rgba(3,13,8,0.5) 72%, rgba(2,9,5,0.9) 100%)' }}/>
 
-        {/* Titre centré sur l'image */}
-        <div style={{ position: 'absolute', left: 26, right: 26, top: '45%', transform: 'translateY(-50%)', textAlign: 'center' }}>
+        {/* Titre centré sur l'image (animation d'entrée) */}
+        <div className="okaba-welcome-title" style={{ position: 'absolute', left: 26, right: 26, top: '45%', transform: 'translateY(-50%)', textAlign: 'center' }}>
           <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 33, lineHeight: 1.12, color: '#fff',
             letterSpacing: -0.6, textShadow: '0 2px 18px rgba(0,0,0,0.6)' }}>
             Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>Okaba</span>
           </h1>
-          <p style={{ margin: '14px auto 0', maxWidth: 300, fontFamily: FAU, fontSize: 14, fontWeight: 500,
-            color: 'rgba(255,255,255,0.92)', lineHeight: 1.5, textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>
-            Trouvez, découvrez et profitez des meilleurs services, produits et commerce locaux
-          </p>
+          {/* Sous-titre publicitaire qui défile */}
+          <WelcomePromo/>
           <div style={{ margin: '18px auto 0', width: 54, height: 4, borderRadius: 999, background: '#22B24F' }}/>
         </div>
 
