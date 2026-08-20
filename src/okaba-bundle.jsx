@@ -1,6 +1,7 @@
 import React from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
+import QRCode from 'qrcode';
 
 // okaba-bundle.jsx — concaténation du prototype O'KABA (généré)
 // Un seul scope module : les const/globals se résolvent entre fichiers.
@@ -1393,6 +1394,9 @@ const APP_HEADER_TOP_PLUS_4 = '16px';
 const APP_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(14px, env(safe-area-inset-bottom))' : 20;
 const APP_DETAIL_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(16px, env(safe-area-inset-bottom))' : '26px';
 const APP_DETAIL_HEADER_HEIGHT = '68px';
+// Position des boutons flottants sur les écrans « hero » plein cadre (edgeTop) :
+// juste sous la barre de statut.
+const APP_EDGE_TOP = `calc(${APP_SAFE_TOP} + 8px)`;
 
 const StatusBar = ({ dark = false, time = '9:41' }) => {
   if (USE_DEVICE_CHROME) return null;
@@ -1569,7 +1573,7 @@ function TabBar() {
 }
 
 // ── Screen wrapper (gère le scroll + status bar + tab bar) ──
-function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, noScroll = false, scrollRef, footer, footerPad = 0 }) {
+function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, noScroll = false, scrollRef, footer, footerPad = 0, edgeTop = false, lightStatus = false }) {
   const statusBarOnDark = hasDarkStatusBackground(bg, statusDark);
   return (
     <div style={{
@@ -1577,22 +1581,23 @@ function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, n
       fontFamily: FONT_UI, color: OKABA.ink, WebkitFontSmoothing: 'antialiased',
       overflow: 'hidden', overscrollBehavior: 'none', contain: 'layout paint',
     }}>
-      <div aria-hidden={USE_DEVICE_CHROME || undefined} style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: APP_SAFE_TOP,
-        zIndex: 60, pointerEvents: 'none', overflow: 'hidden',
-        background: IS_NATIVE_APP ? OK.green : bg,
-      }}>
-      {!USE_DEVICE_CHROME &&
-        <StatusBar dark={statusBarOnDark}/>
-      }
-      </div>
+      {/* edgeTop : le contenu remonte derrière la barre de statut (hero plein cadre) */}
       <div ref={scrollRef} style={{
-        position: 'absolute', top: APP_SAFE_TOP, right: 0, bottom: 0, left: 0,
+        position: 'absolute', top: edgeTop ? 0 : APP_SAFE_TOP, right: 0, bottom: 0, left: 0,
         overflowY: noScroll ? 'hidden' : 'auto',
         overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch',
         paddingBottom: tabBar ? 132 : footerPad,
       }}>
         {children}
+      </div>
+      <div aria-hidden={USE_DEVICE_CHROME || undefined} style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: APP_SAFE_TOP,
+        zIndex: 60, pointerEvents: 'none', overflow: 'hidden',
+        background: edgeTop ? 'transparent' : (lightStatus ? bg : OK.green),
+      }}>
+      {!USE_DEVICE_CHROME &&
+        <StatusBar dark={edgeTop ? false : (lightStatus ? statusBarOnDark : true)}/>
+      }
       </div>
       {footer}
       {tabBar && <TabBar/>}
@@ -2225,12 +2230,12 @@ const GreenHeader = ({ title, onBack, right }) => (
 const DetailOverlayHeader = ({ solid, title, onBack, onAction, actionIcon = 'share', actionLabel = 'Partager' }) => (
   <>
     <div aria-hidden style={{ position: 'absolute', zIndex: 40, top: 0, left: 0, right: 0,
-      height: APP_DETAIL_HEADER_HEIGHT, pointerEvents: 'none',
+      height: `calc(${APP_DETAIL_HEADER_HEIGHT} + ${APP_SAFE_TOP})`, pointerEvents: 'none',
       background: solid ? OK.green : 'transparent',
       borderBottom: solid ? '1px solid rgba(255,255,255,0.16)' : '1px solid transparent',
       boxShadow: solid ? '0 5px 18px rgba(0,0,0,0.14)' : 'none',
       transition: 'background .12s ease, box-shadow .12s ease' }}/>
-    <div style={{ position: 'absolute', zIndex: 50, top: APP_HEADER_TOP_PLUS_2, left: 14, right: 14,
+    <div style={{ position: 'absolute', zIndex: 50, top: APP_EDGE_TOP, left: 14, right: 14,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
       <button onClick={onBack} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
         background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
@@ -2548,43 +2553,39 @@ const SocialApple = () => (
 
 function WelcomeScreen() {
   const { navigate } = useNav();
-  const socialBtn = { width: 52, height: 52, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.06)' };
   return (
-    <Screen statusDark={true} bg="#04120A" noScroll>
-      <div data-screen-label="Bienvenue" style={{ position: 'absolute', inset: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        {/* Zone photo (haut) */}
-        <div style={{ position: 'relative', flex: 1, minHeight: 0 }}>
-          <div aria-hidden style={{ position: 'absolute', inset: 0,
-            backgroundImage: "url('assets/okaba-welcome-hero.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}/>
-          <div aria-hidden style={{ position: 'absolute', inset: 0,
-            background: 'linear-gradient(180deg, rgba(4,16,10,0.35) 0%, rgba(4,16,10,0.05) 34%, rgba(3,13,8,0.45) 74%, rgba(2,9,5,0.85) 100%)' }}/>
-          {/* Titre sur la photo — centré, style du modèle */}
-          <div style={{ position: 'absolute', left: 24, right: 24, bottom: 40, textAlign: 'center' }}>
-            <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 32, lineHeight: 1.12, color: '#fff',
-              letterSpacing: -0.6, textShadow: '0 2px 16px rgba(0,0,0,0.5)' }}>
-              Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>Okaba</span>
-            </h1>
-            <p style={{ margin: '12px auto 0', maxWidth: 300, fontFamily: FAU, fontSize: 14, fontWeight: 500,
-              color: 'rgba(255,255,255,0.9)', lineHeight: 1.5, textShadow: '0 1px 8px rgba(0,0,0,0.45)' }}>
-              Trouvez, découvrez et profitez des meilleurs services, produits et commerce locaux
-            </p>
-            <div style={{ margin: '18px auto 0', width: 54, height: 4, borderRadius: 999, background: '#22B24F' }}/>
-          </div>
+    <Screen statusDark={true} bg="#04120A" noScroll edgeTop>
+      <div data-screen-label="Bienvenue" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        {/* Photo plein cadre */}
+        <div aria-hidden style={{ position: 'absolute', inset: 0,
+          backgroundImage: "url('assets/okaba-welcome-hero.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}/>
+        <div aria-hidden style={{ position: 'absolute', inset: 0,
+          background: 'linear-gradient(180deg, rgba(3,13,8,0.45) 0%, rgba(3,13,8,0.22) 38%, rgba(3,13,8,0.5) 72%, rgba(2,9,5,0.9) 100%)' }}/>
+
+        {/* Titre centré sur l'image */}
+        <div style={{ position: 'absolute', left: 26, right: 26, top: '45%', transform: 'translateY(-50%)', textAlign: 'center' }}>
+          <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 33, lineHeight: 1.12, color: '#fff',
+            letterSpacing: -0.6, textShadow: '0 2px 18px rgba(0,0,0,0.6)' }}>
+            Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>Okaba</span>
+          </h1>
+          <p style={{ margin: '14px auto 0', maxWidth: 300, fontFamily: FAU, fontSize: 14, fontWeight: 500,
+            color: 'rgba(255,255,255,0.92)', lineHeight: 1.5, textShadow: '0 1px 10px rgba(0,0,0,0.55)' }}>
+            Trouvez, découvrez et profitez des meilleurs services, produits et commerce locaux
+          </p>
+          <div style={{ margin: '18px auto 0', width: 54, height: 4, borderRadius: 999, background: '#22B24F' }}/>
         </div>
 
-        {/* Carte blanche arrondie (bas) */}
-        <div style={{ position: 'relative', background: '#fff', borderTopLeftRadius: 28, borderTopRightRadius: 28,
-          marginTop: -26, padding: '46px 22px 46px', boxShadow: '0 -10px 30px rgba(0,0,0,0.18)' }}>
+        {/* Boutons posés sur l'image */}
+        <div style={{ position: 'absolute', left: 24, right: 24, bottom: 40, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <button onClick={() => navigate('signup')} style={{ width: '100%', height: 58, borderRadius: 30, border: 'none', cursor: 'pointer',
             background: `linear-gradient(135deg, #18A64C 0%, ${OK.green} 100%)`, color: '#fff',
             fontFamily: FAU, fontSize: 15.5, fontWeight: 800,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-            boxShadow: '0 12px 28px rgba(10,106,47,0.35)' }}>
+            boxShadow: '0 12px 30px rgba(10,106,47,0.45)' }}>
             Créer un compte <Icon name="arrow-r" size={19} color="#fff" strokeWidth={2.4}/>
           </button>
-          <div onClick={() => navigate('login')} style={{ marginTop: 22, textAlign: 'center', fontFamily: FAU, fontSize: 14, fontWeight: 700,
-            color: OK.ink, cursor: 'pointer' }}>
+          <div onClick={() => navigate('login')} style={{ textAlign: 'center', fontFamily: FAU, fontSize: 15, fontWeight: 800,
+            color: OK.goldSoft, opacity: 0.8, cursor: 'pointer', textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>
             J’ai déjà un compte
           </div>
         </div>
@@ -2667,7 +2668,7 @@ function SignupScreen() {
   const ss = String(timer % 60).padStart(2, '0');
 
   return (
-    <Screen bg="#fff" statusDark={true} noScroll={false}>
+    <Screen bg="#fff" statusDark={true} lightStatus noScroll={false}>
       <div data-screen-label={`Inscription ${step + 1}`}>
         {/* En-tête : flèche retour + logo O'KABA (comme le modèle) */}
         <div style={{ padding: `${APP_HEADER_TOP} 14px 8px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -2812,7 +2813,7 @@ function LoginScreen() {
   const [showPin, setShowPin] = useState(false);
   const ok = phone.replace(/\D/g, '').length >= 8 && pin.length === 4;
   return (
-    <Screen bg="#fff" statusDark={true}>
+    <Screen bg="#fff" statusDark={true} lightStatus>
       <div data-screen-label="Connexion">
         <div style={{ padding: `${APP_HEADER_TOP} 14px 6px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           <button onClick={back} style={{ position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
@@ -3207,7 +3208,7 @@ function ListingScreen({ params }) {
   const sref = useRef(null);
 
   return (
-    <Screen bg={OK.bg} statusDark={true} noScroll footer={
+    <Screen bg={OK.bg} statusDark={true} noScroll edgeTop footer={
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50,
         background: '#fff', borderTop: `1px solid ${OK.line}`, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`,
         display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
@@ -3244,11 +3245,11 @@ function ListingScreen({ params }) {
 
         {/* Navigation réellement fixe au-dessus de l'image et de la feuille */}
         <div aria-hidden style={{ position: 'absolute', zIndex: 20, top: 0, left: 0, right: 0,
-          height: APP_DETAIL_HEADER_HEIGHT,
+          height: `calc(${APP_DETAIL_HEADER_HEIGHT} + ${APP_SAFE_TOP})`,
           pointerEvents: 'none', background: headerSolid ? OK.green : 'transparent',
           borderBottom: headerSolid ? '1px solid rgba(255,255,255,0.16)' : '1px solid transparent',
           boxShadow: headerSolid ? '0 5px 18px rgba(0,0,0,0.14)' : 'none', transition: 'background .12s ease, box-shadow .12s ease' }}/>
-        <div style={{ position: 'absolute', top: APP_HEADER_TOP_PLUS_2, left: 14, right: 14, display: 'flex', alignItems: 'center', gap: 10, zIndex: 30 }}>
+        <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, right: 14, display: 'flex', alignItems: 'center', gap: 10, zIndex: 30 }}>
           <button onClick={back} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
             background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
             display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -3405,7 +3406,7 @@ function ShopScreen({ params }) {
   ];
 
   return (
-    <Screen bg={OK.bg} statusDark={true} noScroll>
+    <Screen bg={OK.bg} statusDark={true} noScroll edgeTop>
       <div data-screen-label="Profil boutique" style={{ position: 'absolute', inset: 0, overflow: 'hidden', '--detail-hero-h': 'clamp(200px, 28vh, 230px)' }}>
         {/* Cover (épinglée en arrière-plan) */}
         <div data-fixed-hero="shop" style={{ position: 'absolute', zIndex: 0, top: 0, left: 0, right: 0, height: 'var(--detail-hero-h)' }}>
@@ -3423,11 +3424,11 @@ function ShopScreen({ params }) {
         </div>
 
         <div aria-hidden style={{ position: 'absolute', zIndex: 20, top: 0, left: 0, right: 0,
-          height: APP_DETAIL_HEADER_HEIGHT,
+          height: `calc(${APP_DETAIL_HEADER_HEIGHT} + ${APP_SAFE_TOP})`,
           pointerEvents: 'none', background: headerSolid ? OK.green : 'transparent',
           borderBottom: headerSolid ? '1px solid rgba(255,255,255,0.16)' : '1px solid transparent',
           boxShadow: headerSolid ? '0 5px 18px rgba(0,0,0,0.14)' : 'none', transition: 'background .12s ease, box-shadow .12s ease' }}/>
-        <div style={{ position: 'absolute', top: APP_HEADER_TOP, left: 14, right: 14, zIndex: 30, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, right: 14, zIndex: 30, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <button onClick={back} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer',
             background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon name="back" size={20} color={OK.ink} strokeWidth={2.4}/>
@@ -3948,7 +3949,7 @@ function EntityScreen({ params }) {
   const allReels = ANNU_REELS; // pour remplir l'onglet réels
 
   return (
-    <Screen bg={OK.bg2} statusDark={true} tabBar noScroll>
+    <Screen bg={OK.bg2} statusDark={true} tabBar noScroll edgeTop>
       <div data-screen-label="Profil entité" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         <DetailOverlayHeader solid={headerSolid} title={e.name} onBack={back} onAction={() => notifyDemo(`Profil ${e.name} prêt à être partagé`)}/>
         <div data-screen-scroll="entity" onScroll={event => setHeaderSolid(event.currentTarget.scrollTop > 80)} style={{ position: 'absolute', inset: '0 0 92px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 24 }}>
@@ -4145,7 +4146,7 @@ function TenantScreen({ params }) {
   ].filter(Boolean);
   const dist = [58, 62, 24, 8, 4];
   return (
-    <Screen bg={OK.bg} statusDark={true} noScroll footer={
+    <Screen bg={OK.bg} statusDark={true} noScroll edgeTop footer={
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, background: '#fff', borderTop: `1px solid ${OK.line}`, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, display: 'flex', gap: 10, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
         <button onClick={() => setFav(f => !f)} style={{ width: 52, height: 52, borderRadius: 13, border: `1.5px solid ${OK.line}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name={fav ? 'heart-f' : 'heart'} size={21} color={fav ? OK.red : OK.ink2} strokeWidth={2}/></button>
         <button onClick={() => navigate('messages')} style={{ width: 52, height: 52, borderRadius: 13, border: `1.5px solid ${OK.green}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="message" size={20} color={OK.green} strokeWidth={2}/></button>
@@ -4164,11 +4165,11 @@ function TenantScreen({ params }) {
         </div>
 
         <div aria-hidden style={{ position: 'absolute', zIndex: 20, top: 0, left: 0, right: 0,
-          height: APP_DETAIL_HEADER_HEIGHT,
+          height: `calc(${APP_DETAIL_HEADER_HEIGHT} + ${APP_SAFE_TOP})`,
           pointerEvents: 'none', background: headerSolid ? OK.green : 'transparent',
           borderBottom: headerSolid ? '1px solid rgba(255,255,255,0.16)' : '1px solid transparent',
           boxShadow: headerSolid ? '0 5px 18px rgba(0,0,0,0.14)' : 'none', transition: 'background .12s ease, box-shadow .12s ease' }}/>
-        <div style={{ position: 'absolute', top: APP_HEADER_TOP_PLUS_2, left: 14, right: 14, zIndex: 30, display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, right: 14, zIndex: 30, display: 'flex', justifyContent: 'space-between' }}>
           <button onClick={back} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
           <button onClick={() => notifyDemo(`${t.name} prêt à être partagé`)} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: headerSolid ? '#fff' : '#3a3a3a', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="share" size={17} color={headerSolid ? OK.green : '#fff'} strokeWidth={2}/></button>
           <div style={{ position: 'absolute', left: 56, right: 56, top: 10, textAlign: 'center', opacity: headerSolid ? 1 : 0, transition: 'opacity .15s ease',
@@ -4338,7 +4339,7 @@ function BaieHub({ params }) {
   );
 
   return (
-    <Screen bg={OK.bg2} statusDark={true} tabBar noScroll>
+    <Screen bg={OK.bg2} statusDark={true} tabBar noScroll edgeTop>
       <div data-screen-label="La Baie des Rois" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         <DetailOverlayHeader solid={headerSolid} title={e.name} onBack={back} onAction={() => notifyDemo('La Baie des Rois prête à être partagée')}/>
         <div data-screen-scroll="entity-baie" onScroll={event => setHeaderSolid(event.currentTarget.scrollTop > 80)} style={{ position: 'absolute', inset: '0 0 92px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 24 }}>
@@ -4650,9 +4651,9 @@ function TourismePlaceScreen({ params }) {
   const { back } = useNav();
   const spot = TOURISM_SPOTS.find(item => item.id === params?.id) || TOURISM_SPOTS[0];
   return (
-    <Screen bg="#F7F7F2" statusDark={true}>
+    <Screen bg="#F7F7F2" statusDark={true} edgeTop>
       <div data-screen-label={`Destination — ${spot.name}`}>
-        <div style={{ position: 'relative', height: 330 }}><Img src={spot.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(3,28,13,.48) 0%, rgba(3,28,13,.04) 35%, rgba(3,28,13,.86) 100%)"/><button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_HEADER_TOP, left: 16, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,.28)', background: 'rgba(4,35,17,.48)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color="#fff" strokeWidth={2.2}/></button><div style={{ position: 'absolute', left: 18, right: 18, bottom: 20 }}><div style={{ fontFamily: FT, fontSize: 10.5, fontWeight: 850, color: OK.gold, textTransform: 'uppercase', letterSpacing: 1.1 }}>{spot.cat}</div><h1 style={{ margin: '7px 0 0', fontFamily: FT, fontSize: 29, lineHeight: 1.05, fontWeight: 900, color: '#fff' }}>{spot.name}</h1><div style={{ marginTop: 9, display: 'flex', alignItems: 'center', gap: 6, fontFamily: FT, fontSize: 11.5, fontWeight: 650, color: 'rgba(255,255,255,.9)' }}><Icon name="pin" size={13} color={OK.gold}/>{spot.city}</div></div></div>
+        <div style={{ position: 'relative', height: 330 }}><Img src={spot.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(3,28,13,.48) 0%, rgba(3,28,13,.04) 35%, rgba(3,28,13,.86) 100%)"/><button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 16, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,.28)', background: 'rgba(4,35,17,.48)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color="#fff" strokeWidth={2.2}/></button><div style={{ position: 'absolute', left: 18, right: 18, bottom: 20 }}><div style={{ fontFamily: FT, fontSize: 10.5, fontWeight: 850, color: OK.gold, textTransform: 'uppercase', letterSpacing: 1.1 }}>{spot.cat}</div><h1 style={{ margin: '7px 0 0', fontFamily: FT, fontSize: 29, lineHeight: 1.05, fontWeight: 900, color: '#fff' }}>{spot.name}</h1><div style={{ marginTop: 9, display: 'flex', alignItems: 'center', gap: 6, fontFamily: FT, fontSize: 11.5, fontWeight: 650, color: 'rgba(255,255,255,.9)' }}><Icon name="pin" size={13} color={OK.gold}/>{spot.city}</div></div></div>
         <div style={{ padding: '18px 16px 32px' }}><div style={{ padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 5px 16px rgba(17,55,30,.06)' }}><div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><strong style={{ fontFamily: FT, fontSize: 16, color: OK.green }}>À découvrir</strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontSize: 11.5, fontWeight: 850, color: OK.ink }}><Icon name="star" size={13} color={OK.star}/>{spot.rating.toString().replace('.', ',')}</span></div><p style={{ margin: '11px 0 0', fontFamily: FT, fontSize: 13, lineHeight: 1.62, color: OK.ink2 }}>{spot.description}</p></div><button onClick={() => notifyDemo(`Itinéraire vers ${spot.name} préparé`)} style={{ width: '100%', height: 50, marginTop: 14, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FT, fontSize: 13.5, fontWeight: 850, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 7px 18px rgba(11,124,57,.22)' }}><Icon name="pin" size={17} color="#fff"/>Préparer l’itinéraire</button></div>
       </div>
     </Screen>
@@ -4711,7 +4712,7 @@ function BaieScreen() {
   }, [feat.length]);
   const featuredSpot = feat[spotSlide] || feat[0];
   return (
-    <Screen bg={OK.bg} statusDark={true} noScroll>
+    <Screen bg={OK.bg} statusDark={true} noScroll edgeTop>
       <div data-screen-label="La Baie des Rois" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         <DetailOverlayHeader solid={headerSolid} title="La Baie des Rois" onBack={back} onAction={() => notifyDemo('La Baie des Rois prête à être partagée')}/>
         <div data-screen-scroll="baie" onScroll={event => setHeaderSolid(event.currentTarget.scrollTop > 100)} style={{ position: 'absolute', inset: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 24 }}>
@@ -4887,7 +4888,7 @@ function BaieServiceHero({ place, label, back }) {
   return (
     <div data-baie-service-hero style={{ position: 'relative', zIndex: 0, height: 292, flexShrink: 0, background: place.imageFit === 'contain' ? '#fff' : OK.bg2 }}>
       <Img src={place.image} alt={place.name} style={{ position: 'absolute', inset: 0, backgroundSize: place.imageFit || 'cover', backgroundPosition: place.imagePosition || 'center', backgroundColor: place.imageFit === 'contain' ? '#fff' : OK.bg2 }} overlay="linear-gradient(180deg, rgba(3,18,10,0.34) 0%, transparent 35%, rgba(3,18,10,0.74) 100%)"/>
-      <div style={{ position: 'absolute', top: APP_HEADER_TOP, left: 15, right: 15, display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 15, right: 15, display: 'flex', justifyContent: 'space-between' }}>
         <button onClick={back} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
         <button onClick={() => notifyDemo(`${place.name} prêt à être partagé`)} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(4,25,12,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="share" size={17} color="#fff" strokeWidth={2}/></button>
       </div>
@@ -4927,7 +4928,7 @@ function BaieRestaurantScreen({ place }) {
   };
   const menu = d.menu || BAIE_DEFAULT_MENU;
   const reviews = tenant?.reviewList || [['Mélissa A.', 5, 'Il y a 3 jours', 'Très beau cadre et service attentionné. La vue sur la baie fait vraiment la différence.'], ['Joël M.', 4, 'Il y a 1 semaine', 'Une belle adresse pour sortir à Libreville, avec une ambiance soignée.']];
-  return <Screen bg={OK.bg} statusDark={false} footerPad={92} footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Restaurant — ${place.name}`}>
+  return <Screen bg={OK.bg} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Restaurant — ${place.name}`}>
     <BaieServiceHero place={place} label="Restaurant & bar" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, fontFamily: FT, fontSize: 12.5, fontWeight: 750, color: OK.ink }}><Icon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>{d.hours}</span></div>
@@ -4949,7 +4950,7 @@ function BaieHotelScreen({ place }) {
   const d = BAIE_HOTEL_DETAILS[place.id] || { rating: 4.7, reviews: 58, cta: 'Voir les disponibilités' };
   const rooms = d.rooms || BAIE_DEFAULT_ROOMS;
   const amenities = d.amenities || BAIE_DEFAULT_AMENITIES;
-  return <Screen bg={OK.bg} statusDark={false} footerPad={92} footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Hôtel — ${place.name}`}>
+  return <Screen bg={OK.bg} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Hôtel — ${place.name}`}>
     <BaieServiceHero place={place} label="Hôtel" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontFamily: FT, fontSize: 12.5, fontWeight: 750 }}><Icon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>Bord de mer</span></div>
@@ -4970,7 +4971,7 @@ function BaieLeisureScreen({ place }) {
   const { back } = useNav();
   const [tab, setTab] = useState('billets');
   const d = BAIE_LEISURE_DETAILS[place.id] || { date: 'Selon programmation', time: '10:00 – 20:00', cta: 'Réserver une place', tickets: [['Accès standard', 'Une personne', 5000]] };
-  return <Screen bg={OK.bg} statusDark={false} footerPad={92} footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Loisirs — ${place.name}`}>
+  return <Screen bg={OK.bg} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Loisirs — ${place.name}`}>
     <BaieServiceHero place={place} label="Loisirs & événements" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <p style={{ margin: 0, fontFamily: FT, fontSize: 13.5, lineHeight: 1.62, color: OK.ink2 }}>{place.description}</p>
@@ -5008,12 +5009,12 @@ function EventImmersiveScreen({ params }) {
   const displayImage = /^https?:\/\//i.test(currentImage) ? offlineImage : currentImage;
   const showPrevious = () => setMediaIndex(index => (index - 1 + media.length) % media.length);
   const showNext = () => setMediaIndex(index => (index + 1) % media.length);
-  return <Screen bg="#041109" statusDark={true} noScroll>
+  return <Screen bg="#041109" statusDark={true} noScroll edgeTop>
     <div data-screen-label={`Événement — ${event.title}`} style={{ position: 'absolute', inset: 0, overflow: 'hidden', background: '#050505', color: '#fff' }}>
       <img src={displayImage} alt={`Affiche — ${event.title}`} onClick={media.length > 1 ? showNext : undefined} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = offlineImage; }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', cursor: media.length > 1 ? 'pointer' : 'default' }}/>
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 58%, rgba(0,0,0,.78) 100%)' }}/>
 
-      <header style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, height: 58, padding: '6px 12px 8px', display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center' }}>
+      <header style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, height: `calc(58px + ${APP_SAFE_TOP})`, padding: `calc(${APP_SAFE_TOP} + 6px) 12px 8px`, display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center' }}>
         <button onClick={back} aria-label="Fermer" style={{ width: 44, height: 44, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="close" size={25} color="#fff" strokeWidth={2}/></button>
         {media.length > 1 && <strong data-event-counter style={{ justifySelf: 'center', fontFamily: FT, fontSize: 14, lineHeight: 1, fontWeight: 850, color: '#fff' }}>{mediaIndex + 1} sur {media.length}</strong>}
       </header>
@@ -5044,6 +5045,21 @@ function EventTicketScreen({ params }) {
   const [bookingCode] = useState(() => `OKT-${Date.now().toString().slice(-6)}`);
   const selectedTier = tiers.find(([id]) => id === tier) || tiers[0];
   const total = selectedTier[2] * qty;
+
+  // Lien vers la page web des billets (téléchargeable en PDF) + QR code.
+  // location.origin → fonctionne une fois l'app déployée (et en dev via l'URL réseau).
+  const ticketUrl = `${window.location.origin}/billet.html?` + [
+    ['event', event.title], ['date', `${date}${event.time ? ` · ${event.time}` : ''}`],
+    ['place', place], ['tier', selectedTier[1]], ['qty', qty],
+    ['code', bookingCode], ['total', total === 0 ? 'Gratuit' : fcfa(total)],
+  ].map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+  const [qrUrl, setQrUrl] = useState('');
+  useEffect(() => {
+    if (step !== 3) return;
+    QRCode.toDataURL(ticketUrl, { margin: 1, width: 360, color: { dark: '#0A6A2F', light: '#ffffff' } })
+      .then(setQrUrl).catch(() => {});
+  }, [step, ticketUrl]);
+
   const payments = [
     { id: 'airtel', label: 'Airtel Money', color: '#E32636', logo: 'assets/payments/airtel.svg' },
     { id: 'moov', label: 'Moov Money', color: '#F36B21', logo: 'assets/payments/moov-money.png' },
@@ -5102,11 +5118,25 @@ function EventTicketScreen({ params }) {
           <h1 style={{ margin: '20px 0 0', fontFamily: FX, fontSize: 23, fontWeight: 900, color: OK.ink }}>Votre billet est confirmé</h1>
           <p style={{ margin: '8px auto 0', maxWidth: 285, fontFamily: FT, fontSize: 12.5, lineHeight: 1.55, color: OK.ink3 }}>Présentez le code ci-dessous à l’entrée de « {event.title} ».</p>
           <div style={{ marginTop: 20, padding: '21px 15px', borderRadius: 20, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 8px 24px rgba(18,51,31,.08)' }}>
-            <div style={{ fontFamily: FT, fontSize: 10, fontWeight: 750, letterSpacing: .7, color: OK.ink3 }}>CODE D’ACCÈS</div>
-            <div style={{ marginTop: 7, fontFamily: FX, fontSize: 29, fontWeight: 900, letterSpacing: 2, color: OK.green }}>{bookingCode}</div>
+            {/* QR code — scannez pour ouvrir vos billets (PDF) dans le navigateur */}
+            <div style={{ width: 168, height: 168, margin: '0 auto', padding: 10, borderRadius: 16, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {qrUrl
+                ? <img src={qrUrl} alt="QR code des billets" style={{ width: '100%', height: '100%', objectFit: 'contain' }}/>
+                : <Icon name="qr" size={64} color={OK.ink3} strokeWidth={1.6}/>}
+            </div>
+            <div style={{ marginTop: 12, fontFamily: FT, fontSize: 11.5, fontWeight: 700, color: OK.ink2, lineHeight: 1.5 }}>
+              Scannez ce QR code pour ouvrir vos billets et les télécharger en PDF.
+            </div>
+            <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px dashed ${OK.line}` }}>
+              <div style={{ fontFamily: FT, fontSize: 10, fontWeight: 750, letterSpacing: .7, color: OK.ink3 }}>CODE D’ACCÈS</div>
+              <div style={{ marginTop: 5, fontFamily: FX, fontSize: 25, fontWeight: 900, letterSpacing: 2, color: OK.green }}>{bookingCode}</div>
+            </div>
             <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px dashed ${OK.line}`, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, textAlign: 'left' }}><div><div style={{ fontFamily: FT, fontSize: 9.5, color: OK.ink3 }}>Catégorie</div><strong style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink }}>{selectedTier[1]}</strong></div><div><div style={{ fontFamily: FT, fontSize: 9.5, color: OK.ink3 }}>Billets</div><strong style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink }}>{qty}</strong></div></div>
           </div>
-          <button onClick={() => navigate('events')} style={{ width: '100%', height: 50, marginTop: 22, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer' }}>Retour aux événements</button>
+          <button onClick={() => window.open(ticketUrl, '_blank')} style={{ width: '100%', height: 50, marginTop: 16, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Ouvrir mes billets (PDF)
+          </button>
+          <button onClick={() => navigate('events')} style={{ width: '100%', height: 46, marginTop: 8, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 13, fontWeight: 800, cursor: 'pointer' }}>Retour aux événements</button>
         </div>}
       </div>
     </Screen>
@@ -5240,7 +5270,7 @@ function BaieInformationScreen() {
   const { favorites, toggleFavorite } = useBaieNewsFavorites();
   const featured = BAIE_NEWS[0];
   const articles = tab === 'favorites' ? BAIE_NEWS.filter(article => favorites.includes(article.id)) : BAIE_NEWS.slice(1);
-  return <Screen bg="#fff" statusDark={true}>
+  return <Screen bg="#fff" statusDark={true} lightStatus>
     <div data-screen-label="Informations — Baie des Rois">
       <div style={{ position: 'sticky', top: 0, zIndex: 30, padding: `${APP_HEADER_TOP_PLUS_2} 16px 10px`, display: 'flex', alignItems: 'center', gap: 11, background: '#fff', borderBottom: `1px solid ${OK.line}` }}>
         <button onClick={back} aria-label="Retour" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color={OK.ink} strokeWidth={2.2}/></button>
@@ -5289,12 +5319,12 @@ function BaieArticleScreen({ params }) {
       else notifyDemo('Article prêt à être partagé');
     } catch {}
   };
-  return <Screen bg="#fff" statusDark={false}>
+  return <Screen bg="#fff" statusDark={false} edgeTop>
     <article data-screen-label={`Article — ${article.title}`}>
       <div style={{ height: 260, position: 'relative', overflow: 'hidden' }}>
         <Img src={article.image} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(2,20,9,0.42) 0%, rgba(2,20,9,0.02) 48%, rgba(2,20,9,0.36) 100%)"/>
-        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_HEADER_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color="#fff" strokeWidth={2.2}/></button>
-        <div style={{ position: 'absolute', top: APP_HEADER_TOP, right: 14, display: 'flex', gap: 8 }}><button onClick={shareArticle} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="share" size={17} color="#fff" strokeWidth={2}/></button><BaieNewsBookmark active={favorite} onClick={() => toggleFavorite(article.id)} dark size={40}/></div>
+        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color="#fff" strokeWidth={2.2}/></button>
+        <div style={{ position: 'absolute', top: APP_EDGE_TOP, right: 14, display: 'flex', gap: 8 }}><button onClick={shareArticle} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="share" size={17} color="#fff" strokeWidth={2}/></button><BaieNewsBookmark active={favorite} onClick={() => toggleFavorite(article.id)} dark size={40}/></div>
       </div>
       <div style={{ padding: '19px 18px 34px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontFamily: FT, fontSize: 10, color: OK.ink3 }}><span style={{ color: OK.green, fontWeight: 900, letterSpacing: 0.55 }}>{article.category}</span><span>•</span><b>{article.source}</b><span>•</span><span>{article.date}</span></div>
@@ -7754,7 +7784,7 @@ function CompteScreen() {
               </button>
             ))}
           </div>
-          <button onClick={() => { clearOkabaDemoSession(); reset('splash'); }} style={{ width: '100%', marginTop: 14, height: 50, borderRadius: 13, border: `1.5px solid ${OK.line}`,
+          <button onClick={() => { clearOkabaDemoSession(); reset('welcome'); }} style={{ width: '100%', marginTop: 14, height: 50, borderRadius: 13, border: `1.5px solid ${OK.line}`,
             background: '#fff', color: OK.red, cursor: 'pointer', fontFamily: FX, fontSize: 14, fontWeight: 800,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <Icon name="logout" size={17} color={OK.red} strokeWidth={2}/> Se déconnecter
