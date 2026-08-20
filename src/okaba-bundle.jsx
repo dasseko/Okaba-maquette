@@ -1388,9 +1388,11 @@ const USE_DEVICE_CHROME = IS_NATIVE_APP;
 const APP_SAFE_TOP = IS_NATIVE_APP
   ? 'max(env(safe-area-inset-top), var(--okaba-status-bar-height, 24px))'
   : USE_DEVICE_CHROME ? 'env(safe-area-inset-top, 0px)' : '50px';
-const APP_HEADER_TOP = '12px';
-const APP_HEADER_TOP_PLUS_2 = '14px';
-const APP_HEADER_TOP_PLUS_4 = '16px';
+// Le contenu monte derrière la barre de statut (edge-to-edge) : les en-têtes
+// intègrent donc la zone sûre dans leur padding haut pour rester lisibles.
+const APP_HEADER_TOP = `calc(${APP_SAFE_TOP} + 12px)`;
+const APP_HEADER_TOP_PLUS_2 = `calc(${APP_SAFE_TOP} + 14px)`;
+const APP_HEADER_TOP_PLUS_4 = `calc(${APP_SAFE_TOP} + 16px)`;
 const APP_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(14px, env(safe-area-inset-bottom))' : 20;
 const APP_DETAIL_BOTTOM_PADDING = IS_NATIVE_APP ? 'max(16px, env(safe-area-inset-bottom))' : '26px';
 const APP_DETAIL_HEADER_HEIGHT = '68px';
@@ -1573,17 +1575,19 @@ function TabBar() {
 }
 
 // ── Screen wrapper (gère le scroll + status bar + tab bar) ──
+// Edge-to-edge : le contenu monte TOUJOURS derrière la barre de statut, qui est
+// transparente. Le haut de l'écran (couleur d'en-tête OU image) se prolonge donc
+// naturellement sous la barre de statut. Les en-têtes intègrent la zone sûre via
+// APP_HEADER_TOP. `lightStatus` = le haut est clair → icônes de statut sombres.
 function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, noScroll = false, scrollRef, footer, footerPad = 0, edgeTop = false, lightStatus = false }) {
-  const statusBarOnDark = hasDarkStatusBackground(bg, statusDark);
   return (
     <div style={{
       position: 'absolute', inset: 0, background: bg,
       fontFamily: FONT_UI, color: OKABA.ink, WebkitFontSmoothing: 'antialiased',
       overflow: 'hidden', overscrollBehavior: 'none', contain: 'layout paint',
     }}>
-      {/* edgeTop : le contenu remonte derrière la barre de statut (hero plein cadre) */}
       <div ref={scrollRef} style={{
-        position: 'absolute', top: edgeTop ? 0 : APP_SAFE_TOP, right: 0, bottom: 0, left: 0,
+        position: 'absolute', top: 0, right: 0, bottom: 0, left: 0,
         overflowY: noScroll ? 'hidden' : 'auto',
         overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch',
         paddingBottom: tabBar ? 132 : footerPad,
@@ -1592,11 +1596,10 @@ function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, n
       </div>
       <div aria-hidden={USE_DEVICE_CHROME || undefined} style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: APP_SAFE_TOP,
-        zIndex: 60, pointerEvents: 'none', overflow: 'hidden',
-        background: edgeTop ? 'transparent' : (lightStatus ? bg : OK.green),
+        zIndex: 60, pointerEvents: 'none', overflow: 'hidden', background: 'transparent',
       }}>
       {!USE_DEVICE_CHROME &&
-        <StatusBar dark={edgeTop ? false : (lightStatus ? statusBarOnDark : true)}/>
+        <StatusBar dark={!lightStatus}/>
       }
       </div>
       {footer}
@@ -2554,7 +2557,7 @@ const SocialApple = () => (
 function WelcomeScreen() {
   const { navigate } = useNav();
   return (
-    <Screen statusDark={true} bg="#04120A" noScroll edgeTop>
+    <Screen statusDark={true} bg="#04120A" noScroll edgeTop lightStatus>
       <div data-screen-label="Bienvenue" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         {/* Photo plein cadre */}
         <div aria-hidden style={{ position: 'absolute', inset: 0,
@@ -2867,18 +2870,6 @@ function LoginScreen() {
           </div>
 
           <div style={{ marginTop: 24 }}><AuBtn label="Se connecter" disabled={!ok} onClick={() => { if (ok) { saveOkabaDemoSession(); reset('home'); } }}/></div>
-
-          {/* Séparateur OU */}
-          <div style={{ margin: '20px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ flex: 1, height: 1, background: OK.line }}/>
-            <span style={{ fontFamily: FAU, fontSize: 12, fontWeight: 700, color: OK.ink3 }}>OU</span>
-            <span style={{ flex: 1, height: 1, background: OK.line }}/>
-          </div>
-          <button onClick={() => navigate('signup')} style={{ width: '100%', height: 52, borderRadius: 14, cursor: 'pointer',
-            border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontFamily: FAU, fontSize: 14.5, fontWeight: 800,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-            <Icon name="phone" size={17} color={OK.green} strokeWidth={2.2}/> Se connecter avec un autre numéro
-          </button>
 
           <div style={{ margin: '22px 0 30px', padding: '14px', borderRadius: 14, background: OK.bg2, textAlign: 'center', fontFamily: FAU, fontSize: 13, color: OK.ink2 }}>
             Vous n’avez pas encore de compte&nbsp;?{' '}
