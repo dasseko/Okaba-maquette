@@ -2600,7 +2600,7 @@ function WelcomeScreen() {
         <div className="okaba-welcome-title" style={{ position: 'absolute', left: 26, right: 26, top: '45%', transform: 'translateY(-50%)', textAlign: 'center' }}>
           <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 33, lineHeight: 1.12, color: '#fff',
             letterSpacing: -0.6, textShadow: '0 2px 18px rgba(0,0,0,0.6)' }}>
-            Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>Okaba</span>
+            Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>O'kaba</span>
           </h1>
           {/* Sous-titre publicitaire qui défile */}
           <WelcomePromo/>
