@@ -2,6 +2,26 @@ import React from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import QRCode from 'qrcode';
+import {
+  SquarePen, Store, Handshake, LifeBuoy, Tag, Briefcase, CalendarDays, Megaphone,
+  Gift, Video, Palmtree, Lightbulb, Flag, TriangleAlert, Mail, User, MessageSquare,
+  Phone, Plus, ArrowLeft, X as XIcon, ChevronRight, Check,
+} from 'lucide-react';
+
+// ── LIcon : icônes Lucide pour le menu Publier + formulaires uniquement.
+// Repli sur le composant maison <Icon> pour les noms non mappés (ex. marques).
+const LUCIDE_MAP = {
+  edit: SquarePen, shop: Store, handshake: Handshake, help: LifeBuoy,
+  tag: Tag, briefcase: Briefcase, calendar: CalendarDays, trend: Megaphone,
+  gift: Gift, video: Video, travel: Palmtree, sparkle: Lightbulb,
+  flag: Flag, alert: TriangleAlert, mail: Mail, user: User, message: MessageSquare,
+  phone: Phone, plus: Plus, back: ArrowLeft, close: XIcon, 'chev-r': ChevronRight, check: Check,
+};
+function LIcon({ name, size = 20, color = 'currentColor', strokeWidth = 2 }) {
+  const L = LUCIDE_MAP[name];
+  if (!L) return <Icon name={name} size={size} color={color} strokeWidth={strokeWidth}/>;
+  return <L size={size} color={color} strokeWidth={strokeWidth} absoluteStrokeWidth/>;
+}
 
 // okaba-bundle.jsx — concaténation du prototype O'KABA (généré)
 // Un seul scope module : les const/globals se résolvent entre fichiers.
@@ -592,6 +612,15 @@ const SHOPS = {
     bio: 'Smartphones, ordinateurs et accessoires neufs et reconditionnés. Garantie 6 à 12 mois. Livraison Libreville.',
     phone: '+241 07 45 11 03', responseTime: 'Répond en ~30 min',
   },
+  'residence-gabon': {
+    id: 'residence-gabon', name: 'Résidences Gabon', handle: '@residencesgabon',
+    cat: 'Immobilier · Agence', city: 'Libreville · Baie des Rois',
+    verified: true, pro: true, rating: 4.6, reviews: 96, followers: 4120, since: 2021,
+    avatar: 'assets/etab-complexe-afrique.jpg',
+    cover: 'assets/baie/c21-aerial-01.webp',
+    bio: 'Agence immobilière : vente et location d’appartements, villas et terrains à Libreville et sur la côte. Accompagnement de A à Z.',
+    phone: '+241 06 55 20 44', responseTime: 'Répond en ~2h',
+  },
 };
 
 // Annonces (listings) ──────────────────────────────────────
@@ -779,6 +808,26 @@ const LISTINGS = [
     images: ['assets/mas-famille-shampooing-shikakai.jpg'],
     specs: [['Poids', '135 g'], ['Naturel', '100 %'], ['Usage', 'Cheveux secs'], ['Additifs', 'Aucun']],
     desc: 'Shampooing artisanal riche en poudre de shikakaï, spécialement formulé pour les cheveux secs.',
+  },
+  {
+    id: 'appartement-baie', cat: 'immo', shop: 'residence-gabon',
+    title: 'Appartement F4 neuf — Baie des Rois',
+    price: 95000000, negotiable: true, condition: 'Neuf',
+    city: 'Libreville · Baie des Rois', posted: 'Il y a 2 jours', ref: 'OKB-IM-30117',
+    featured: false,
+    images: ['assets/baie/c21-building-01.webp', 'assets/baie/c21-project-01.webp'],
+    specs: [['Type', 'F4'], ['Surface', '112 m²'], ['Chambres', '3'], ['Standing', 'Haut de gamme']],
+    desc: 'Appartement F4 neuf en front de mer à la Baie des Rois. Séjour lumineux, 3 chambres, cuisine équipée, parking sécurisé et gardiennage 24h/24. Financement possible.',
+  },
+  {
+    id: 'villa-pointe-denis', cat: 'immo', shop: 'residence-gabon',
+    title: 'Villa 4 chambres avec piscine — Pointe Denis',
+    price: 180000000, negotiable: true, condition: 'Occasion',
+    city: 'Pointe Denis · Gabon', posted: 'Il y a 5 jours', ref: 'OKB-IM-30122',
+    featured: false,
+    images: ['assets/etab-hotel-pointe-denis.jpg'],
+    specs: [['Type', 'Villa'], ['Surface', '260 m²'], ['Chambres', '4'], ['Extérieur', 'Piscine + jardin']],
+    desc: 'Villa de standing à Pointe Denis, pieds dans le sable. 4 chambres, grand séjour ouvert, piscine, jardin arboré et terrasse vue mer. Idéale résidence secondaire ou location saisonnière.',
   },
 ];
 
@@ -1446,27 +1495,53 @@ function hasDarkStatusBackground(color, fallback = false) {
   return perceivedLightness < 145;
 }
 
-// ── Action sheet « Publier » (cf. capture) ──────────────────
-const PUB_ACTIONS = [
-  { id: 'annonce',    label: 'Publier une annonce',         icon: 'edit',      tone: '#0B7C39', screen: 'publier', primary: true },
-  { id: 'reel',       label: 'Diffuser une capsule vidéo (Reel)', icon: 'video', tone: '#C8302E' },
-  { id: 'etab',       label: 'Référencer un établissement', icon: 'shop',      tone: '#E0A400', screen: 'etab' },
-  { id: 'event',      label: 'Créer un événement',          icon: 'calendar',  tone: '#5C6B7A' },
-  { id: 'cv',         label: 'Soumettre mon CV / offre d’emploi', icon: 'doc',  tone: '#5C6B7A' },
-  { id: 'service',    label: 'Proposer un service',         icon: 'handshake', tone: '#0B7C39', screen: 'proposer-service' },
-  { id: 'partenariat',  label: 'Demande de partenariat',    icon: 'handshake', tone: '#E0A400' },
+// ── Action sheet « Publier » — menu à 2 niveaux ─────────────
+// Niveau 1 = les 4 sections (sans emoji). Niveau 2 = les sous-actions.
+const PUB_MENU = [
+  { id: 'promouvoir', label: 'Publier & promouvoir', icon: 'edit', tone: '#0B7C39',
+    hint: 'Produit, service, événement, publicité, promotion…',
+    sub: [
+      { id: 'produit',  icon: 'tag',       label: 'Publier un produit',        screen: 'publier' },
+      { id: 'service',  icon: 'briefcase', label: 'Publier un service',        screen: 'proposer-service' },
+      { id: 'event',    icon: 'calendar',  label: 'Publier un événement' },
+      { id: 'pub',      icon: 'trend',     label: 'Faire de la publicité' },
+      { id: 'promo',    icon: 'gift',      label: 'Créer une promotion' },
+      { id: 'reel',     icon: 'video',     label: 'Publier une capsule vidéo' },
+    ] },
+  { id: 'visibilite', label: 'Augmenter votre visibilité', icon: 'shop', tone: '#E0A400',
+    hint: 'Établissement, activité, site touristique',
+    sub: [
+      { id: 'etab',     icon: 'shop',      label: 'Référencer mon établissement / activité', screen: 'etab' },
+      { id: 'tourisme', icon: 'travel',    label: 'Référencer un site touristique' },
+    ] },
+  { id: 'participer', label: 'Partenariat et suggestion', icon: 'handshake', tone: '#5C6B7A',
+    hint: 'Proposez un partenariat ou partagez une idée',
+    sub: [
+      { id: 'partenariat', icon: 'handshake', label: 'Proposer un partenariat', screen: 'form-partenariat' },
+      { id: 'suggestion',  icon: 'sparkle',   label: 'Faire une suggestion',    screen: 'form-suggestion' },
+    ] },
+  { id: 'assistance', label: 'Assistance & Contact', icon: 'help', tone: '#C8302E',
+    hint: 'Signaler un problème, nous contacter',
+    sub: [
+      { id: 'signaler', icon: 'flag',      label: 'Signaler un problème', screen: 'form-signaler' },
+      { id: 'contact',  icon: 'mail',      label: 'Nous contacter',       screen: 'form-contact' },
+    ] },
 ];
 
 function PublishSheet({ open, onClose }) {
   const { reset } = useNav();
   const [toast, setToast] = useState(null);
+  const [section, setSection] = useState(null); // null = niveau 1, sinon la section ouverte
   const G = (typeof OK !== 'undefined') ? OK.green : '#0B7C39';
   const INK = (typeof OK !== 'undefined') ? OK.ink : '#15321f';
   const LINE = (typeof OK !== 'undefined') ? OK.line : '#e8e6df';
-  const handle = (a) => {
+  const BG = (typeof OK !== 'undefined') ? OK.bg2 : '#F4F6F4';
+  // À la fermeture, on revient toujours au niveau 1.
+  React.useEffect(() => { if (!open) setSection(null); }, [open]);
+  const showToast = (label) => { setToast(label); setTimeout(() => setToast(null), 1700); };
+  const handleSub = (a) => {
     if (a.screen) { onClose(); reset(a.screen); return; }
-    setToast(a.label);
-    setTimeout(() => setToast(null), 1700);
+    showToast(a.label);
   };
   return (
     <div style={{ position: 'absolute', inset: 0, zIndex: 70, pointerEvents: open ? 'auto' : 'none' }}>
@@ -1476,33 +1551,93 @@ function PublishSheet({ open, onClose }) {
       {/* sheet */}
       <div style={{ position: 'absolute', left: 10, right: 10, bottom: 96, maxHeight: 'calc(100% - 150px)',
         display: 'flex', flexDirection: 'column',
-        background: '#fff', borderRadius: 22, overflow: 'hidden',
-        boxShadow: '0 18px 50px rgba(0,0,0,0.32)',
+        background: BG, borderRadius: 26, overflow: 'hidden',
+        boxShadow: '0 20px 55px rgba(6,40,20,0.38)',
         transform: open ? 'translateY(0)' : 'translateY(24px)', opacity: open ? 1 : 0,
         transition: 'transform .26s cubic-bezier(.2,.8,.2,1), opacity .2s ease' }}>
-        <div style={{ padding: '14px 18px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${LINE}`, flexShrink: 0 }}>
-          <span style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 15.5, color: G }}>Que voulez-vous publier ?</span>
-          <button onClick={onClose} style={{ width: 30, height: 30, borderRadius: 999, border: 'none', background: '#F1EFEA', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name="close" size={16} color={INK} strokeWidth={2.4}/>
-          </button>
-        </div>
-        <div style={{ flex: 1, overflowY: 'auto' }}>
-          {PUB_ACTIONS.map((a, i) => (
-            <button key={a.id} onClick={() => handle(a)} style={{
-              width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
-              background: a.primary ? 'rgba(11,124,57,0.06)' : '#fff',
-              borderBottom: i < PUB_ACTIONS.length - 1 ? `1px solid ${LINE}` : 'none',
-              padding: '13px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>
-              <span style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: a.tone + '1A',
+        {/* en-tête blanc + filet */}
+        <div style={{ background: '#fff', borderBottom: `1px solid ${LINE}`, flexShrink: 0,
+          boxShadow: '0 1px 0 rgba(20,50,31,0.02)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 9 }}>
+            <span style={{ width: 40, height: 4, borderRadius: 999, background: '#DDDAD1' }}/>
+          </div>
+          <div style={{ padding: '9px 14px 13px', display: 'flex', alignItems: 'center', gap: 11 }}>
+            {section ? (
+              <button onClick={() => setSection(null)} style={{ width: 34, height: 34, borderRadius: 999, border: `1px solid ${LINE}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <LIcon name="back" size={16} color={INK} strokeWidth={2.4}/>
+              </button>
+            ) : (
+              <span style={{ width: 34, height: 34, borderRadius: 11, flexShrink: 0, background: G + '14',
                 display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name={a.icon} size={19} color={a.tone} strokeWidth={2}/>
+                <LIcon name="plus" size={19} color={G} strokeWidth={2.4}/>
               </span>
-              <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: a.primary ? 800 : 600, color: INK }}>{a.label}</span>
-              {a.badge && <span style={{ fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 800, color: '#C8302E', background: '#C8302E1A', border: '1px solid #C8302E55', padding: '3px 7px', borderRadius: 6, whiteSpace: 'nowrap' }}>{a.badge}</span>}
-              <Icon name="chev-r" size={16} color="#B8B6AE" strokeWidth={2}/>
+            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 16.5, color: section ? INK : G, letterSpacing: -0.2, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{section ? section.label : 'Que voulez-vous faire ?'}</div>
+              <div style={{ fontFamily: FONT_UI, fontSize: 11.5, color: OK.ink3, marginTop: 2 }}>{section ? `${section.sub.length} option${section.sub.length > 1 ? 's' : ''}` : 'Publier, promouvoir ou nous contacter'}</div>
+            </div>
+            <button onClick={onClose} style={{ width: 34, height: 34, borderRadius: 999, border: 'none', background: '#F1EFEA', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <LIcon name="close" size={16} color={INK} strokeWidth={2.4}/>
             </button>
-          ))}
+          </div>
         </div>
+
+        {/* NIVEAU 1 — cartes riches */}
+        {!section && (
+          <div style={{ flex: 1, overflowY: 'auto', padding: '13px 12px 15px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {PUB_MENU.map(sec => (
+              <button key={sec.id} onClick={() => setSection(sec)} style={{
+                width: '100%', textAlign: 'left', cursor: 'pointer',
+                background: '#fff', border: `1px solid ${LINE}`, borderRadius: 18,
+                padding: '13px 14px', display: 'flex', alignItems: 'center', gap: 13,
+                boxShadow: '0 2px 8px rgba(20,50,31,0.06)' }}>
+                <span style={{ width: 46, height: 46, borderRadius: 14, flexShrink: 0,
+                  background: `linear-gradient(145deg, ${sec.tone}24, ${sec.tone}0E)`,
+                  boxShadow: `inset 0 0 0 1px ${sec.tone}26`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <LIcon name={sec.icon} size={23} color={sec.tone} strokeWidth={2}/>
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                  <span style={{ display: 'block', fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 800, color: INK, lineHeight: 1.25 }}>{sec.label}</span>
+                  <span style={{ display: 'block', fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 500, color: OK.ink3, marginTop: 3, lineHeight: 1.35 }}>{sec.hint}</span>
+                </span>
+                <span style={{ width: 27, height: 27, borderRadius: 999, background: BG, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <LIcon name="chev-r" size={15} color={INK} strokeWidth={2.2}/>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* NIVEAU 2 — mêmes cartes que le niveau 1, proportionnées au nombre d'items */}
+        {section && (() => {
+          const dense = section.sub.length >= 5;          // beaucoup d'items → cartes compactes
+          const s = dense
+            ? { gap: 8,  pad: '10px 12px', tile: 40, tr: 12, ic: 20, rad: 15 }
+            : { gap: 10, pad: '13px 14px', tile: 46, tr: 14, ic: 23, rad: 18 };
+          return (
+            <div style={{ flex: 1, overflowY: 'auto', padding: '13px 12px 15px', display: 'flex', flexDirection: 'column', gap: s.gap }}>
+              {section.sub.map(a => (
+                <button key={a.id} onClick={() => handleSub(a)} style={{
+                  width: '100%', textAlign: 'left', cursor: 'pointer',
+                  background: '#fff', border: `1px solid ${LINE}`, borderRadius: s.rad,
+                  padding: s.pad, display: 'flex', alignItems: 'center', gap: 13,
+                  boxShadow: '0 2px 8px rgba(20,50,31,0.06)' }}>
+                  <span style={{ width: s.tile, height: s.tile, borderRadius: s.tr, flexShrink: 0,
+                    background: `linear-gradient(145deg, ${section.tone}24, ${section.tone}0E)`,
+                    boxShadow: `inset 0 0 0 1px ${section.tone}26`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <LIcon name={a.icon} size={s.ic} color={section.tone} strokeWidth={2}/>
+                  </span>
+                  <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, color: INK, lineHeight: 1.25 }}>{a.label}</span>
+                  <span style={{ width: 27, height: 27, borderRadius: 999, background: BG, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <LIcon name="chev-r" size={15} color={INK} strokeWidth={2.2}/>
+                  </span>
+                </button>
+              ))}
+            </div>
+          );
+        })()}
       </div>
       {/* toast “bientôt disponible” */}
       {toast && (
@@ -7810,7 +7945,183 @@ function CompteScreen() {
   );
 }
 
-Object.assign(window, { PublierScreen, EtabScreen, ProposerServiceScreen, ProximityServicesScreen, ProximityProviderScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen });
+// ── FORMULAIRES : partenariat · suggestion · signalement · contact ──
+// Écran générique piloté par config, réutilise le design system (PubCard,
+// ChipRow, PUB_FIELD, GreenHeader, PubBar) pour rester fidèle à l'app.
+const FORMS = {
+  partenariat: {
+    title: 'Proposer un partenariat', tone: '#5C6B7A', icon: 'handshake',
+    intro: 'Présentez votre projet. L’équipe O’KABA revient vers vous sous 48–72 h.',
+    sections: [
+      { title: 'Type de partenariat', icon: 'handshake', fields: [
+        { k: 'type', type: 'chips', opts: ['Marque partenaire', 'Sponsor', 'Institution', 'Média', 'Affiliation'], required: true },
+      ] },
+      { title: 'Votre organisation', icon: 'shop', fields: [
+        { k: 'org', label: 'Nom de l’organisation', type: 'text', ph: 'Ex : Société XYZ', required: true },
+        { k: 'sector', label: 'Secteur d’activité', type: 'text', ph: 'Ex : Télécoms' },
+        { k: 'web', label: 'Site web ou réseau social', type: 'text', ph: 'Ex : xyz.ga' },
+      ] },
+      { title: 'Personne à contacter', icon: 'user', fields: [
+        { k: 'name', label: 'Nom complet', type: 'text', ph: 'Ex : Jean Ondo', required: true },
+        { k: 'role', label: 'Fonction', type: 'text', ph: 'Ex : Directeur marketing' },
+        { k: 'email', label: 'E-mail', type: 'email', ph: 'nom@organisation.ga', required: true },
+        { k: 'phone', label: 'Téléphone / WhatsApp', type: 'tel', ph: '+241 …' },
+      ] },
+      { title: 'Votre proposition', icon: 'edit', fields: [
+        { k: 'message', label: 'Objectif du partenariat', type: 'textarea', ph: 'Décrivez ce que vous proposez et ce que vous attendez d’O’KABA…', required: true },
+      ] },
+    ],
+    submit: 'Envoyer la demande',
+    success: { title: 'Demande envoyée 🤝', body: 'Votre demande de partenariat a bien été transmise à l’équipe O’KABA. Nous revenons vers vous sous 48–72 h.' },
+  },
+  suggestion: {
+    title: 'Faire une suggestion', tone: '#5C6B7A', icon: 'sparkle',
+    intro: 'Une idée pour améliorer O’KABA ? On vous lit attentivement.',
+    sections: [
+      { title: 'Votre idée', icon: 'sparkle', fields: [
+        { k: 'cat', label: 'Catégorie', type: 'chips', opts: ['Nouvelle fonctionnalité', 'Amélioration', 'Contenu', 'Autre'], required: true },
+        { k: 'message', label: 'Décrivez votre suggestion', type: 'textarea', ph: 'Ex : j’aimerais pouvoir…', required: true },
+      ] },
+      { title: 'Pour vous recontacter (facultatif)', icon: 'mail', fields: [
+        { k: 'email', label: 'E-mail', type: 'email', ph: 'nom@email.ga' },
+      ] },
+    ],
+    submit: 'Envoyer ma suggestion',
+    success: { title: 'Merci pour votre idée 💡', body: 'Votre suggestion a bien été envoyée. Chaque retour nous aide à améliorer O’KABA.' },
+  },
+  signaler: {
+    title: 'Signaler un problème', tone: '#C8302E', icon: 'flag',
+    intro: 'Décrivez le problème rencontré. Nous traitons chaque signalement.',
+    sections: [
+      { title: 'Nature du problème', icon: 'flag', fields: [
+        { k: 'type', type: 'chips', opts: ['Bug technique', 'Contenu inapproprié', 'Arnaque / fraude', 'Problème de compte', 'Autre'], required: true },
+      ] },
+      { title: 'Détails', icon: 'edit', fields: [
+        { k: 'where', label: 'Où cela s’est-il produit ?', type: 'text', ph: 'Ex : page d’une annonce, messagerie…' },
+        { k: 'message', label: 'Description', type: 'textarea', ph: 'Expliquez ce qui s’est passé…', required: true },
+      ] },
+      { title: 'Pour vous recontacter (facultatif)', icon: 'mail', fields: [
+        { k: 'email', label: 'E-mail', type: 'email', ph: 'nom@email.ga' },
+      ] },
+    ],
+    submit: 'Envoyer le signalement',
+    success: { title: 'Signalement envoyé', body: 'Votre signalement a été transmis à notre équipe. Nous faisons le nécessaire au plus vite.' },
+  },
+  contact: {
+    title: 'Nous contacter', tone: '#C8302E', icon: 'mail',
+    intro: 'Une question ? Écrivez-nous, ou joignez-nous directement.',
+    channels: [
+      { icon: 'whatsapp', tone: '#25D366', label: 'WhatsApp', value: '+241 00 00 00 00' },
+      { icon: 'mail',     tone: '#C8302E', label: 'E-mail',   value: 'contact@okaba.ga' },
+      { icon: 'phone',    tone: '#0A6A2F', label: 'Téléphone', value: '+241 00 00 00 00' },
+    ],
+    sections: [
+      { title: 'Votre message', icon: 'message', fields: [
+        { k: 'subject', label: 'Sujet', type: 'chips', opts: ['Question générale', 'Mon compte', 'Publicité', 'Autre'], required: true },
+        { k: 'message', label: 'Message', type: 'textarea', ph: 'Comment pouvons-nous vous aider ?', required: true },
+      ] },
+      { title: 'Vos coordonnées', icon: 'user', fields: [
+        { k: 'name', label: 'Nom', type: 'text', ph: 'Votre nom' },
+        { k: 'email', label: 'E-mail', type: 'email', ph: 'nom@email.ga', required: true },
+      ] },
+    ],
+    submit: 'Envoyer le message',
+    success: { title: 'Message envoyé 📩', body: 'Merci de nous avoir écrit. Notre équipe vous répondra dans les meilleurs délais.' },
+  },
+};
+
+function FormField({ f, value, onChange }) {
+  const common = { value: value || '', onChange: e => onChange(e.target.value) };
+  let control;
+  if (f.type === 'chips') control = <ChipRow opts={f.opts} value={value} onPick={onChange}/>;
+  else if (f.type === 'textarea') control = <textarea {...common} rows={4} placeholder={f.ph} style={{ ...PUB_FIELD, height: 'auto', minHeight: 104, padding: '12px 14px', resize: 'none', lineHeight: 1.5 }}/>;
+  else control = <input {...common} type={f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : 'text'} inputMode={f.type === 'num' ? 'numeric' : f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : undefined} placeholder={f.ph} style={PUB_FIELD}/>;
+  return (
+    <div>
+      {f.label && <label style={PUB_LABEL}>{f.label}{f.required && <span style={{ color: OK.red }}> *</span>}</label>}
+      {control}
+    </div>
+  );
+}
+
+function SimpleFormScreen({ id }) {
+  const { back, navigate, canBack } = useNav();
+  const cfg = FORMS[id];
+  const [form, setForm] = useState({});
+  const [sent, setSent] = useState(false);
+  const setF = (k, v) => setForm(prev => ({ ...prev, [k]: v }));
+  const goBack = () => { if (canBack) back(); else navigate('home'); };
+  const fields = cfg.sections.flatMap(s => s.fields);
+  const valid = fields.filter(f => f.required).every(f => (form[f.k] || '').toString().trim());
+
+  if (sent) {
+    return (
+      <Screen bg={OK.bg2} statusDark>
+        <div data-screen-label={`${cfg.title} — envoyé`} style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 30px', textAlign: 'center' }}>
+          <div style={{ width: 96, height: 96, borderRadius: 999, background: cfg.tone, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: `0 12px 30px ${cfg.tone}59` }}>
+            <LIcon name="check" size={48} color="#fff" strokeWidth={3}/>
+          </div>
+          <h1 style={{ margin: '24px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 24, color: OK.ink, letterSpacing: -0.4 }}>{cfg.success.title}</h1>
+          <p style={{ margin: '12px 0 0', fontFamily: FX, fontSize: 14, color: OK.ink2, lineHeight: 1.55, maxWidth: 300 }}>{cfg.success.body}</p>
+          <button onClick={() => navigate('home')} style={{ marginTop: 28, width: '100%', height: 52, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FX, fontSize: 15, fontWeight: 800, boxShadow: '0 8px 20px rgba(11,124,57,0.3)' }}>
+            Retour à l’accueil
+          </button>
+        </div>
+      </Screen>
+    );
+  }
+
+  return (
+    <Screen bg={OK.bg2} statusDark footerPad={92} footer={<PubBar label={cfg.submit} icon="check" disabled={!valid} onClick={() => valid && setSent(true)}/>}>
+      <div data-screen-label={cfg.title}>
+        <GreenHeader title={cfg.title} onBack={goBack}/>
+        <div style={{ padding: '14px 16px', display: 'grid', gap: 12 }}>
+          {cfg.intro && (
+            <div style={{ display: 'flex', gap: 11, padding: '13px 14px', borderRadius: 16, background: cfg.tone + '12', border: `1px solid ${cfg.tone}2E` }}>
+              <span style={{ width: 34, height: 34, borderRadius: 10, flexShrink: 0, background: cfg.tone + '22', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <LIcon name={cfg.icon} size={18} color={cfg.tone} strokeWidth={2}/>
+              </span>
+              <p style={{ margin: 0, fontFamily: FX, fontSize: 12.5, lineHeight: 1.5, color: OK.ink2, alignSelf: 'center' }}>{cfg.intro}</p>
+            </div>
+          )}
+
+          {cfg.channels && (
+            <div style={{ display: 'grid', gap: 8 }}>
+              {cfg.channels.map(ch => (
+                <div key={ch.label} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}>
+                  <span style={{ width: 38, height: 38, borderRadius: 11, flexShrink: 0, background: ch.tone + '18', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <LIcon name={ch.icon} size={19} color={ch.tone} strokeWidth={2}/>
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: FX, fontSize: 11, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase', letterSpacing: 0.3 }}>{ch.label}</div>
+                    <div style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 700, color: OK.ink, marginTop: 1 }}>{ch.value}</div>
+                  </div>
+                </div>
+              ))}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 2px' }}>
+                <div style={{ flex: 1, height: 1, background: OK.line }}/>
+                <span style={{ fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink3 }}>ou envoyez-nous un message</span>
+                <div style={{ flex: 1, height: 1, background: OK.line }}/>
+              </div>
+            </div>
+          )}
+
+          {cfg.sections.map(sec => (
+            <PubCard key={sec.title} title={sec.title} icon={sec.icon}>
+              <div style={{ display: 'grid', gap: 14 }}>
+                {sec.fields.map(f => <FormField key={f.k} f={f} value={form[f.k]} onChange={v => setF(f.k, v)}/>)}
+              </div>
+            </PubCard>
+          ))}
+          <div style={{ fontFamily: FX, fontSize: 11, color: OK.ink3, textAlign: 'center', padding: '2px 10px' }}>Les champs marqués <span style={{ color: OK.red }}>*</span> sont obligatoires.</div>
+          <div style={{ height: 12 }}/>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+Object.assign(window, { PublierScreen, EtabScreen, ProposerServiceScreen, ProximityServicesScreen, ProximityProviderScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen, SimpleFormScreen });
 
 
 // ===================== 11-app =====================
@@ -7854,6 +8165,10 @@ function renderScreen(entry) {
     case 'baie-information': return <BaieInformationScreen/>;
     case 'baie-article':  return <BaieArticleScreen params={params}/>;
     case 'publier':       return <PublierScreen/>;
+    case 'form-partenariat': return <SimpleFormScreen id="partenariat"/>;
+    case 'form-suggestion':  return <SimpleFormScreen id="suggestion"/>;
+    case 'form-signaler':    return <SimpleFormScreen id="signaler"/>;
+    case 'form-contact':     return <SimpleFormScreen id="contact"/>;
     case 'etab':          return <EtabScreen/>;
     case 'proposer-service': return <ProposerServiceScreen/>;
     case 'proximity-services': return <ProximityServicesScreen/>;
