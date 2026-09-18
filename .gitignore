@@ -40,3 +40,8 @@ videos/
 
 # Redundant generated Android Studio export; the canonical project is android/
 /OKABA-Android-Studio-ready/
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json
+
+# POC modération IA : on garde la source, pas les images uploadées lors des tests
+demo-moderation/public/uploads/

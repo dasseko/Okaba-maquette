@@ -1,0 +1,16 @@
+{
+  "name": "okaba-demo-moderation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "POC modération O'KABA : publication d'annonces vérifiées par IA (CLIP + NSFW) avant affichage par catégorie",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "multer": "^1.4.5-lts.1"
+  }
+}

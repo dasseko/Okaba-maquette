@@ -4,13 +4,15 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "npm run regression:smoke && vite --host 0.0.0.0",
+    "dev:fast": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "android:add": "cap add android",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "audit:ui": "node tests/ui-audit.mjs",
+    "regression:smoke": "node tests/regression-smoke.mjs",
     "audit:event": "node tests/event-audit.mjs"
   },
   "dependencies": {

@@ -2657,9 +2657,9 @@ const AU_FIELD = { width: '100%', height: 52, background: '#fff', border: '1px s
 const AU_LABEL = { fontFamily: FAU, fontSize: 12, fontWeight: 800, color: OK.ink, display: 'block', margin: '0 2px 7px' };
 
 // Bouton plein vert (CTA principal)
-function AuBtn({ label, onClick, disabled, icon }) {
+function AuBtn({ label, onClick, disabled, icon, ...buttonProps }) {
   return (
-    <button onClick={onClick} disabled={disabled} style={{ width: '100%', height: 54, borderRadius: 14, border: 'none',
+    <button {...buttonProps} onClick={onClick} disabled={disabled} style={{ width: '100%', height: 54, borderRadius: 14, border: 'none',
       background: disabled ? OK.bg2 : OK.green, color: disabled ? OK.ink3 : '#fff', cursor: disabled ? 'default' : 'pointer',
       fontFamily: FAU, fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
       boxShadow: disabled ? 'none' : '0 8px 20px rgba(11,124,57,0.28)', transition: 'background .15s' }}>
@@ -2732,7 +2732,8 @@ function WelcomeScreen() {
           background: 'linear-gradient(180deg, rgba(3,13,8,0.45) 0%, rgba(3,13,8,0.22) 38%, rgba(3,13,8,0.5) 72%, rgba(2,9,5,0.9) 100%)' }}/>
 
         {/* Titre centré sur l'image (animation d'entrée) */}
-        <div className="okaba-welcome-title" style={{ position: 'absolute', left: 26, right: 26, top: '45%', transform: 'translateY(-50%)', textAlign: 'center' }}>
+        <div className="okaba-welcome-title" style={{ position: 'absolute', left: 26, right: 26, top: '41%', transform: 'translateY(-50%)', textAlign: 'center' }}>
+          <img src="assets/okaba-welcome-mark.png" alt="O'KABA" style={{ width: 78, height: 78, objectFit: 'contain', display: 'block', margin: '0 auto 14px', filter: 'drop-shadow(0 4px 16px rgba(0,0,0,0.45))' }}/>
           <h1 style={{ margin: 0, fontFamily: FAU, fontWeight: 800, fontSize: 33, lineHeight: 1.12, color: '#fff',
             letterSpacing: -0.6, textShadow: '0 2px 18px rgba(0,0,0,0.6)' }}>
             Bienvenue sur<br/>l'application <span style={{ color: OK.goldSoft }}>O'kaba</span>
@@ -3054,11 +3055,12 @@ function MarketScreen({ params }) {
   const [favs, setFavs] = useState({});
 
   const catObj = MARKET_CATS.find(c => c.id === cat) || MARKET_CATS[0];
+  const ALL = [...readUserListings(), ...LISTINGS];
   const items = cat === 'all'
-    ? LISTINGS
+    ? ALL
     : cat === 'gabon'
-      ? LISTINGS.filter(l => l.madeInGabon).sort((a, b) => (a.gabonPriority ?? 99) - (b.gabonPriority ?? 99))
-      : LISTINGS.filter(l => l.cat === cat);
+      ? ALL.filter(l => l.madeInGabon).sort((a, b) => (a.gabonPriority ?? 99) - (b.gabonPriority ?? 99))
+      : ALL.filter(l => l.cat === cat);
 
   return (
     <Screen bg={OK.bg2} statusDark={true} tabBar noScroll>
@@ -4668,33 +4670,33 @@ const BAIE_PLACES = {
   },
   loisirs: {
     title: 'Loisirs & divertissement',
-    cover: 'assets/baie/c21-site-01.webp',
+    cover: bImg('1507525428034-b723cf961d3e', 900),
     places: [
-      { id: 'promenade-nord', name: 'Promenade Nord', subtitle: '1,2 km au rythme de l’océan', image: 'assets/baie/c21-promenade-01.webp',
+      { id: 'promenade-nord', name: 'Promenade Nord', subtitle: '1,2 km au rythme de l’océan', image: bImg('1507525428034-b723cf961d3e', 900),
         description: 'Un grand ruban piéton relie les expériences du front de mer et offre à Libreville un espace privilégié pour marcher, courir, respirer et se retrouver.',
         vision: 'Devenir la promenade emblématique de la capitale et la colonne vertébrale des activités de la Baie des Rois.',
         highlights: ['1,2 km', 'Mobilité douce', 'Front de mer'], gallery: ['assets/baie/c21-cover.webp', 'assets/baie/c21-aerial-03.webp'] },
-      { id: 'aires-familles', name: 'Jardins des familles', subtitle: 'Jeux, fraîcheur & découvertes', image: 'assets/baie/c21-site-02.webp',
+      { id: 'aires-familles', name: 'Jardins des familles', subtitle: 'Jeux, fraîcheur & découvertes', image: bImg('1519331379826-f10be5486c6f', 900),
         description: 'Des aires de jeux sécurisées et des jardins généreux composent un territoire d’exploration pour les enfants et un lieu de détente pour toutes les générations.',
         vision: 'Faire du front de mer la sortie familiale de référence, inclusive, sûre et active toute l’année.',
         highlights: ['Aires de jeux', 'Jardins', 'Intergénérationnel'], gallery: ['assets/baie/c21-aerial-04.webp', 'assets/baie/c21-cover.webp'] },
-      { id: 'sport-glisse', name: 'Parc sports & glisse', subtitle: 'Bouger face à l’océan', image: 'assets/baie/c21-site-01.webp',
+      { id: 'sport-glisse', name: 'Parc sports & glisse', subtitle: 'Bouger face à l’océan', image: bImg('1520045892732-304bc3ac5d8e', 900),
         description: 'Vélo, jogging, fitness et glisse urbaine se rencontrent dans un paysage continu, pensé pour le mouvement et les nouvelles pratiques sportives.',
         vision: 'Créer un équipement urbain fédérateur et une scène sportive visible au cœur de Libreville.',
         highlights: ['Vélo', 'Skate-park', 'Fitness'], gallery: ['assets/baie/c21-aerial-01.webp', 'assets/baie/c21-aerial-04.webp'] },
-      { id: 'marche-producteurs', name: 'Marché des Producteurs', subtitle: 'Le Gabon en circuit court', image: 'assets/baie/c21-event-01.webp',
+      { id: 'marche-producteurs', name: 'Marché des Producteurs', subtitle: 'Le Gabon en circuit court', image: bImg('1488459716781-31db52582fe9', 900),
         description: 'Producteurs, artisans et visiteurs se rencontrent autour des saveurs locales et de produits issus des territoires gabonais.',
         vision: 'Offrir une vitrine régulière aux filières locales et transformer le marché en rendez-vous signature de la destination.',
         highlights: ['Circuits courts', 'Produits locaux', 'Savoir-faire'], gallery: ['assets/baie/c21-building-01.webp', 'assets/baie/c21-cover.webp'] },
-      { id: 'black-friday', name: 'Black Friday', subtitle: 'Shopping & animations sur la baie', image: 'assets/baie/c21-building-01.webp',
+      { id: 'black-friday', name: 'Black Friday', subtitle: 'Shopping & animations sur la baie', image: bImg('1483985988355-763728e1935b', 900),
         description: 'Une journée événementielle mêle offres commerciales, musique et animations pour créer un temps fort populaire sur la promenade.',
         vision: 'Fédérer les enseignes autour d’un rendez-vous à forte fréquentation et amplifier le rayonnement commercial du quartier.',
         highlights: ['Shopping', 'Animations', 'Temps fort mensuel'], gallery: ['assets/baie/c21-cover.webp', 'assets/baie/c21-event-01.webp'] },
-      { id: 'particulier-particulier', name: 'Particulier à Particulier', subtitle: 'Le rendez-vous automobile du samedi', image: 'assets/baie/economie-03.jpg',
+      { id: 'particulier-particulier', name: 'Particulier à Particulier', subtitle: 'Le rendez-vous automobile du samedi', image: bImg('1567818735868-e71b99932e29', 900),
         description: 'Un espace de rencontre dédié à l’achat, la vente et la découverte de véhicules d’occasion dans un cadre organisé et accessible.',
         vision: 'Structurer un marché visible, rassurant et capable d’attirer chaque semaine une communauté d’acheteurs et de passionnés.',
         highlights: ['Automobile', 'Chaque samedi', 'Mise en relation'], gallery: ['assets/baie/economie-02.jpg', 'assets/baie/c21-cover.webp'] },
-      { id: 'marina', name: 'Marina Baie des Rois', subtitle: 'Libreville tournée vers le large', image: 'assets/baie/c21-aerial-02.webp',
+      { id: 'marina', name: 'Marina Baie des Rois', subtitle: 'Libreville tournée vers le large', image: bImg('1569263979104-865ab7cd8d13', 900),
         description: 'Une marina contemporaine accueille plaisance, services nautiques et expériences sur l’eau dans le prolongement naturel de la promenade.',
         vision: 'Ouvrir une nouvelle économie maritime, connecter la destination aux itinéraires nautiques et enrichir l’offre touristique de Libreville.',
         highlights: ['Plaisance', 'Activités nautiques', 'Économie bleue'], gallery: ['assets/baie/c21-aerial-03.webp', 'assets/baie/c21-cover.webp'] },
@@ -4852,6 +4854,8 @@ function BaieScreen() {
     { label: 'Smart City', smart: true },
   ];
   const groupImg = g => (tenants.find(t => t.group === g) || {}).img;
+  const funPlaces = (typeof BAIE_PLACES !== 'undefined' && BAIE_PLACES.loisirs?.places) || [];
+  const funFeat = funPlaces[0];
   const featured = ['bdr-ocean', 'sakura', 'theone', 'club-plage', 'lamaia'].map(id => tenants.find(t => t.id === id)).filter(Boolean);
   const feat = featured.length ? featured : tenants.slice(0, 5);
   const [spotSlide, setSpotSlide] = useState(0);
@@ -4952,6 +4956,33 @@ function BaieScreen() {
             </div>
           </div>
         </div>
+
+        {/* Divertissement — carrousel cinématique (portrait) */}
+        {funFeat && (
+          <div style={{ padding: '22px 0 0' }}>
+            <div style={{ padding: '0 16px', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 3 }}>
+              <span style={{ fontFamily: FT, fontWeight: 800, fontSize: 18, color: OK.green }}>Divertissement</span>
+              <button onClick={() => navigate('baie-spots', { cat: 'loisirs' })} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FT, fontWeight: 700, fontSize: 13, color: OK.green }}>Voir tout</button>
+            </div>
+            <div style={{ padding: '0 16px 12px', fontFamily: FT, fontSize: 12, fontWeight: 600, color: OK.ink3 }}>Loisirs, sport, marché & marina au bord de l’eau</div>
+            <div style={{ display: 'flex', gap: 12, overflowX: 'auto', padding: '2px 16px 8px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
+              {funPlaces.map(p => (
+                <button key={p.id} onClick={() => navigate('baie-place', { cat: 'loisirs', id: p.id })} style={{ flexShrink: 0, width: 174, height: 234, borderRadius: 20, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', position: 'relative', boxShadow: '0 8px 22px rgba(5,45,21,0.16)' }}>
+                  <Img src={p.image} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(3,25,12,0.02) 24%, rgba(3,25,12,0.55) 62%, rgba(3,25,12,0.92) 100%)"/>
+                  {p.highlights?.[0] && (
+                    <span style={{ position: 'absolute', top: 11, left: 11, padding: '4px 9px', borderRadius: 999, background: 'rgba(4,25,12,0.5)', fontFamily: FT, fontWeight: 850, fontSize: 8.5, letterSpacing: 0.5, color: OK.gold, textTransform: 'uppercase' }}>{p.highlights[0]}</span>
+                  )}
+                  <div style={{ position: 'absolute', left: 13, right: 13, bottom: 13 }}>
+                    <div style={{ fontFamily: FT, fontWeight: 850, fontSize: 16, lineHeight: 1.12, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>{p.name}</div>
+                    <div style={{ marginTop: 4, fontFamily: FT, fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,0.9)', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.subtitle}</div>
+                    <div style={{ marginTop: 9, display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FT, fontWeight: 800, fontSize: 10.5, color: '#fff' }}>Découvrir <Icon name="arrow-r" size={13} color={OK.gold} strokeWidth={2.6}/></div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div style={{ height: 40 }}/>
         </div>
       </div>
@@ -7379,6 +7410,18 @@ function ProposerServiceScreen() {
   </div></Screen>;
 }
 
+// ── Modération IA + magasin d'annonces publiées (POC branché sur le mini-backend) ──
+const MOD_API = 'http://localhost:5178';
+const USER_LISTINGS_KEY = 'okaba:user-listings';
+const SEL_TO_DEMO = { immo: 'immobilier', auto: 'vehicules', tech: 'electronique', mode: 'mode', maison: 'maison' };
+function readUserListings() {
+  try { return JSON.parse(window.localStorage.getItem(USER_LISTINGS_KEY) || '[]'); } catch (e) { return []; }
+}
+function saveUserListing(l) {
+  const cur = readUserListings(); cur.unshift(l);
+  window.localStorage.setItem(USER_LISTINGS_KEY, JSON.stringify(cur));
+}
+
 function PublierScreen() {
   const { back, navigate, canBack } = useNav();
   const cats = MARKET_CATS.filter(c => !['all', 'gabon', 'services', 'events'].includes(c.id));
@@ -7394,13 +7437,58 @@ function PublierScreen() {
   const [loc, setLoc] = useState('');
   const [pkg, setPkg] = useState('free');
   const [preview, setPreview] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [rejection, setRejection] = useState(null);
+  const fileRef = React.useRef(null);
+
+  const onFiles = (e) => {
+    const files = [...(e.target.files || [])];
+    Promise.all(files.map(f => new Promise(res => {
+      const rd = new FileReader();
+      rd.onload = () => res({ type: 'photo', url: rd.result, file: f });
+      rd.readAsDataURL(f);
+    }))).then(ph => setMedia(m => [...m.filter(x => x.url), ...ph]));
+  };
+
+  const doPublish = async () => {
+    const photo = media.find(m => m.file);
+    if (!photo) { setRejection("Ajoutez une vraie photo : l'IA doit vérifier qu'elle correspond à votre annonce."); return; }
+    setChecking(true);
+    try {
+      const fd = new FormData();
+      fd.append('title', title || '');
+      fd.append('description', desc || '');
+      fd.append('category', SEL_TO_DEMO[sel] || sel);
+      fd.append('image', photo.file);
+      const r = await fetch(MOD_API + '/api/publish', { method: 'POST', body: fd });
+      const j = await r.json();
+      if (j.status === 'approved') {
+        saveUserListing({
+          id: 'usr-' + Date.now(), cat: sel, title: title || 'Sans titre',
+          price: Number(price) || 0, negotiable: nego, condition: form.cond || form.etat || 'Bon état',
+          city: (needsLoc && loc) ? loc : 'Libreville', posted: "À l'instant",
+          ref: 'OKB-' + Date.now().toString().slice(-6), featured: false,
+          images: [photo.url],
+          specs: (cfg ? cfg.fields : []).filter(f => form[f.k]).map(f => [f.label, form[f.k]]),
+          desc: desc || '', verified: true, relevance: j.article && j.article.relevance,
+        });
+        setStep(successStep);
+      } else {
+        setRejection(j.reason || 'Publication refusée : image non conforme.');
+      }
+    } catch (e) {
+      setRejection("Service de modération injoignable. Lance le mini-backend (dossier demo-moderation : node server.mjs, port 5178).");
+    }
+    setChecking(false);
+  };
 
   const PH_IMGS = [
     'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=700&q=80&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1584305574647-0cc949a2bb9f?w=700&q=80&auto=format&fit=crop',
     'https://images.unsplash.com/photo-1612817288484-6f916006741a?w=700&q=80&auto=format&fit=crop',
   ];
-  const coverImg = PH_IMGS[0];
+  const uploadedPhotos = media.filter(m => m.url);
+  const coverImg = uploadedPhotos[0] ? uploadedPhotos[0].url : PH_IMGS[0];
 
   const cfg = sel ? LISTING_TYPES[sel] : null;
   const steps = pubStepsFor(sel);
@@ -7495,11 +7583,21 @@ function PublierScreen() {
   else if (step === iDet) footer = <PubBar label="Continuer" disabled={!detailValid} onClick={() => detailValid && setStep(iMedia)}/>;
   else if (step === iMedia) footer = <PubBar label="Continuer" disabled={media.length < 1} onClick={() => { if (needsLoc) setStep(iLoc); else setPreview(true); }}/>;
   else if (step === iLoc) footer = <PubBar label="Continuer" disabled={!locValid} onClick={() => locValid && setPreview(true)}/>;
-  else footer = <PubBar label="Publier l’annonce" icon="check" onClick={() => setStep(successStep)}/>;
+  else footer = <PubBar label={checking ? 'Vérification IA…' : 'Publier l’annonce'} icon="check" disabled={checking} onClick={doPublish}/>;
 
   return (
     <Screen bg={OK.bg2} statusDark={true} footerPad={92} footer={footer}>
       <div data-screen-label="Publier">
+        {rejection && (
+          <div style={{ position: 'absolute', inset: 0, zIndex: 120, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+            <div style={{ background: '#fff', borderRadius: 20, padding: '26px 22px', textAlign: 'center', maxWidth: 320, boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+              <div style={{ width: 60, height: 60, borderRadius: 999, background: 'rgba(224,36,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px', fontSize: 30 }}>🚫</div>
+              <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.red }}>Publication refusée</div>
+              <p style={{ fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.5, margin: '10px 0 0' }}><strong style={{ color: OK.ink }}>Motif de rejet :</strong> {rejection}</p>
+              <button onClick={() => setRejection(null)} style={{ marginTop: 18, border: 'none', borderRadius: 12, padding: '11px 24px', fontFamily: FX, fontWeight: 800, fontSize: 14, cursor: 'pointer', background: OK.green, color: '#fff' }}>Modifier mon annonce</button>
+            </div>
+          </div>
+        )}
         <GreenHeader title="Publier une annonce" onBack={goBack}/>
         <PubStepper steps={steps} step={step}/>
 
@@ -7623,7 +7721,8 @@ function PublierScreen() {
               Une bonne photo attire 3× plus de contacts. Ajoutez jusqu’à 8 médias — photos ou vidéos.
             </p>
             <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
-              <button onClick={() => setMedia(m => [...m, { type: 'photo' }])} style={{ flex: 1, height: 46, borderRadius: 12, border: `1.5px solid ${OK.green}`, background: 'rgba(11,124,57,0.06)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.green }}>
+              <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={onFiles}/>
+              <button onClick={() => fileRef.current && fileRef.current.click()} style={{ flex: 1, height: 46, borderRadius: 12, border: `1.5px solid ${OK.green}`, background: 'rgba(11,124,57,0.06)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.green }}>
                 <Icon name="camera" size={18} color={OK.green} strokeWidth={2}/> Photo
               </button>
               <button onClick={() => setMedia(m => [...m, { type: 'video' }])} style={{ flex: 1, height: 46, borderRadius: 12, border: `1.5px solid ${OK.red}`, background: 'rgba(224,36,27,0.05)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.red }}>
@@ -7633,7 +7732,7 @@ function PublierScreen() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 14 }}>
               {media.map((m, i) => (
                 <div key={i} style={{ position: 'relative', aspectRatio: '1 / 1', borderRadius: 12, overflow: 'hidden' }}>
-                  <Img src={[
+                  <Img src={m.url || [
                     'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=300&q=80&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1584305574647-0cc949a2bb9f?w=300&q=80&auto=format&fit=crop',
                     'https://images.unsplash.com/photo-1612817288484-6f916006741a?w=300&q=80&auto=format&fit=crop',
