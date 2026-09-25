@@ -623,6 +623,24 @@ const SHOPS = {
   },
 };
 
+// Vendeur de repli pour les annonces créées par l'utilisateur (id: 'me').
+const ME_SHOP = {
+  id: 'me', name: `${USER.firstName} ${USER.lastName}`, handle: USER.handle,
+  cat: 'Vendeur particulier', city: USER.city,
+  verified: false, pro: false, rating: 5, reviews: 0, followers: 0, since: 2026,
+  avatar: USER.avatar, cover: USER.avatar,
+  bio: 'Annonces publiées depuis mon compte O’KABA.',
+  phone: USER.phone, email: USER.email, responseTime: 'Répond rapidement',
+};
+
+// Libellé de prix d'une annonce : renvoie « Sur devis » / « Gratuit »,
+// ou null si l'annonce a un vrai prix numérique.
+function priceText(item) {
+  if (item.priceMode === 'Sur devis' || item.onQuote) return 'Sur devis';
+  if (item.priceMode === 'Gratuit' || item.free) return 'Gratuit';
+  return null;
+}
+
 // Annonces (listings) ──────────────────────────────────────
 // prix en FCFA. ref = numéro de référence (consigne sécurité PDF BETA).
 const LISTINGS = [
@@ -1498,33 +1516,33 @@ function hasDarkStatusBackground(color, fallback = false) {
 // ── Action sheet « Publier » — menu à 2 niveaux ─────────────
 // Niveau 1 = les 4 sections (sans emoji). Niveau 2 = les sous-actions.
 const PUB_MENU = [
-  { id: 'promouvoir', label: 'Publier & promouvoir', icon: 'edit', tone: '#0B7C39',
-    hint: 'Produit, service, événement, publicité, promotion…',
+  { id: 'vendre', label: 'Vendre & proposer', icon: 'tag', tone: '#0B7C39',
+    hint: 'Mettez un produit ou un service en ligne',
     sub: [
-      { id: 'produit',  icon: 'tag',       label: 'Publier un produit',        screen: 'publier' },
-      { id: 'service',  icon: 'briefcase', label: 'Publier un service',        screen: 'proposer-service' },
-      { id: 'event',    icon: 'calendar',  label: 'Publier un événement' },
-      { id: 'pub',      icon: 'trend',     label: 'Faire de la publicité' },
-      { id: 'promo',    icon: 'gift',      label: 'Créer une promotion' },
-      { id: 'reel',     icon: 'video',     label: 'Publier une capsule vidéo' },
+      { id: 'produit',  icon: 'tag',       label: 'Publier une annonce', screen: 'publier' },
+      { id: 'service',  icon: 'briefcase', label: 'Proposer un service', screen: 'proposer-service' },
     ] },
-  { id: 'visibilite', label: 'Augmenter votre visibilité', icon: 'shop', tone: '#E0A400',
-    hint: 'Établissement, activité, site touristique',
+  { id: 'referencer', label: 'Référencer un lieu', icon: 'shop', tone: '#E0A400',
+    hint: 'Faites connaître un lieu sur O’KABA',
     sub: [
-      { id: 'etab',     icon: 'shop',      label: 'Référencer mon établissement / activité', screen: 'etab' },
+      { id: 'etab',     icon: 'shop',      label: 'Référencer un établissement / activité', screen: 'etab' },
       { id: 'tourisme', icon: 'travel',    label: 'Référencer un site touristique' },
     ] },
-  { id: 'participer', label: 'Partenariat et suggestion', icon: 'handshake', tone: '#5C6B7A',
-    hint: 'Proposez un partenariat ou partagez une idée',
+  { id: 'animer', label: 'Animer & promouvoir', icon: 'trend', tone: '#2F6DB5',
+    hint: 'Événement, vidéo, publicité, promotion',
+    sub: [
+      { id: 'event',    icon: 'calendar',  label: 'Publier un événement' },
+      { id: 'reel',     icon: 'video',     label: 'Publier une capsule vidéo' },
+      { id: 'pub',      icon: 'trend',     label: 'Faire de la publicité' },
+      { id: 'promo',    icon: 'gift',      label: 'Créer une promotion' },
+    ] },
+  { id: 'aide', label: 'Aide & relations', icon: 'handshake', tone: '#5C6B7A',
+    hint: 'Partenariat, suggestion, contact',
     sub: [
       { id: 'partenariat', icon: 'handshake', label: 'Proposer un partenariat', screen: 'form-partenariat' },
       { id: 'suggestion',  icon: 'sparkle',   label: 'Faire une suggestion',    screen: 'form-suggestion' },
-    ] },
-  { id: 'assistance', label: 'Assistance & Contact', icon: 'help', tone: '#C8302E',
-    hint: 'Signaler un problème, nous contacter',
-    sub: [
-      { id: 'signaler', icon: 'flag',      label: 'Signaler un problème', screen: 'form-signaler' },
-      { id: 'contact',  icon: 'mail',      label: 'Nous contacter',       screen: 'form-contact' },
+      { id: 'signaler',    icon: 'flag',      label: 'Signaler un problème',    screen: 'form-signaler' },
+      { id: 'contact',     icon: 'mail',      label: 'Nous contacter',          screen: 'form-contact' },
     ] },
 ];
 
@@ -2200,10 +2218,10 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => (
   </div>
 );
 
-// Prix (vert, gras)
-const Price = ({ value, unit, size = 18 }) => (
+// Prix (vert, gras). `label` remplace le montant (ex. « Sur devis », « Gratuit »).
+const Price = ({ value, unit, size = 18, label }) => (
   <span style={{ fontFamily: F, fontWeight: 800, fontSize: size, color: OK.green, lineHeight: 1, letterSpacing: -0.3, whiteSpace: 'nowrap' }}>
-    {fcfa(value)}{unit && <span style={{ fontSize: size * 0.6, color: OK.ink3, fontWeight: 600 }}>{unit}</span>}
+    {label != null ? label : <>{fcfa(value)}{unit && <span style={{ fontSize: size * 0.6, color: OK.ink3, fontWeight: 600 }}>{unit}</span>}</>}
   </span>
 );
 
@@ -2239,7 +2257,7 @@ const ListingCard = ({ item, onClick, fav, onFav, compact }) => {
         }}>{item.condition}</span>
       </div>
       <div style={{ padding: compact ? '8px 10px 9px' : '10px 11px 12px', display: 'flex', flexDirection: 'column', gap: compact ? 3 : 4 }}>
-        <Price value={item.price} unit={item.unit} size={compact ? 16 : 18}/>
+        <Price value={item.price} unit={item.unit} size={compact ? 16 : 18} label={priceText(item)}/>
         <div style={{ fontFamily: F, fontSize: compact ? 11.5 : 12.5, fontWeight: 700, color: OK.ink, lineHeight: 1.25,
           display: '-webkit-box', WebkitLineClamp: compact ? 1 : 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: compact ? 0 : 32 }}>
           {item.title}
@@ -2272,7 +2290,7 @@ const ListingRow = ({ item, onClick }) => (
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
         {item.title}
       </div>
-      <Price value={item.price} unit={item.unit} size={19}/>
+      <Price value={item.price} unit={item.unit} size={19} label={priceText(item)}/>
       <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: 5 }}>
         <span style={{ fontFamily: F, fontSize: 10, fontWeight: 700, color: OK.ink2, background: OK.bg2, padding: '2px 7px', borderRadius: 6 }}>{item.condition}</span>
         <Icon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
@@ -3350,12 +3368,13 @@ const FD = "'Manrope', system-ui, sans-serif";
 // ── DÉTAIL ANNONCE ──────────────────────────────────────────
 function ListingScreen({ params }) {
   const { navigate, back } = useNav();
-  const item = LISTINGS.find(l => l.id === params?.id) || LISTINGS[0];
-  const shop = SHOPS[item.shop];
+  const ALL_LISTINGS = [...readUserListings(), ...LISTINGS];
+  const item = ALL_LISTINGS.find(l => l.id === params?.id) || LISTINGS[0];
+  const shop = SHOPS[item.shop] || ME_SHOP;
   const [img, setImg] = useState(0);
   const [fav, setFav] = useState(false);
   const [headerSolid, setHeaderSolid] = useState(false);
-  const similar = LISTINGS.filter(l => l.cat === item.cat && l.id !== item.id).slice(0, 4);
+  const similar = ALL_LISTINGS.filter(l => l.cat === item.cat && l.id !== item.id).slice(0, 4);
   const sref = useRef(null);
 
   return (
@@ -3421,11 +3440,15 @@ function ListingScreen({ params }) {
         <div ref={sref} data-screen-scroll="listing" onScroll={e => setHeaderSolid(e.currentTarget.scrollTop > 80)} style={{ position: 'absolute', zIndex: 1, inset: '0 0 92px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
           <div aria-hidden style={{ height: 'calc(var(--detail-hero-h) - 22px)', pointerEvents: 'none' }}/>
           <div data-scroll-sheet="listing" style={{ minHeight: `calc(100% - ${APP_DETAIL_HEADER_HEIGHT})`, background: OK.bg, borderRadius: '26px 26px 0 0', padding: '22px 20px 24px' }}>
-          {/* condition + posted + ref */}
+          {/* condition + date de publication + pseudo vendeur */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <span style={{ fontFamily: FD, fontSize: 11, fontWeight: 800, color: OK.green, background: 'rgba(11,124,57,0.10)', padding: '4px 10px', borderRadius: 999 }}>{item.condition}</span>
-            <span style={{ fontFamily: FD, fontSize: 12, color: OK.ink3 }}>{item.posted}</span>
-            <span style={{ marginLeft: 'auto', fontFamily: FD, fontSize: 11, color: OK.ink3, letterSpacing: 0.3 }}>Réf. {item.ref}</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FD, fontSize: 12, color: OK.ink3 }}>
+              <Icon name="history" size={13} color={OK.ink3} strokeWidth={2}/>{item.posted}
+            </span>
+            {shop.handle && (
+              <span style={{ marginLeft: 'auto', fontFamily: FD, fontSize: 12, fontWeight: 700, color: OK.green, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '45%' }}>{shop.handle}</span>
+            )}
           </div>
 
           <h1 style={{ margin: '12px 0 0', fontFamily: FD, fontWeight: 800, fontSize: 23, lineHeight: 1.18, color: OK.ink, letterSpacing: -0.3 }}>
@@ -3433,9 +3456,9 @@ function ListingScreen({ params }) {
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
             <span style={{ fontFamily: FD, fontWeight: 800, fontSize: 30, color: OK.green, letterSpacing: -0.6, whiteSpace: 'nowrap' }}>
-              {fcfa(item.price)}<span style={{ fontSize: 15, color: OK.ink3, fontWeight: 600 }}>{item.unit || ''}</span>
+              {priceText(item) != null ? priceText(item) : <>{fcfa(item.price)}<span style={{ fontSize: 15, color: OK.ink3, fontWeight: 600 }}>{item.unit || ''}</span></>}
             </span>
-            {item.negotiable && <span style={{ fontFamily: FD, fontSize: 11.5, fontWeight: 700, color: '#8A6B00', background: 'rgba(245,184,0,0.22)', padding: '4px 10px', borderRadius: 999 }}>Négociable</span>}
+            {item.negotiable && priceText(item) == null && <span style={{ fontFamily: FD, fontSize: 11.5, fontWeight: 700, color: '#8A6B00', background: 'rgba(245,184,0,0.22)', padding: '4px 10px', borderRadius: 999 }}>Négociable</span>}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, color: OK.ink2 }}>
             <Icon name="pin" size={15} color={OK.ink2} strokeWidth={2}/>
@@ -3509,6 +3532,15 @@ function ListingScreen({ params }) {
             </div>
           )}
 
+          {/* Référence de l'annonce — pied de fiche discret */}
+          <div style={{ marginTop: 24, paddingTop: 14, borderTop: `1px solid ${OK.line}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+            <Icon name="tag" size={12} color={OK.ink3} strokeWidth={2}/>
+            <span style={{ fontFamily: FD, fontSize: 11, color: OK.ink3, letterSpacing: 0.4 }}>
+              Réf. {item.ref}
+            </span>
+          </div>
+
           <div style={{ height: 24 }}/>
           </div>
         </div>
@@ -3520,12 +3552,12 @@ function ListingScreen({ params }) {
 // ── PROFIL BOUTIQUE / VENDEUR (cf. capture MAS et Famille) ──
 function ShopScreen({ params }) {
   const { navigate, back } = useNav();
-  const shop = SHOPS[params?.id] || SHOPS['mas-famille'] || Object.values(SHOPS)[0];
+  const shop = SHOPS[params?.id] || (params?.id === 'me' ? ME_SHOP : null) || SHOPS['mas-famille'] || Object.values(SHOPS)[0];
   const [tab, setTab] = useState('apropos');
   const [following, setFollowing] = useState(false);
   const [fav, setFav] = useState(false);
   const [headerSolid, setHeaderSolid] = useState(false);
-  const listings = LISTINGS.filter(l => l.shop === shop.id);
+  const listings = [...readUserListings(), ...LISTINGS].filter(l => l.shop === shop.id);
   const photosCount = shop.photosCount || listings.reduce((n, l) => n + l.images.length, 0);
   const avisCount = shop.avisCount || shop.reviews || 0;
   const photoPool = listings.flatMap(l => l.images).concat(shop.cover, shop.avatar);
@@ -7464,8 +7496,9 @@ function PublierScreen() {
       const j = await r.json();
       if (j.status === 'approved') {
         saveUserListing({
-          id: 'usr-' + Date.now(), cat: sel, title: title || 'Sans titre',
-          price: Number(price) || 0, negotiable: nego, condition: form.cond || form.etat || 'Bon état',
+          id: 'usr-' + Date.now(), cat: sel, shop: 'me', title: title || 'Sans titre',
+          price: Number(price) || 0, priceMode, unit: priceUnit.trim() === 'FCFA' ? '' : priceUnit,
+          negotiable: nego && priceNeeded, condition: form.cond || form.etat || 'Bon état',
           city: (needsLoc && loc) ? loc : 'Libreville', posted: "À l'instant",
           ref: 'OKB-' + Date.now().toString().slice(-6), featured: false,
           images: [photo.url],
@@ -7991,21 +8024,30 @@ function FavorisScreen() {
 }
 
 // ── COMPTE ──────────────────────────────────────────────────
+const APP_VERSION = '0.1.0';
+
 function CompteScreen() {
   const { navigate, reset } = useNav();
   const rows = [
-    ['tag', 'Mes annonces', '3 actives'], ['heart', 'Favoris', null], ['shop', 'Devenir vendeur Pro', 'Nouveau'],
+    ['user', 'Informations personnelles', null], ['tag', 'Mes annonces', '3 actives'], ['heart', 'Favoris', null], ['shop', 'Devenir vendeur Pro', 'Nouveau'],
     ['bell', 'Notifications', null], ['shield', 'Sécurité & confidentialité', null], ['help', 'Aide & support', null],
   ];
   return (
     <Screen bg={OK.bg2} statusDark={true} tabBar>
       <div data-screen-label="Compte">
         <GreenHeader title="Mon compte"/>
-        {/* Profile card */}
+        {/* Profile card — cliquable pour consulter / modifier ses infos */}
         <div style={{ padding: '14px 16px 0' }}>
-          <div style={{ background: `linear-gradient(135deg, ${OK.green} 0%, ${OK.greenDeep} 100%)`, borderRadius: 20, padding: 18,
+          <button onClick={() => navigate('profil')} style={{ width: '100%', textAlign: 'left', cursor: 'pointer', border: 'none',
+            background: `linear-gradient(135deg, ${OK.green} 0%, ${OK.greenDeep} 100%)`, borderRadius: 20, padding: 18,
             display: 'flex', alignItems: 'center', gap: 14, color: '#fff', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 26px rgba(11,124,57,0.26)' }}>
             <div aria-hidden style={{ position: 'absolute', right: -30, top: -40, width: 150, height: 150, borderRadius: 75, background: `radial-gradient(circle, ${OK.gold} 0%, transparent 70%)`, opacity: 0.45 }}/>
+            {/* Accès édition clairement identifiable */}
+            <span style={{ position: 'absolute', top: 12, right: 12, display: 'inline-flex', alignItems: 'center', gap: 5,
+              background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.4)', padding: '5px 11px', borderRadius: 999,
+              fontFamily: FX, fontSize: 11, fontWeight: 800, color: '#fff' }}>
+              <Icon name="edit" size={12} color="#fff" strokeWidth={2.2}/> Modifier
+            </span>
             <div style={{ width: 60, height: 60, borderRadius: 16, background: `url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80&auto=format&fit=crop') center/cover`, border: '2px solid rgba(255,255,255,0.5)', flexShrink: 0 }}/>
             <div style={{ flex: 1, position: 'relative' }}>
               <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 20, lineHeight: 1 }}>Patricia Ndong</div>
@@ -8014,13 +8056,13 @@ function CompteScreen() {
                 <Icon name="sparkle" size={11} color={OK.gold} strokeWidth={2}/> Membre O’KABA
               </span>
             </div>
-          </div>
+          </button>
         </div>
         {/* Menu */}
         <div style={{ padding: '16px 16px 0' }}>
           <div style={{ background: '#fff', borderRadius: 16, border: `1px solid ${OK.line}`, overflow: 'hidden' }}>
             {rows.map(([ic, l, badge], i) => (
-              <button key={l} onClick={() => { if (l === 'Favoris') navigate('favoris'); else if (l === 'Notifications') navigate('notifications'); else if (l === 'Mes annonces') navigate('market', { cat: 'all' }); else if (l === 'Devenir vendeur Pro') navigate('shops'); }}
+              <button key={l} onClick={() => { if (l === 'Informations personnelles') navigate('profil'); else if (l === 'Favoris') navigate('favoris'); else if (l === 'Notifications') navigate('notifications'); else if (l === 'Mes annonces') navigate('market', { cat: 'all' }); else if (l === 'Devenir vendeur Pro') navigate('shops'); }}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 13, padding: '14px 15px', border: 'none',
                   borderTop: i ? `1px solid ${OK.line}` : 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
                 <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -8037,6 +8079,56 @@ function CompteScreen() {
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <Icon name="logout" size={17} color={OK.red} strokeWidth={2}/> Se déconnecter
           </button>
+          {/* Version de l'application */}
+          <div style={{ marginTop: 16, textAlign: 'center', fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink3, letterSpacing: 0.2 }}>
+            O’KABA · version {APP_VERSION}
+          </div>
+        </div>
+        <div style={{ height: 30 }}/>
+      </div>
+    </Screen>
+  );
+}
+
+// ── INFORMATIONS PERSONNELLES — consultation / modification ──
+function ProfilInfosScreen() {
+  const { back, navigate, canBack } = useNav();
+  const goBack = () => { if (canBack) back(); else navigate('compte'); };
+  const [form, setForm] = useState({
+    nom: 'Patricia Ndong', tel: '+241 06 77 12 34', email: 'patricia.ndong@email.ga', ville: 'Libreville',
+  });
+  const setF = (k, v) => setForm(prev => ({ ...prev, [k]: v }));
+  const FIELDS = [
+    { k: 'nom',   label: 'Nom complet', type: 'text',  ph: 'Ex : Patricia Ndong' },
+    { k: 'tel',   label: 'Téléphone',   type: 'tel',   ph: '+241 …' },
+    { k: 'email', label: 'E-mail',      type: 'email', ph: 'nom@email.ga' },
+    { k: 'ville', label: 'Ville',       type: 'text',  ph: 'Ex : Libreville' },
+  ];
+  return (
+    <Screen bg={OK.bg2} statusDark={true} footerPad={92} footer={
+      <PubBar label="Enregistrer" icon="check" onClick={() => { notifyDemo('Informations personnelles enregistrées'); goBack(); }}/>
+    }>
+      <div data-screen-label="Informations personnelles">
+        <GreenHeader title="Informations personnelles" onBack={goBack}/>
+        {/* En-tête avatar */}
+        <div style={{ padding: '18px 16px 0', display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ width: 66, height: 66, borderRadius: 18, background: `url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80&auto=format&fit=crop') center/cover`, border: `2px solid ${OK.line}`, flexShrink: 0 }}/>
+          <button onClick={() => notifyDemo('Changer la photo de profil')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff',
+            border: `1.5px solid ${OK.line}`, borderRadius: 12, padding: '9px 14px', cursor: 'pointer', fontFamily: FX, fontSize: 12.5, fontWeight: 800, color: OK.green }}>
+            <Icon name="edit" size={14} color={OK.green} strokeWidth={2.2}/> Changer la photo
+          </button>
+        </div>
+        {/* Formulaire */}
+        <div style={{ padding: '18px 16px 0', display: 'flex', flexDirection: 'column', gap: 15 }}>
+          {FIELDS.map(f => (
+            <div key={f.k}>
+              <label style={PUB_LABEL}>{f.label}</label>
+              <input value={form[f.k]} onChange={e => setF(f.k, e.target.value)}
+                type={f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : 'text'}
+                inputMode={f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : undefined}
+                placeholder={f.ph} style={PUB_FIELD}/>
+            </div>
+          ))}
         </div>
         <div style={{ height: 30 }}/>
       </div>
@@ -8220,7 +8312,7 @@ function SimpleFormScreen({ id }) {
   );
 }
 
-Object.assign(window, { PublierScreen, EtabScreen, ProposerServiceScreen, ProximityServicesScreen, ProximityProviderScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen, SimpleFormScreen });
+Object.assign(window, { PublierScreen, EtabScreen, ProposerServiceScreen, ProximityServicesScreen, ProximityProviderScreen, NotificationsScreen, MessagesScreen, ChatScreen, FavorisScreen, CompteScreen, ProfilInfosScreen, SimpleFormScreen });
 
 
 // ===================== 11-app =====================
@@ -8277,6 +8369,7 @@ function renderScreen(entry) {
     case 'chat':          return <ChatScreen params={params}/>;
     case 'favoris':       return <FavorisScreen/>;
     case 'compte':        return <CompteScreen/>;
+    case 'profil':        return <ProfilInfosScreen/>;
     default:              return <HomeScreen/>;
   }
 }
