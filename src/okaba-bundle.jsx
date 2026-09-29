@@ -4879,11 +4879,18 @@ function BaieScreen() {
     return () => clearInterval(timer);
   }, [baieEvents.length]);
   const featuredBaieEvent = baieEvents[baieEventSlide] || baieEvents[0];
+  // Modules de la Baie des Rois (grille 3 × 3, cf. maquette papier).
+  // Smart City est masqué pour le moment (pas prêt pour la vraie app) : l'écran
+  // SmartCityScreen reste en place, on affiche seulement les 2 modules retenus
+  // qui en sont issus (Infos Pratiques, Accès & Mobilité).
   const explore = [
-    { label: 'Restaurants & Bars', guide: 'restaurants', img: BAIE_PLACES.restaurants.cover },
-    { label: 'Hôtels', guide: 'hotels', img: BAIE_PLACES.hotels.cover },
-    { label: 'Loisirs et divertissement', guide: 'loisirs', img: BAIE_PLACES.loisirs.cover },
-    { label: 'Smart City', smart: true },
+    { label: 'Établissements', sub: 'Restaurants, boutiques, hôtels, services…', icon: 'shop', tone: OK.green, img: BAIE_PLACES.restaurants.cover, go: () => navigate('entity', { id: 'baie-des-rois' }) },
+    { label: 'Événements', sub: 'Concerts, expositions, activités culturelles…', icon: 'calendar', tone: OK.red, img: (baieEvents[0] || {}).poster || BAIE_PLACES.hotels.cover, go: () => navigate('events') },
+    { label: 'Activités & Loisirs', sub: 'Détente, sport, plage, visites…', icon: 'loisir', tone: OK.blue, img: BAIE_PLACES.loisirs.cover, go: () => navigate('baie-spots', { cat: 'loisirs' }) },
+    { label: 'Infos Pratiques', sub: 'Accès, horaires, plan, services, contacts…', icon: 'info', tone: '#6B3FA0', img: 'assets/smartcity-information.jpg', go: () => navigate('baie-information') },
+    { label: 'Accès & Mobilité', sub: 'Parking, transport, plan d’accès…', icon: 'transport', tone: OK.gold, img: 'assets/baie/acces-mobilite.jpg', go: () => navigate('parking') },
+    { label: 'Partenariats & Opportunités', sub: 'Investir, devenir partenaire, appels à projets…', icon: 'handshake', tone: OK.blue, img: 'assets/baie/partenariats.jpg', go: () => navigate('form-partenariat') },
+    // { label: 'Smart City', smart: true },
   ];
   const groupImg = g => (tenants.find(t => t.group === g) || {}).img;
   const funPlaces = (typeof BAIE_PLACES !== 'undefined' && BAIE_PLACES.loisirs?.places) || [];
@@ -4927,7 +4934,14 @@ function BaieScreen() {
         <div style={{ padding: '16px 16px 0' }}>
           <div style={{ fontFamily: FT, fontWeight: 800, fontSize: 20, color: OK.ink, letterSpacing: -0.3, marginBottom: 12 }}>Explorer</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            {explore.map(c => c.smart ? (
+            {explore.map(c => c.go ? (
+              <button key={c.label} onClick={c.go} style={{
+                position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
+                <Img src={c.img} style={{ position: 'absolute', inset: 0 }}
+                  overlay="linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.62) 100%)"/>
+                <span style={{ position: 'absolute', left: 12, right: 12, bottom: 10, fontFamily: FT, fontWeight: 800, fontSize: 14, color: '#fff', lineHeight: 1.15, textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}>{c.label}</span>
+              </button>
+            ) : c.smart ? (
               <button key={c.label} onClick={() => navigate('smartcity')} style={{
                 position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
                 <Img src={bImg('1477959858617-67f85cf4f1df', 500)} style={{ position: 'absolute', inset: 0 }}
@@ -8081,7 +8095,7 @@ function CompteScreen() {
           </button>
           {/* Version de l'application */}
           <div style={{ marginTop: 16, textAlign: 'center', fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink3, letterSpacing: 0.2 }}>
-            O’KABA · version {APP_VERSION}
+            Version {APP_VERSION}
           </div>
         </div>
         <div style={{ height: 30 }}/>
