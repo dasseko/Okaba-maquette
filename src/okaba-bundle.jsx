@@ -2537,7 +2537,7 @@ const HOME_CATS = [
   { id: 'resto',  label: 'Restaurants', icon: 'restaurant', color: '#0A6A2F', tint: '#E7F2EB', target: 'annuaire', param: 'restaurants' },
   { id: 'shop',   label: 'Shopping',    icon: 'shop',       color: '#15924B', tint: '#E8F5ED', target: 'market',   param: 'all' },
   { id: 'hotel',  label: 'Hôtels',      icon: 'hotel',      color: '#3E6AA5', tint: '#E7EDF6', target: 'annuaire', param: 'hotel' },
-  { id: 'tour',   label: 'Tourisme',    icon: 'travel',     color: '#0E8C86', tint: '#DEF1F0', target: 'tourisme' },
+  { id: 'tour',   label: 'Tourisme',    icon: 'compass',    color: '#0E8C86', tint: '#DEF1F0', target: 'tourisme' },
   { id: 'mkt',    label: 'Marketplace', icon: 'tag',        color: '#B5531E', tint: '#F7E8DF', target: 'market',   param: 'all' },
   { id: 'event',  label: 'Événements',  icon: 'calendar',   color: '#2D6FB3', tint: '#E4EEF8', target: 'events' },
 ];
@@ -2592,14 +2592,13 @@ function HomeScreen() {
       <div data-screen-label="Accueil" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div data-home-scroll style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 132 }}>
 
-          {/* ═══ HERO (image de fond + recherche + à la une) ═══ */}
-          <div style={{ position: 'relative', minHeight: 404 }}>
+          {/* ═══ HEADER COURT (image de fond + recherche) ═══ */}
+          <div style={{ position: 'relative' }}>
             {HERO_SLIDES.map((s, i) => (
               <div key={s.id} aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: `url('${s.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === slide ? 1 : 0, transition: 'opacity .9s ease' }}/>
             ))}
-            <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,26,14,0.64) 0%, rgba(3,26,14,0.26) 28%, rgba(3,26,14,0.24) 50%, rgba(3,26,14,0.88) 100%)' }}/>
-            <div style={{ position: 'relative', padding: `${APP_SAFE_TOP} 16px 0`, minHeight: 404, display: 'flex', flexDirection: 'column' }}>
-              {/* ligne 1 : logo + cloche + profil */}
+            <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(175deg, rgba(3,24,13,0.76) 0%, rgba(3,24,13,0.52) 55%, rgba(3,24,13,0.66) 100%)' }}/>
+            <div style={{ position: 'relative', padding: `${APP_SAFE_TOP} 16px 18px` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ flex: 1, minWidth: 0 }}><Wordmark size={24}/></div>
                 <button aria-label="Notifications" onClick={() => navigate('notifications')} style={{ position: 'relative', background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 999, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
@@ -2610,41 +2609,40 @@ function HomeScreen() {
                   <Icon name="user" size={18} color="#fff" strokeWidth={2.1}/>
                 </button>
               </div>
-              {/* ligne 2 : localisation */}
-              <button aria-label="Changer de ville" style={{ marginTop: 9, alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 5, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
-                <Icon name="pin" size={13} color="#fff" strokeWidth={2.2}/>
-                <span style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 12.5, color: '#fff' }}>Libreville</span>
-                <Icon name="chev-d" size={12} color="rgba(255,255,255,0.85)" strokeWidth={2.6}/>
-              </button>
-              {/* recherche */}
-              <button onClick={() => go('market', 'all')} style={{ marginTop: 11, width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 15, padding: '13px 14px', boxShadow: '0 8px 22px rgba(0,0,0,0.26)', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+              <button onClick={() => go('market', 'all')} style={{ marginTop: 13, width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 15, padding: '13px 14px', boxShadow: '0 8px 22px rgba(0,0,0,0.28)', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
                 <Icon name="search" size={18} color={OK.green} strokeWidth={2.4}/>
-                <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>Rechercher un établissement, un produit, un service…</span>
+                <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>Rechercher à Libreville…</span>
                 <span style={{ width: 32, height: 32, borderRadius: 10, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="qr" size={16} color="#fff" strokeWidth={2}/></span>
               </button>
-              {/* à la une */}
-              <div style={{ flex: 1 }}/>
-              <div style={{ paddingBottom: 38 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                  <span style={{ width: 24, height: 2.5, background: '#fff', borderRadius: 3 }}/>
-                  <span style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 10, letterSpacing: 1.6, color: '#fff' }}>{hero.badge}</span>
+            </div>
+          </div>
+
+          {/* ═══ À LA UNE (carte slider arrondie, chevauche le header) ═══ */}
+          <div style={{ padding: '0 16px', marginTop: -16 }}>
+            <div style={{ position: 'relative', height: 190, borderRadius: 22, overflow: 'hidden', boxShadow: PSH }}>
+              {HERO_SLIDES.map((s, i) => (
+                <div key={s.id} aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: `url('${s.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === slide ? 1 : 0, transition: 'opacity .8s ease' }}/>
+              ))}
+              <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(100deg, rgba(3,24,13,0.9) 0%, rgba(3,24,13,0.5) 45%, rgba(3,24,13,0.08) 82%)' }}/>
+              <div style={{ position: 'absolute', left: 17, right: 17, top: 15, bottom: 15, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ width: 20, height: 2.5, background: '#fff', borderRadius: 3 }}/>
+                  <span style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 9.5, letterSpacing: 1.4, color: '#fff' }}>{hero.badge}</span>
                 </div>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 30, color: '#fff', lineHeight: 1.05, marginTop: 10, letterSpacing: -0.7, textShadow: '0 2px 14px rgba(0,0,0,0.5)' }}>{hero.title}</div>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 13, color: 'rgba(255,255,255,0.9)', marginTop: 6, maxWidth: 264, lineHeight: 1.35, textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>{hero.subtitle}</div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 15 }}>
-                  <button onClick={() => navigate(hero.target)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 13, padding: '11px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 6px 16px rgba(0,0,0,0.25)' }}>
-                    {hero.cta}<Icon name="arrow-r" size={15} color={OK.green} strokeWidth={2.6}/>
-                  </button>
-                  <div style={{ display: 'flex', gap: 5 }}>
-                    {HERO_SLIDES.map((s, i) => <button key={s.id} onClick={() => setSlide(i)} aria-label={`Diapo ${i + 1}`} style={{ width: i === slide ? 22 : 7, height: 7, borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer', background: i === slide ? '#fff' : 'rgba(255,255,255,0.45)', transition: 'width .35s ease' }}/>)}
-                  </div>
-                </div>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 24, color: '#fff', lineHeight: 1.05, marginTop: 8, letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.55)' }}>{hero.title}</div>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 12, color: 'rgba(255,255,255,0.9)', marginTop: 5, maxWidth: 210, lineHeight: 1.3, textShadow: '0 1px 6px rgba(0,0,0,0.55)' }}>{hero.subtitle}</div>
+                <button onClick={() => navigate(hero.target)} style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '9px 15px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 5px 14px rgba(0,0,0,0.25)' }}>
+                  {hero.cta}<Icon name="arrow-r" size={14} color={OK.green} strokeWidth={2.6}/>
+                </button>
+              </div>
+              <div style={{ position: 'absolute', right: 14, bottom: 12, display: 'flex', gap: 5 }}>
+                {HERO_SLIDES.map((s, i) => <button key={s.id} onClick={() => setSlide(i)} aria-label={`Diapo ${i + 1}`} style={{ width: i === slide ? 20 : 6, height: 6, borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer', background: i === slide ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'width .35s ease' }}/>)}
               </div>
             </div>
           </div>
 
-          {/* ═══ CONTENU (feuille arrondie) ═══ */}
-          <div style={{ position: 'relative', marginTop: -24, background: OK.bg2, borderRadius: '26px 26px 0 0', paddingTop: 24, boxShadow: '0 -12px 28px rgba(3,26,14,0.2)' }}>
+          {/* ═══ CONTENU ═══ */}
+          <div style={{ paddingTop: 14 }}>
 
             {/* CATÉGORIES — grandes tuiles aérées */}
             <div style={{ display: 'flex', gap: 15, overflowX: 'auto', padding: '14px 18px 4px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
