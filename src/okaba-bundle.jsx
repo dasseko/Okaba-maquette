@@ -2525,12 +2525,12 @@ const HOME_EVENTS = [...EVENTS, ...BAIE_EVENTS];
 
 // ── Refonte accueil : données des sections ──────────────────
 const HERO_SLIDES = [
-  { id: 'baie', img: bImg('1506929562872-bb421503ef21', 1200), badge: 'À LA UNE', title: 'La Baie des Rois',
-    subtitle: 'Vivez une expérience unique au cœur de Libreville', cta: 'Découvrir maintenant', target: 'baie' },
-  { id: 'tourisme', img: bImg('1519046904884-53103b34b206', 1200), badge: 'DÉCOUVRIR', title: 'Explorez le Gabon',
-    subtitle: 'Plages, forêts, culture et aventures à vivre', cta: 'Explorer le Gabon', target: 'tourisme' },
-  { id: 'market', img: bImg('1441986300917-64674bd600d8', 1200), badge: 'MARKETPLACE', title: 'Achetez & vendez',
-    subtitle: "Des milliers d'annonces près de chez vous", cta: 'Parcourir les annonces', target: 'market' },
+  { id: 'baie1', img: 'assets/baie/net/miboue-101.png', badge: 'À LA UNE', title: 'La Baie des Rois',
+    subtitle: 'Le nouveau front de mer de Libreville', cta: 'Découvrir', target: 'baie' },
+  { id: 'baie2', img: 'assets/baie/c21-aerial-03.webp', badge: 'DESTINATION PHARE', title: 'La Baie des Rois',
+    subtitle: 'Promenade, marina, restaurants & loisirs', cta: 'Explorer', target: 'baie' },
+  { id: 'baie3', img: 'assets/baie/net/miboue-102.png', badge: 'À VIVRE', title: 'La Baie des Rois',
+    subtitle: "Concerts, festivals et animations toute l'année", cta: "Voir l'agenda", target: 'baie' },
 ];
 
 const HOME_CATS = [
@@ -2592,13 +2592,13 @@ function HomeScreen() {
       <div data-screen-label="Accueil" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div data-home-scroll style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 132 }}>
 
-          {/* ═══ HERO CINÉMATIQUE ═══ */}
-          <div style={{ position: 'relative', height: 412 }}>
+          {/* ═══ HEADER IMAGE — slider La Baie des Rois (vraies photos) ═══ */}
+          <div style={{ position: 'relative', height: 408 }}>
             {HERO_SLIDES.map((s, i) => (
               <div key={s.id} aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: `url('${s.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === slide ? 1 : 0, transition: 'opacity .9s ease' }}/>
             ))}
-            <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(4,36,19,0.60) 0%, rgba(4,36,19,0.08) 26%, rgba(4,36,19,0.22) 54%, rgba(4,36,19,0.80) 88%)' }}/>
-            <div style={{ position: 'relative', padding: `${APP_SAFE_TOP} 18px 0`, height: 412, display: 'flex', flexDirection: 'column' }}>
+            <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(4,36,19,0.55) 0%, rgba(4,36,19,0.10) 28%, rgba(4,36,19,0.22) 55%, rgba(4,36,19,0.82) 90%)' }}/>
+            <div style={{ position: 'relative', padding: `${APP_SAFE_TOP} 18px 0`, height: 408, display: 'flex', flexDirection: 'column' }}>
               {/* barre du haut (verre) */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -2620,13 +2620,13 @@ function HomeScreen() {
               </div>
 
               <div style={{ flex: 1 }}/>
-              {/* légende "À la une" */}
-              <div style={{ paddingBottom: 52 }}>
+              {/* légende */}
+              <div style={{ paddingBottom: 50 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 9.5, letterSpacing: 0.6, padding: '4px 10px', borderRadius: 999, boxShadow: '0 2px 8px rgba(245,184,0,0.4)' }}>
                   <span style={{ width: 5, height: 5, borderRadius: 5, background: OK.red }}/>{hero.badge}
                 </span>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 31, color: '#fff', lineHeight: 1.05, marginTop: 9, letterSpacing: -0.8, textShadow: '0 2px 14px rgba(0,0,0,0.45)' }}>{hero.title}</div>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 13, color: 'rgba(255,255,255,0.92)', marginTop: 6, maxWidth: 262, lineHeight: 1.35, textShadow: '0 1px 8px rgba(0,0,0,0.45)' }}>{hero.subtitle}</div>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 31, color: '#fff', lineHeight: 1.04, marginTop: 9, letterSpacing: -0.8, textShadow: '0 2px 14px rgba(0,0,0,0.5)' }}>{hero.title}</div>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 13, color: 'rgba(255,255,255,0.92)', marginTop: 6, maxWidth: 270, lineHeight: 1.35, textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>{hero.subtitle}</div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 }}>
                   <button onClick={() => navigate(hero.target)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 13, padding: '11px 17px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 6px 16px rgba(245,184,0,0.45)' }}>
                     {hero.cta}<Icon name="arrow-r" size={15} color="#3a2c00" strokeWidth={2.6}/>
@@ -2639,7 +2639,7 @@ function HomeScreen() {
             </div>
           </div>
 
-          {/* ═══ FEUILLE DE CONTENU (remonte sur le hero) ═══ */}
+          {/* ═══ CONTENU (feuille arrondie remontant sur le header) ═══ */}
           <div style={{ position: 'relative', marginTop: -30, background: OK.bg2, borderRadius: '30px 30px 0 0', paddingTop: 42, boxShadow: '0 -12px 30px rgba(4,36,19,0.18)' }}>
             {/* recherche flottante au raccord */}
             <button onClick={() => go('market', 'all')} style={{ position: 'absolute', top: -27, left: 18, right: 18, display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 16, padding: '13px 14px', boxShadow: PSH, border: 'none', cursor: 'pointer', textAlign: 'left' }}>
@@ -2663,24 +2663,6 @@ function HomeScreen() {
                   <Icon name="grid" size={25} color={OK.ink2} strokeWidth={2}/>
                 </div>
                 <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>Voir plus</span>
-              </button>
-            </div>
-
-            {/* LA BAIE DES ROIS — grande carte immersive (flagship) */}
-            <div style={{ padding: '26px 18px 0' }}>
-              <button onClick={() => navigate('baie')} style={{ position: 'relative', width: '100%', height: 232, borderRadius: 26, overflow: 'hidden', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', boxShadow: PSH, display: 'block' }}>
-                <Img src="assets/baie/c21-aerial-03.webp" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(4,34,18,0.12) 0%, rgba(4,34,18,0.32) 42%, rgba(4,34,18,0.9) 100%)"/>
-                <span style={{ position: 'absolute', top: 15, left: 15, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontFamily: FONT_UI, fontWeight: 800, fontSize: 9.5, letterSpacing: 0.6, padding: '5px 11px', borderRadius: 999 }}>DESTINATION PHARE</span>
-                <div style={{ position: 'absolute', left: 18, right: 18, bottom: 17 }}>
-                  <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 26, color: '#fff', lineHeight: 1.04, letterSpacing: -0.6, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>La Baie des Rois</div>
-                  <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 12.5, color: 'rgba(255,255,255,0.9)', marginTop: 5, textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>Le rendez-vous du front de mer de Libreville</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 13 }}>
-                    {['Restaurants', 'Hôtels', 'Loisirs'].map(ch => (
-                      <span key={ch} style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.28)', padding: '5px 10px', borderRadius: 999 }}>{ch}</span>
-                    ))}
-                    <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '10px 15px', borderRadius: 999 }}>Explorer<Icon name="arrow-r" size={14} color="#3a2c00" strokeWidth={2.6}/></span>
-                  </div>
-                </div>
               </button>
             </div>
 
