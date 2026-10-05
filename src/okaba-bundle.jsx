@@ -6,32 +6,20 @@ import {
   SquarePen, Store, Handshake, LifeBuoy, Tag, Briefcase, CalendarDays, Megaphone,
   Gift, Video, Palmtree, Lightbulb, Flag, TriangleAlert, Mail, User, MessageSquare,
   Phone, Plus, ArrowLeft, X as XIcon, ChevronRight, Check,
-  MapPin, ChevronDown, ChevronLeft, ChevronUp, Bell, Search, QrCode, ArrowRight,
-  Utensils, BedDouble, LayoutGrid, Heart, House, Compass, Star, SlidersHorizontal,
-  Clock, Share2, Bookmark, Globe, Navigation, Camera, ShoppingBag, Users, BadgeCheck,
-  Map as MapIcon, Filter, Send, Wallet, Bell as BellIcon, CircleUserRound,
 } from 'lucide-react';
 
-// ── LIcon : helper d'icônes Lucide (jeu pro, cohérent) pour toute l'app.
-// Repli sur le composant maison pour les noms non mappés (marques, glyphes custom).
+// ── LIcon : icônes Lucide pour le menu Publier + formulaires uniquement.
+// Repli sur le composant maison <Icon> pour les noms non mappés (ex. marques).
 const LUCIDE_MAP = {
   edit: SquarePen, shop: Store, handshake: Handshake, help: LifeBuoy,
   tag: Tag, briefcase: Briefcase, calendar: CalendarDays, trend: Megaphone,
   gift: Gift, video: Video, travel: Palmtree, sparkle: Lightbulb,
   flag: Flag, alert: TriangleAlert, mail: Mail, user: User, message: MessageSquare,
   phone: Phone, plus: Plus, back: ArrowLeft, close: XIcon, 'chev-r': ChevronRight, check: Check,
-  // Extension : navigation, header, catégories, cartes
-  pin: MapPin, 'chev-d': ChevronDown, 'chev-l': ChevronLeft, 'chev-u': ChevronUp,
-  bell: Bell, search: Search, qr: QrCode, 'arrow-r': ArrowRight, 'arrow-l': ArrowLeft,
-  restaurant: Utensils, hotel: BedDouble, grid: LayoutGrid, heart: Heart, home: House,
-  compass: Compass, star: Star, filter: SlidersHorizontal, sliders: SlidersHorizontal,
-  clock: Clock, share: Share2, 'share-ios': Share2, bookmark: Bookmark, web: Globe, globe: Globe,
-  navigate: Navigation, camera: Camera, people: Users, users: Users, verified: BadgeCheck,
-  map: MapIcon, send: Send, wallet: Wallet,
 };
 function LIcon({ name, size = 20, color = 'currentColor', strokeWidth = 2 }) {
   const L = LUCIDE_MAP[name];
-  if (!L) return React.createElement(Icon, { name, size, color, strokeWidth });
+  if (!L) return <Icon name={name} size={size} color={color} strokeWidth={strokeWidth}/>;
   return <L size={size} color={color} strokeWidth={strokeWidth} absoluteStrokeWidth/>;
 }
 
@@ -1730,7 +1718,7 @@ function TabBar() {
             padding: '3px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
           }}>
             <span style={{ position: 'relative', display: 'flex' }}>
-              <LIcon name={on && it.icon === 'heart' ? 'heart-f' : it.icon}
+              <Icon name={on && it.icon === 'heart' ? 'heart-f' : it.icon}
                 size={23} color="#fff" strokeWidth={on ? 2.5 : 1.9}/>
               {it.badge && <span style={{ position: 'absolute', top: -5, right: -8, minWidth: 15, height: 15, padding: '0 3px', borderRadius: 999, background: GOLD, color: '#3a2c00', fontSize: 9, fontWeight: 800, fontFamily: FONT_UI, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1.5px solid ${G}` }}>{it.badge}</span>}
             </span>
@@ -2107,7 +2095,7 @@ function TopBar({ title, onAction, actionIcon, light = false, transparent = fals
         border: transparent ? 'none' : `1px solid ${OKABA.line}`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <LIcon name="back" size={18} color={transparent ? OKABA.ink : OKABA.ink} strokeWidth={2.2}/>
+        <Icon name="back" size={18} color={transparent ? OKABA.ink : OKABA.ink} strokeWidth={2.2}/>
       </button>
       {title && (
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -2125,7 +2113,7 @@ function TopBar({ title, onAction, actionIcon, light = false, transparent = fals
           boxShadow: transparent ? '0 2px 8px rgba(0,0,0,0.12)' : 'none',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <LIcon name={actionIcon || 'dots'} size={17} color={OKABA.ink} strokeWidth={2}/>
+          <Icon name={actionIcon || 'dots'} size={17} color={OKABA.ink} strokeWidth={2}/>
         </button>
       )}
     </div>
@@ -2192,7 +2180,7 @@ const Badge = ({ kind, size = 'sm' }) => {
       fontSize: size === 'lg' ? 11.5 : 10.5, fontWeight: 700, lineHeight: 1.2,
       whiteSpace: 'nowrap', fontFamily: F,
     }}>
-      <LIcon name={b.icon} size={size === 'lg' ? 13 : 11} color={b.fg} strokeWidth={2}/>
+      <Icon name={b.icon} size={size === 'lg' ? 13 : 11} color={b.fg} strokeWidth={2}/>
       {b.label}
     </span>
   );
@@ -2206,7 +2194,7 @@ const FeaturedTag = () => (
     fontSize: 10, fontWeight: 800, letterSpacing: 0.3, fontFamily: F,
     boxShadow: '0 2px 8px rgba(245,184,0,0.5)',
   }}>
-    <LIcon name="sparkle" size={11} color="#6b4e00" strokeWidth={2}/> VEDETTE
+    <Icon name="sparkle" size={11} color="#6b4e00" strokeWidth={2}/> VEDETTE
   </span>
 );
 
@@ -2228,7 +2216,7 @@ const SectionHead = ({ eyebrow, title, cta, onCta }) => (
         fontFamily: F, fontSize: 13, fontWeight: 700, color: OK.green,
         display: 'inline-flex', alignItems: 'center', gap: 2, padding: 0, flexShrink: 0,
       }}>
-        {cta}<LIcon name="chev-r" size={14} color={OK.green} strokeWidth={2.4}/>
+        {cta}<Icon name="chev-r" size={14} color={OK.green} strokeWidth={2.4}/>
       </button>
     )}
   </div>
@@ -2265,7 +2253,7 @@ const ListingCard = ({ item, onClick, fav, onFav, compact }) => {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
         }}>
-          <LIcon name={fav ? 'heart-f' : 'heart'} size={compact ? 12 : 15} color={fav ? OK.red : OK.ink2} strokeWidth={2}/>
+          <Icon name={fav ? 'heart-f' : 'heart'} size={compact ? 12 : 15} color={fav ? OK.red : OK.ink2} strokeWidth={2}/>
         </button>
         <span style={{
           position: 'absolute', bottom: compact ? 6 : 8, left: compact ? 6 : 8, padding: compact ? '2px 6px' : '3px 8px', borderRadius: 8,
@@ -2279,11 +2267,11 @@ const ListingCard = ({ item, onClick, fav, onFav, compact }) => {
           {item.title}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 1 }}>
-          <LIcon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
+          <Icon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
           <span style={{ fontFamily: F, fontSize: 10.5, color: OK.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {item.city.split('·')[1]?.trim() || item.city}
           </span>
-          {shop?.verified && <LIcon name="verified" size={12} color={OK.green} strokeWidth={2}/>}
+          {shop?.verified && <Icon name="verified" size={12} color={OK.green} strokeWidth={2}/>}
         </div>
       </div>
     </div>
@@ -2309,7 +2297,7 @@ const ListingRow = ({ item, onClick }) => (
       <Price value={item.price} unit={item.unit} size={19} label={priceText(item)}/>
       <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: 5 }}>
         <span style={{ fontFamily: F, fontSize: 10, fontWeight: 700, color: OK.ink2, background: OK.bg2, padding: '2px 7px', borderRadius: 6 }}>{item.condition}</span>
-        <LIcon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
+        <Icon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
         <span style={{ fontFamily: F, fontSize: 10.5, color: OK.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {item.city.split('·')[1]?.trim() || item.city} · {item.posted}
         </span>
@@ -2329,17 +2317,17 @@ const ShopRow = ({ shop, onClick, count }) => (
     <div style={{ flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
         <span style={{ fontFamily: F, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{shop.name}</span>
-        {shop.verified && <LIcon name="verified" size={14} color={OK.green} strokeWidth={2}/>}
+        {shop.verified && <Icon name="verified" size={14} color={OK.green} strokeWidth={2}/>}
       </div>
       <div style={{ fontFamily: F, fontSize: 11.5, color: OK.ink2, marginTop: 1 }}>{shop.cat}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontFamily: F, fontSize: 11, fontWeight: 700, color: OK.ink }}>
-          <LIcon name="star" size={11} color={OK.star}/> {shop.rating.toString().replace('.', ',')}
+          <Icon name="star" size={11} color={OK.star}/> {shop.rating.toString().replace('.', ',')}
         </span>
         <span style={{ fontFamily: F, fontSize: 11, color: OK.ink3 }}>· {count != null ? count + ' annonces' : (shop.followersStr || shop.followers.toLocaleString('fr-FR') + ' abonnés')}</span>
       </div>
     </div>
-    <LIcon name="chev-r" size={18} color={OK.ink3} strokeWidth={2}/>
+    <Icon name="chev-r" size={18} color={OK.ink3} strokeWidth={2}/>
   </button>
 );
 
@@ -2352,7 +2340,7 @@ const CatChip = ({ icon, label, active, onClick }) => (
     display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: F,
     fontSize: 12.5, fontWeight: 700,
   }}>
-    {icon && <LIcon name={icon} size={15} color={active ? OK.gold : OK.ink2} strokeWidth={2}/>}
+    {icon && <Icon name={icon} size={15} color={active ? OK.gold : OK.ink2} strokeWidth={2}/>}
     {label}
   </button>
 );
@@ -2364,7 +2352,7 @@ const EmptyState = ({ icon = 'search', title, body, ctaLabel, onCta }) => (
       width: 92, height: 92, borderRadius: 999, background: 'rgba(11,124,57,0.08)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20,
     }}>
-      <LIcon name={icon} size={40} color={OK.green} strokeWidth={1.6}/>
+      <Icon name={icon} size={40} color={OK.green} strokeWidth={1.6}/>
     </div>
     <div style={{ fontFamily: F, fontWeight: 800, fontSize: 21, color: OK.ink, lineHeight: 1.1, letterSpacing: -0.3 }}>{title}</div>
     <p style={{ margin: '10px 0 0', fontFamily: F, fontSize: 13.5, color: OK.ink2, lineHeight: 1.5, maxWidth: 280 }}>{body}</p>
@@ -2374,7 +2362,7 @@ const EmptyState = ({ icon = 'search', title, body, ctaLabel, onCta }) => (
         background: OK.green, color: '#fff', fontFamily: F, fontSize: 14.5, fontWeight: 800,
         display: 'inline-flex', alignItems: 'center', gap: 8,
       }}>
-        {ctaLabel}<LIcon name="arrow-r" size={17} color="#fff" strokeWidth={2.4}/>
+        {ctaLabel}<Icon name="arrow-r" size={17} color="#fff" strokeWidth={2.4}/>
       </button>
     )}
   </div>
@@ -2388,7 +2376,7 @@ const GreenHeader = ({ title, onBack, right, light = false, flat = false }) => (
     {onBack && (
       <button onClick={onBack} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', cursor: 'pointer', flexShrink: 0,
         background: light ? '#F1F5F1' : 'rgba(255,255,255,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <LIcon name="back" size={19} color={light ? OK.green : '#fff'} strokeWidth={2.4}/>
+        <Icon name="back" size={19} color={light ? OK.green : '#fff'} strokeWidth={2.4}/>
       </button>
     )}
     <div style={{ flex: 1, fontFamily: F, fontWeight: 800, fontSize: 19, color: light ? OK.ink : '#fff', letterSpacing: -0.2,
@@ -2412,14 +2400,14 @@ const DetailOverlayHeader = ({ solid, title, onBack, onAction, actionIcon = 'sha
       <button onClick={onBack} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
         background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+        <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
       </button>
       <div style={{ flex: 1, minWidth: 0, textAlign: 'center', opacity: solid ? 1 : 0, transition: 'opacity .15s ease',
         fontFamily: F, fontSize: 14, fontWeight: 800, color: light && solid ? OK.ink : '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</div>
       <button onClick={onAction} aria-label={actionLabel} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
         background: light ? (solid ? '#F1F5F1' : 'rgba(255,255,255,0.94)') : solid ? '#fff' : 'rgba(4,25,12,0.62)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <LIcon name={actionIcon} size={17} color={solid || light ? OK.green : '#fff'} strokeWidth={2}/>
+        <Icon name={actionIcon} size={17} color={solid || light ? OK.green : '#fff'} strokeWidth={2}/>
       </button>
     </div>
   </>
@@ -2596,7 +2584,7 @@ function HomeScreen() {
         </div>
         {sub && <div style={{ fontFamily: FONT_UI, fontSize: 11.5, color: OK.ink2, marginTop: 3, marginLeft: 12 }}>{sub}</div>}
       </div>
-      {onMore && <button onClick={onMore} style={{ flexShrink: 0, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 999, padding: '6px 12px', cursor: 'pointer', fontFamily: FONT_UI, fontWeight: 700, fontSize: 11.5, color: OK.green, display: 'inline-flex', alignItems: 'center', gap: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>Voir tout<LIcon name="arrow-r" size={12} color={OK.green} strokeWidth={2.6}/></button>}
+      {onMore && <button onClick={onMore} style={{ flexShrink: 0, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 999, padding: '6px 12px', cursor: 'pointer', fontFamily: FONT_UI, fontWeight: 700, fontSize: 11.5, color: OK.green, display: 'inline-flex', alignItems: 'center', gap: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>Voir tout<Icon name="arrow-r" size={12} color={OK.green} strokeWidth={2.6}/></button>}
     </div>
   );
   return (
@@ -2618,22 +2606,22 @@ function HomeScreen() {
                   <div style={{ fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 600, color: 'rgba(255,255,255,0.9)', marginTop: 2, letterSpacing: 0.3 }}>Le Gabon dans vos mains</div>
                 </div>
                 <button aria-label="Changer de ville" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.16)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.32)', borderRadius: 999, padding: '6px 11px', cursor: 'pointer' }}>
-                  <LIcon name="pin" size={12} color={OK.gold} strokeWidth={2.4}/>
+                  <Icon name="pin" size={12} color={OK.gold} strokeWidth={2.4}/>
                   <span style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 12, color: '#fff' }}>Libreville</span>
-                  <LIcon name="chev-d" size={11} color="rgba(255,255,255,0.8)" strokeWidth={2.6}/>
+                  <Icon name="chev-d" size={11} color="rgba(255,255,255,0.8)" strokeWidth={2.6}/>
                 </button>
                 <button aria-label="Notifications" onClick={() => navigate('notifications')} style={{ position: 'relative', background: 'rgba(255,255,255,0.16)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.32)', borderRadius: 999, width: 37, height: 37, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                  <LIcon name="bell" size={17} color="#fff" strokeWidth={2}/>
+                  <Icon name="bell" size={17} color="#fff" strokeWidth={2}/>
                   <span style={{ position: 'absolute', top: -4, right: -4, minWidth: 16, height: 16, padding: '0 3px', borderRadius: 999, background: OK.red, color: '#fff', fontSize: 9, fontWeight: 800, fontFamily: FONT_UI, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(255,255,255,0.9)' }}>3</span>
                 </button>
                 <button aria-label="Profil" onClick={() => navigate('compte')} style={{ width: 37, height: 37, borderRadius: 999, border: '2px solid rgba(255,255,255,0.85)', background: 'rgba(255,255,255,0.16)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
-                  <LIcon name="user" size={18} color="#fff" strokeWidth={2.1}/>
+                  <Icon name="user" size={18} color="#fff" strokeWidth={2.1}/>
                 </button>
               </div>
 
               <div style={{ flex: 1 }}/>
               {/* légende "À la une" */}
-              <div style={{ paddingBottom: 52 }}>
+              <div style={{ paddingBottom: 86 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 9.5, letterSpacing: 0.6, padding: '4px 10px', borderRadius: 999, boxShadow: '0 2px 8px rgba(245,184,0,0.4)' }}>
                   <span style={{ width: 5, height: 5, borderRadius: 5, background: OK.red }}/>{hero.badge}
                 </span>
@@ -2641,7 +2629,7 @@ function HomeScreen() {
                 <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 13, color: 'rgba(255,255,255,0.92)', marginTop: 6, maxWidth: 262, lineHeight: 1.35, textShadow: '0 1px 8px rgba(0,0,0,0.45)' }}>{hero.subtitle}</div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 }}>
                   <button onClick={() => navigate(hero.target)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 13, padding: '11px 17px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 6px 16px rgba(245,184,0,0.45)' }}>
-                    {hero.cta}<LIcon name="arrow-r" size={15} color="#3a2c00" strokeWidth={2.6}/>
+                    {hero.cta}<Icon name="arrow-r" size={15} color="#3a2c00" strokeWidth={2.6}/>
                   </button>
                   <div style={{ display: 'flex', gap: 5 }}>
                     {HERO_SLIDES.map((s, i) => <button key={s.id} onClick={() => setSlide(i)} aria-label={`Diapo ${i + 1}`} style={{ width: i === slide ? 20 : 6, height: 6, borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer', background: i === slide ? OK.gold : 'rgba(255,255,255,0.55)', transition: 'width .35s ease' }}/>)}
@@ -2655,9 +2643,9 @@ function HomeScreen() {
           <div style={{ position: 'relative', marginTop: -30, background: OK.bg2, borderRadius: '30px 30px 0 0', paddingTop: 42, boxShadow: '0 -12px 30px rgba(4,36,19,0.18)' }}>
             {/* recherche flottante au raccord */}
             <button onClick={() => go('market', 'all')} style={{ position: 'absolute', top: -27, left: 18, right: 18, display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 16, padding: '13px 14px', boxShadow: PSH, border: 'none', cursor: 'pointer', textAlign: 'left' }}>
-              <LIcon name="search" size={18} color={OK.green} strokeWidth={2.4}/>
+              <Icon name="search" size={18} color={OK.green} strokeWidth={2.4}/>
               <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>Rechercher un établissement, un produit…</span>
-              <span style={{ width: 32, height: 32, borderRadius: 10, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name="qr" size={16} color="#fff" strokeWidth={2}/></span>
+              <span style={{ width: 32, height: 32, borderRadius: 10, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="qr" size={16} color="#fff" strokeWidth={2}/></span>
             </button>
 
             {/* CATÉGORIES — grandes tuiles aérées */}
@@ -2665,14 +2653,14 @@ function HomeScreen() {
               {HOME_CATS.map(c => (
                 <button key={c.id} onClick={() => go(c.target, c.param)} style={{ flex: '0 0 auto', width: 68, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
                   <div style={{ width: 66, height: 66, borderRadius: 22, background: c.tint, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <LIcon name={c.icon} size={28} color={c.color} strokeWidth={2.1}/>
+                    <Icon name={c.icon} size={28} color={c.color} strokeWidth={2.1}/>
                   </div>
                   <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>{c.label}</span>
                 </button>
               ))}
               <button onClick={() => navigate('services')} style={{ flex: '0 0 auto', width: 68, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
                 <div style={{ width: 66, height: 66, borderRadius: 22, background: '#fff', border: `1.5px dashed ${OK.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <LIcon name="grid" size={25} color={OK.ink2} strokeWidth={2}/>
+                  <Icon name="grid" size={25} color={OK.ink2} strokeWidth={2}/>
                 </div>
                 <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>Voir plus</span>
               </button>
@@ -2690,7 +2678,7 @@ function HomeScreen() {
                     {['Restaurants', 'Hôtels', 'Loisirs'].map(ch => (
                       <span key={ch} style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.28)', padding: '5px 10px', borderRadius: 999 }}>{ch}</span>
                     ))}
-                    <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '10px 15px', borderRadius: 999 }}>Explorer<LIcon name="arrow-r" size={14} color="#3a2c00" strokeWidth={2.6}/></span>
+                    <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '10px 15px', borderRadius: 999 }}>Explorer<Icon name="arrow-r" size={14} color="#3a2c00" strokeWidth={2.6}/></span>
                   </div>
                 </div>
               </button>
@@ -2704,7 +2692,7 @@ function HomeScreen() {
                   <div style={{ position: 'absolute', left: 14, right: 14, bottom: 15 }}>
                     <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 17, color: '#fff', lineHeight: 1.08, letterSpacing: -0.3, textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>{card.title}</div>
                     <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 11, color: 'rgba(255,255,255,0.88)', marginTop: 5, lineHeight: 1.3 }}>{card.sub}</div>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 12, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 11.5, padding: '8px 13px', borderRadius: 999 }}>{card.cta}<LIcon name="arrow-r" size={12} color={OK.green} strokeWidth={2.6}/></span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 12, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 11.5, padding: '8px 13px', borderRadius: 999 }}>{card.cta}<Icon name="arrow-r" size={12} color={OK.green} strokeWidth={2.6}/></span>
                   </div>
                 </button>
               ))}
@@ -2723,12 +2711,12 @@ function HomeScreen() {
                         <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 19, color: OK.green, lineHeight: 1 }}>{b.d}</div>
                         <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 9, color: OK.ink2, letterSpacing: 0.5, marginTop: 1 }}>{b.mo}</div>
                       </div>
-                      <span style={{ position: 'absolute', top: 13, right: 13, width: 34, height: 34, borderRadius: 999, background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.18)' }}><LIcon name="heart" size={17} color={OK.red} strokeWidth={2}/></span>
+                      <span style={{ position: 'absolute', top: 13, right: 13, width: 34, height: 34, borderRadius: 999, background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.18)' }}><Icon name="heart" size={17} color={OK.red} strokeWidth={2}/></span>
                     </div>
                     <div style={{ padding: '13px 15px 16px' }}>
                       <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 16, color: OK.ink, lineHeight: 1.2, letterSpacing: -0.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{ev.title}</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
-                        <LIcon name="pin" size={13} color={OK.green} strokeWidth={2}/>
+                        <Icon name="pin" size={13} color={OK.green} strokeWidth={2}/>
                         <span style={{ fontFamily: FONT_UI, fontWeight: 600, fontSize: 12, color: OK.ink2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{(ev.place || '').split('·')[0].trim()}</span>
                       </div>
                     </div>
@@ -2787,7 +2775,7 @@ function AuBtn({ label, onClick, disabled, icon, ...buttonProps }) {
       background: disabled ? OK.bg2 : OK.green, color: disabled ? OK.ink3 : '#fff', cursor: disabled ? 'default' : 'pointer',
       fontFamily: FAU, fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
       boxShadow: disabled ? 'none' : '0 8px 20px rgba(11,124,57,0.28)', transition: 'background .15s' }}>
-      {label}{icon && <LIcon name={icon} size={18} color="#fff" strokeWidth={2.4}/>}
+      {label}{icon && <Icon name={icon} size={18} color="#fff" strokeWidth={2.4}/>}
     </button>
   );
 }
@@ -2874,7 +2862,7 @@ function WelcomeScreen() {
             fontFamily: FAU, fontSize: 15.5, fontWeight: 800,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
             boxShadow: '0 12px 30px rgba(10,106,47,0.45)' }}>
-            Créer un compte <LIcon name="arrow-r" size={19} color="#fff" strokeWidth={2.4}/>
+            Créer un compte <Icon name="arrow-r" size={19} color="#fff" strokeWidth={2.4}/>
           </button>
           <div onClick={() => navigate('login')} style={{ textAlign: 'center', fontFamily: FAU, fontSize: 15, fontWeight: 800,
             color: OK.goldSoft, opacity: 0.8, cursor: 'pointer', textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>
@@ -2892,7 +2880,7 @@ function AuHeader({ onBack }) {
     <div style={{ padding: `${APP_HEADER_TOP} 14px 6px`, display: 'flex', alignItems: 'center' }}>
       <button onClick={onBack} style={{ width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
         background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+        <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
       </button>
     </div>
   );
@@ -2903,7 +2891,7 @@ function IconCircle({ name }) {
   return (
     <div style={{ width: 78, height: 78, borderRadius: 999, margin: '4px auto 18px',
       background: 'rgba(11,124,57,0.10)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <LIcon name={name} size={34} color={OK.green} strokeWidth={1.9}/>
+      <Icon name={name} size={34} color={OK.green} strokeWidth={1.9}/>
     </div>
   );
 }
@@ -2966,7 +2954,7 @@ function SignupScreen() {
         <div style={{ padding: `${APP_HEADER_TOP} 14px 8px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           <button onClick={goBack} style={{ position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
             background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+            <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
           </button>
           <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 24, width: 'auto', display: 'block' }}/>
         </div>
@@ -2989,7 +2977,7 @@ function SignupScreen() {
               </div>
               <div style={{ marginTop: 26 }}><AuBtn label="Envoyer le code OTP" icon="arrow-r" disabled={!phoneOk} onClick={() => phoneOk && setStep(1)}/></div>
               <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                <LIcon name="lock" size={13} color={OK.ink3} strokeWidth={2}/>
+                <Icon name="lock" size={13} color={OK.ink3} strokeWidth={2}/>
                 <span style={{ fontFamily: FAU, fontSize: 12, color: OK.ink3 }}>Vos informations sont sécurisées et ne seront jamais partagées.</span>
               </div>
             </div>
@@ -3035,7 +3023,7 @@ function SignupScreen() {
               </div>
               <NumKeypad onKey={d => setPin(p => (p.length < 4 ? p + d : p))} onBack={() => setPin(p => p.slice(0, -1))}/>
               <div style={{ marginTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-                <LIcon name="shield" size={13} color={OK.ink3} strokeWidth={2}/>
+                <Icon name="shield" size={13} color={OK.ink3} strokeWidth={2}/>
                 <span style={{ fontFamily: FAU, fontSize: 12, color: OK.ink3 }}>Ce code PIN vous sera demandé à chaque connexion.</span>
               </div>
             </div>
@@ -3111,7 +3099,7 @@ function LoginScreen() {
         <div style={{ padding: `${APP_HEADER_TOP} 14px 4px`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
           <button onClick={back} style={{ position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 999, border: `1px solid ${OK.line}`,
             background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+            <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
           </button>
           <img src="assets/okaba-wordmark.png" alt="O'KABA" style={{ height: 30, width: 'auto', display: 'block' }}/>
         </div>
@@ -3195,7 +3183,7 @@ function MarketScreen({ params }) {
           right={
             <button onClick={() => navigate('shops')} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', cursor: 'pointer', flexShrink: 0,
               background: 'rgba(255,255,255,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <LIcon name="shop" size={19} color="#fff" strokeWidth={2}/>
+              <Icon name="shop" size={19} color="#fff" strokeWidth={2}/>
             </button>
           }/>
 
@@ -3205,7 +3193,7 @@ function MarketScreen({ params }) {
             width: '100%', height: 48, background: '#fff', borderRadius: 12, border: `1px solid ${OK.line}`,
             display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10, cursor: 'pointer', textAlign: 'left',
             boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-            <LIcon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
+            <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
             <span style={{ flex: 1, fontFamily: FM, fontSize: 13, color: OK.ink3 }}>Rechercher dans le marché…</span>
           </button>
         </div>
@@ -3226,7 +3214,7 @@ function MarketScreen({ params }) {
           <button onClick={() => notifyDemo('Filtres : catégorie, prix et localisation')} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 34, padding: '0 12px',
             borderRadius: 10, border: `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer',
             fontFamily: FM, fontSize: 12, fontWeight: 700, color: OK.ink }}>
-            <LIcon name="sliders" size={14} color={OK.ink2} strokeWidth={2}/> Filtrer
+            <Icon name="sliders" size={14} color={OK.ink2} strokeWidth={2}/> Filtrer
           </button>
           <div style={{ display: 'flex', background: '#fff', borderRadius: 10, border: `1px solid ${OK.line}`, overflow: 'hidden' }}>
             {[['grid', 'grid'], ['list', 'list']].map(([v, ic]) => (
@@ -3234,7 +3222,7 @@ function MarketScreen({ params }) {
                 width: 34, height: 34, border: 'none', cursor: 'pointer',
                 background: view === v ? OK.green : 'transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <LIcon name={ic} size={15} color={view === v ? '#fff' : OK.ink3} strokeWidth={2}/>
+                <Icon name={ic} size={15} color={view === v ? '#fff' : OK.ink3} strokeWidth={2}/>
               </button>
             ))}
           </div>
@@ -3291,15 +3279,15 @@ function SearchScreen() {
           boxShadow: '0 2px 10px rgba(0,0,0,0.12)' }}>
           <button onClick={back} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', flexShrink: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+            <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
           </button>
           <div style={{ flex: 1, height: 44, background: '#fff', borderRadius: 12,
             display: 'flex', alignItems: 'center', padding: '0 12px', gap: 9 }}>
-            <LIcon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
+            <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
             <input ref={inputRef} value={q} onChange={e => setQ(e.target.value)} placeholder="Rechercher un produit, un pro…"
               style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FM, fontSize: 14, color: OK.ink }}/>
             {q && <button onClick={() => setQ('')} style={{ border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
-              <LIcon name="close" size={16} color={OK.ink3} strokeWidth={2}/>
+              <Icon name="close" size={16} color={OK.ink3} strokeWidth={2}/>
             </button>}
           </div>
         </div>
@@ -3312,7 +3300,7 @@ function SearchScreen() {
                 <button key={t} onClick={() => setQ(t)} style={{ height: 36, padding: '0 14px', borderRadius: 999,
                   border: `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer', fontFamily: FM,
                   fontSize: 12.5, fontWeight: 600, color: OK.ink, display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-                  <LIcon name="history" size={14} color={OK.ink3} strokeWidth={2}/>{t}
+                  <Icon name="history" size={14} color={OK.ink3} strokeWidth={2}/>{t}
                 </button>
               ))}
             </div>
@@ -3323,7 +3311,7 @@ function SearchScreen() {
                   border: 'none', borderBottom: `1px solid ${OK.line}`, background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
                   <span style={{ fontFamily: FM, fontWeight: 800, fontSize: 16, color: OK.gold, width: 20 }}>{i + 1}</span>
                   <span style={{ flex: 1, fontFamily: FM, fontSize: 13.5, fontWeight: 600, color: OK.ink }}>{t}</span>
-                  <LIcon name="trend" size={15} color={OK.green} strokeWidth={2}/>
+                  <Icon name="trend" size={15} color={OK.green} strokeWidth={2}/>
                 </button>
               ))}
             </div>
@@ -3383,7 +3371,7 @@ function ShopsScreen() {
           <button onClick={() => navigate('search')} style={{ width: '100%', height: 46, background: '#fff', borderRadius: 12,
             border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10,
             boxShadow: '0 2px 8px rgba(0,0,0,0.04)', cursor: 'pointer' }}>
-            <LIcon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
+            <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
             <span style={{ flex: 1, textAlign: 'left', fontFamily: FM, fontSize: 13, color: OK.ink3 }}>Rechercher une boutique, un commerce…</span>
           </button>
         </div>
@@ -3397,7 +3385,7 @@ function ShopsScreen() {
         {tag === 'all' && (
           <div style={{ padding: '14px 16px 0' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, margin: '0 2px 10px' }}>
-              <LIcon name="star" size={15} color={OK.gold}/>
+              <Icon name="star" size={15} color={OK.gold}/>
               <span style={{ fontFamily: FM, fontWeight: 800, fontSize: 13, color: OK.ink, letterSpacing: 0.2 }}>Boutique à la une</span>
             </div>
             <button onClick={() => navigate('shop', { id: featured.id })} style={{ width: '100%', textAlign: 'left', cursor: 'pointer',
@@ -3412,7 +3400,7 @@ function ShopsScreen() {
                   <div style={{ flex: 1, minWidth: 0, paddingBottom: 2 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                       <span style={{ fontFamily: FM, fontSize: 17, fontWeight: 800, color: '#fff', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{featured.name}</span>
-                      {featured.verified && <LIcon name="verified" size={15} color="#fff" strokeWidth={2}/>}
+                      {featured.verified && <Icon name="verified" size={15} color="#fff" strokeWidth={2}/>}
                     </div>
                     <div style={{ fontFamily: FM, fontSize: 11.5, color: 'rgba(255,255,255,0.92)', marginTop: 2 }}>{featured.cat}</div>
                   </div>
@@ -3444,12 +3432,12 @@ function ShopsScreen() {
                 <Avatar src={s.avatar} size={44} radius={13} ring="#fff"/>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
                   <span style={{ fontFamily: FM, fontSize: 13.5, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>{s.name}</span>
-                  {s.verified && <LIcon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
+                  {s.verified && <Icon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
                 </div>
                 <div style={{ fontFamily: FM, fontSize: 10.5, color: OK.ink2, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.cat}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8, paddingTop: 8, borderTop: `1px solid ${OK.line}` }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, fontFamily: FM, fontSize: 11, fontWeight: 800, color: OK.ink }}>
-                    <LIcon name="star" size={12} color={OK.star}/> {s.rating.toString().replace('.', ',')}
+                    <Icon name="star" size={12} color={OK.star}/> {s.rating.toString().replace('.', ',')}
                   </span>
                   <span style={{ width: 3, height: 3, borderRadius: 3, background: OK.ink3 }}/>
                   <span style={{ fontFamily: FM, fontSize: 11, color: OK.ink3 }}>{count(s.id)} annonces</span>
@@ -3490,16 +3478,16 @@ function ListingScreen({ params }) {
         display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
         <button onClick={() => setFav(f => !f)} style={{ width: 50, height: 52, borderRadius: 13, border: `1.5px solid ${OK.line}`,
           background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <LIcon name={fav ? 'heart-f' : 'heart'} size={21} color={fav ? OK.red : OK.ink2} strokeWidth={2}/>
+          <Icon name={fav ? 'heart-f' : 'heart'} size={21} color={fav ? OK.red : OK.ink2} strokeWidth={2}/>
         </button>
         <button onClick={() => navigate('chat', { id: shop.id })} style={{ width: 50, height: 52, borderRadius: 13, border: `1.5px solid ${OK.green}`,
           background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <LIcon name="message" size={20} color={OK.green} strokeWidth={2}/>
+          <Icon name="message" size={20} color={OK.green} strokeWidth={2}/>
         </button>
         <button onClick={() => navigate('chat', { id: shop.id })} style={{ flex: 1, height: 52, borderRadius: 13, border: 'none',
           background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FD, fontSize: 15, fontWeight: 800,
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 8px 20px rgba(11,124,57,0.32)' }}>
-          <LIcon name="phone" size={18} color="#fff" strokeWidth={2.2}/> Contacter le vendeur
+          <Icon name="phone" size={18} color="#fff" strokeWidth={2.2}/> Contacter le vendeur
         </button>
       </div>
     }>
@@ -3529,7 +3517,7 @@ function ListingScreen({ params }) {
           <button onClick={back} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
             background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
             display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+            <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
           </button>
           <div style={{ flex: 1, minWidth: 0, textAlign: 'center', paddingLeft: 46, opacity: headerSolid ? 1 : 0, transition: 'opacity .15s ease',
             fontFamily: FD, fontSize: 14, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.title}</div>
@@ -3537,7 +3525,7 @@ function ListingScreen({ params }) {
             <button key={ic} onClick={() => notifyDemo(ic === 'share' ? 'Lien de l’annonce copié' : 'Options de l’annonce')} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
               background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
               display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <LIcon name={ic} size={17} color={OK.ink} strokeWidth={2}/>
+              <Icon name={ic} size={17} color={OK.ink} strokeWidth={2}/>
             </button>
           ))}
         </div>
@@ -3550,7 +3538,7 @@ function ListingScreen({ params }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <span style={{ fontFamily: FD, fontSize: 11, fontWeight: 800, color: OK.green, background: 'rgba(11,124,57,0.10)', padding: '4px 10px', borderRadius: 999 }}>{item.condition}</span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FD, fontSize: 12, color: OK.ink3 }}>
-              <LIcon name="history" size={13} color={OK.ink3} strokeWidth={2}/>{item.posted}
+              <Icon name="history" size={13} color={OK.ink3} strokeWidth={2}/>{item.posted}
             </span>
             {shop.handle && (
               <span style={{ marginLeft: 'auto', fontFamily: FD, fontSize: 12, fontWeight: 700, color: OK.green, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '45%' }}>{shop.handle}</span>
@@ -3567,7 +3555,7 @@ function ListingScreen({ params }) {
             {item.negotiable && priceText(item) == null && <span style={{ fontFamily: FD, fontSize: 11.5, fontWeight: 700, color: '#8A6B00', background: 'rgba(245,184,0,0.22)', padding: '4px 10px', borderRadius: 999 }}>Négociable</span>}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, color: OK.ink2 }}>
-            <LIcon name="pin" size={15} color={OK.ink2} strokeWidth={2}/>
+            <Icon name="pin" size={15} color={OK.ink2} strokeWidth={2}/>
             <span style={{ fontFamily: FD, fontSize: 13 }}>{item.city}</span>
           </div>
 
@@ -3579,14 +3567,14 @@ function ListingScreen({ params }) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                 <span style={{ fontFamily: FD, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{shop.name}</span>
-                {shop.verified && <LIcon name="verified" size={14} color={OK.green} strokeWidth={2}/>}
+                {shop.verified && <Icon name="verified" size={14} color={OK.green} strokeWidth={2}/>}
               </div>
               <div style={{ fontFamily: FD, fontSize: 11.5, color: OK.ink3, marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                <LIcon name="star" size={11} color={OK.star}/> {shop.rating.toString().replace('.', ',')} · {shop.responseTime}
+                <Icon name="star" size={11} color={OK.star}/> {shop.rating.toString().replace('.', ',')} · {shop.responseTime}
               </div>
             </div>
             <span style={{ fontFamily: FD, fontSize: 12, fontWeight: 700, color: OK.green, display: 'inline-flex', alignItems: 'center', gap: 2 }}>
-              Voir <LIcon name="chev-r" size={14} color={OK.green} strokeWidth={2.4}/>
+              Voir <Icon name="chev-r" size={14} color={OK.green} strokeWidth={2.4}/>
             </span>
           </button>
 
@@ -3612,13 +3600,13 @@ function ListingScreen({ params }) {
           {/* Sécurité (consignes PDF BETA) */}
           <div style={{ marginTop: 22, background: 'rgba(11,124,57,0.055)', border: `1px solid rgba(11,124,57,0.18)`, borderRadius: 14, padding: '14px 15px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-              <LIcon name="shield" size={17} color={OK.green} strokeWidth={2}/>
+              <Icon name="shield" size={17} color={OK.green} strokeWidth={2}/>
               <span style={{ fontFamily: FD, fontSize: 13.5, fontWeight: 800, color: OK.green }}>Conseils de sécurité O’KABA</span>
             </div>
             <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
               {['Rencontrez le vendeur dans un lieu public.', 'Vérifiez le produit avant de payer.', 'Ne versez jamais d’acompte avant de voir l’article.'].map(t => (
                 <li key={t} style={{ display: 'flex', gap: 8, fontFamily: FD, fontSize: 12.5, color: OK.ink2, lineHeight: 1.4 }}>
-                  <LIcon name="check" size={15} color={OK.green} strokeWidth={2.4}/>{t}
+                  <Icon name="check" size={15} color={OK.green} strokeWidth={2.4}/>{t}
                 </li>
               ))}
             </ul>
@@ -3641,7 +3629,7 @@ function ListingScreen({ params }) {
           {/* Référence de l'annonce — pied de fiche discret */}
           <div style={{ marginTop: 24, paddingTop: 14, borderTop: `1px solid ${OK.line}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-            <LIcon name="tag" size={12} color={OK.ink3} strokeWidth={2}/>
+            <Icon name="tag" size={12} color={OK.ink3} strokeWidth={2}/>
             <span style={{ fontFamily: FD, fontSize: 11, color: OK.ink3, letterSpacing: 0.4 }}>
               Réf. {item.ref}
             </span>
@@ -3708,7 +3696,7 @@ function ShopScreen({ params }) {
           {/* heart */}
           <button onClick={() => setFav(f => !f)} style={{ position: 'absolute', right: 16, bottom: 24, width: 44, height: 44, borderRadius: 999,
             border: 'none', cursor: 'pointer', background: '#3a3a3a', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.22)' }}>
-            <LIcon name={fav ? 'heart-f' : 'heart'} size={20} color={fav ? '#fff' : '#fff'} strokeWidth={2}/>
+            <Icon name={fav ? 'heart-f' : 'heart'} size={20} color={fav ? '#fff' : '#fff'} strokeWidth={2}/>
           </button>
         </div>
 
@@ -3720,11 +3708,11 @@ function ShopScreen({ params }) {
         <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, right: 14, zIndex: 30, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
           <button onClick={back} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer',
             background: '#fff', boxShadow: '0 2px 10px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={20} color={OK.ink} strokeWidth={2.4}/>
+            <Icon name="back" size={20} color={OK.ink} strokeWidth={2.4}/>
           </button>
           <button onClick={() => notifyDemo(`Profil ${shop.name} prêt à être partagé`)} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer',
             background: headerSolid ? '#fff' : '#3a3a3a', boxShadow: '0 2px 10px rgba(0,0,0,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="share" size={18} color={headerSolid ? OK.green : '#fff'} strokeWidth={2}/>
+            <Icon name="share" size={18} color={headerSolid ? OK.green : '#fff'} strokeWidth={2}/>
           </button>
           <div style={{ position: 'absolute', left: 58, right: 58, top: 10, textAlign: 'center', opacity: headerSolid ? 1 : 0, transition: 'opacity .15s ease',
             fontFamily: FONT_UI, fontSize: 14, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', pointerEvents: 'none' }}>{shop.name}</div>
@@ -3742,7 +3730,7 @@ function ShopScreen({ params }) {
               <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 12, color: OK.green, letterSpacing: 0.4, marginTop: 3, textTransform: 'uppercase' }}>{shop.cat}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 7 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12.5, fontWeight: 800, color: OK.ink }}>
-                  <LIcon name="star" size={14} color={OK.star}/> {shop.ratingStr || shop.rating.toString().replace('.', ',') + '/5'} <span style={{ color: OK.ink2, fontWeight: 600 }}>({shop.reviews} avis)</span>
+                  <Icon name="star" size={14} color={OK.star}/> {shop.ratingStr || shop.rating.toString().replace('.', ',') + '/5'} <span style={{ color: OK.ink2, fontWeight: 600 }}>({shop.reviews} avis)</span>
                 </span>
                 <span style={{ fontSize: 12.5, fontWeight: 800, color: OK.ink }}>{shop.followersStr || shop.followers.toLocaleString('fr-FR')} <span style={{ color: OK.ink2, fontWeight: 600 }}>followers</span></span>
               </div>
@@ -3784,7 +3772,7 @@ function ShopScreen({ params }) {
               <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 11 }}>
                 {[['pin', shop.city], ['phone', shop.phone], ['mail', shop.email]].map(([ic, v]) => (
                   <div key={ic} style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-                    <LIcon name={ic} size={17} color={OK.ink} strokeWidth={2}/>
+                    <Icon name={ic} size={17} color={OK.ink} strokeWidth={2}/>
                     <span style={{ fontSize: 12.5, color: OK.ink, fontWeight: 600, lineHeight: 1.3 }}>{v}</span>
                   </div>
                 ))}
@@ -3849,7 +3837,7 @@ function ShopScreen({ params }) {
               <button key={i} onClick={() => s.ic === 'message' && navigate('chat', { id: shop.id })}
                 style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: s.bg, flexShrink: 0,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.14)' }}>
-                <LIcon name={s.ic} size={20} color="#fff" strokeWidth={2}/>
+                <Icon name={s.ic} size={20} color="#fff" strokeWidth={2}/>
               </button>
             ))}
           </div>
@@ -3944,7 +3932,7 @@ function ProfileLinks({ links = {}, phone }) {
   ].filter(Boolean);
   if (!actions.length) return null;
   return <div style={{ display: 'flex', gap: 9, flexWrap: 'wrap' }}>
-    {actions.map(action => <button key={action.key} type="button" aria-label={action.label} title={action.label} onClick={() => openProfileLink(action.href)} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: action.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}><LIcon name={action.icon} size={19} color="#fff" strokeWidth={2}/></button>)}
+    {actions.map(action => <button key={action.key} type="button" aria-label={action.label} title={action.label} onClick={() => openProfileLink(action.href)} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: action.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}><Icon name={action.icon} size={19} color="#fff" strokeWidth={2}/></button>)}
   </div>;
 }
 
@@ -3966,18 +3954,18 @@ function AnnuaireRow({ e, onClick }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
           {e.featured && <span style={{ background: OK.gold, color: '#6b4e00', fontFamily: FA, fontSize: 8.5, fontWeight: 800, padding: '2px 6px', borderRadius: 5, letterSpacing: 0.3 }}>À LA UNE</span>}
           <span style={{ fontFamily: FA, fontSize: 15, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1, minWidth: 0 }}>{e.name}</span>
-          {e.verified && <LIcon name="verified" size={15} color={OK.green} strokeWidth={2}/>}
+          {e.verified && <Icon name="verified" size={15} color={OK.green} strokeWidth={2}/>}
         </div>
         <span style={{ fontFamily: FA, fontSize: 12, color: OK.ink2, lineHeight: 1.25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.cat}</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 2 }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FA, fontSize: 11, color: OK.ink3, minWidth: 0 }}>
-            <LIcon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
+            <Icon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>
             <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.type === 'proximity' ? e.city : e.city.split('·').pop().trim()}</span>
           </span>
           {e.followers && <span style={{ fontFamily: FA, fontSize: 11, fontWeight: 700, color: OK.green, whiteSpace: 'nowrap' }}>· {e.followers}</span>}
         </div>
       </div>
-      <LIcon name="chev-r" size={18} color={OK.ink3} strokeWidth={2}/>
+      <Icon name="chev-r" size={18} color={OK.ink3} strokeWidth={2}/>
     </button>
   );
 }
@@ -4006,14 +3994,14 @@ function AnnuaireScreen({ params }) {
         <div data-fixed-header="annuaire" style={{ position: 'relative', zIndex: 30, flexShrink: 0, background: OK.bg2 }}>
         <GreenHeader title="Annuaire" onBack={back}
           right={<button onClick={() => navigate('annuaire-map')} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="pin" size={18} color="#fff" strokeWidth={2}/>
+            <Icon name="pin" size={18} color="#fff" strokeWidth={2}/>
           </button>}/>
 
         {/* Search bar */}
         <div style={{ padding: '14px 16px 0' }}>
           <button onClick={() => navigate('annuaire-search')} style={{ width: '100%', height: 48, background: '#fff', borderRadius: 12, border: `1px solid ${OK.line}`,
             display: 'flex', alignItems: 'center', padding: '0 14px', gap: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', cursor: 'pointer', textAlign: 'left' }}>
-            <LIcon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
+            <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
             <span style={{ flex: 1, fontFamily: FA, fontSize: 13, color: OK.ink3 }}>{cat === 'proximite' ? 'Métier, prestataire ou quartier…' : 'Mairie, ministère, entreprise…'}</span>
           </button>
         </div>
@@ -4022,7 +4010,7 @@ function AnnuaireScreen({ params }) {
         <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '14px 16px 4px' }}>
           <button onClick={() => navigate('annuaire-map')} style={{ flexShrink: 0, height: 38, padding: '0 13px', borderRadius: 999, cursor: 'pointer',
             border: 'none', background: OK.gold, color: '#6b4e00', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FA, fontSize: 12.5, fontWeight: 800 }}>
-            <LIcon name="pin" size={14} color="#6b4e00" strokeWidth={2.4}/> Autour de moi
+            <Icon name="pin" size={14} color="#6b4e00" strokeWidth={2.4}/> Autour de moi
           </button>
           <CatChip label="Tout" active={cat === 'tout'} onClick={() => setCat('tout')}/>
           {ALL_CATEGORIES.map(c => (
@@ -4082,7 +4070,7 @@ function EntityCard({ e, onClick }) {
         <div style={{ flex: 1, minWidth: 0, paddingBottom: 2 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             <span style={{ fontFamily: FA, fontSize: 14.5, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.name}</span>
-            {e.verified && <LIcon name="verified" size={14} color={OK.green} strokeWidth={2}/>}
+            {e.verified && <Icon name="verified" size={14} color={OK.green} strokeWidth={2}/>}
           </div>
           <div style={{ fontFamily: FA, fontSize: 11.5, color: OK.ink2, marginTop: 1 }}>{e.cat}</div>
         </div>
@@ -4105,10 +4093,10 @@ function AnnuaireSearchScreen() {
       <div data-screen-label="Annuaire recherche">
         <div style={{ position: 'sticky', top: 0, zIndex: 30, background: OK.green, padding: `${APP_HEADER_TOP} 14px 14px`, display: 'flex', alignItems: 'center', gap: 10, boxShadow: '0 2px 10px rgba(0,0,0,0.12)' }}>
           <button onClick={back} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+            <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
           </button>
           <div style={{ flex: 1, height: 44, background: '#fff', borderRadius: 12, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 9 }}>
-            <LIcon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
+            <Icon name="search" size={17} color={OK.ink2} strokeWidth={2}/>
             <input ref={inputRef} value={q} onChange={e => setQ(e.target.value)} placeholder="Métier, entreprise, institution…"
               style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FA, fontSize: 14, color: OK.ink }}/>
           </div>
@@ -4195,10 +4183,10 @@ function AnnuaireMapScreen() {
         {/* header flottant */}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, padding: `${APP_HEADER_TOP} 14px 0`, display: 'flex', alignItems: 'center', gap: 10, zIndex: 30 }}>
           <button onClick={back} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', background: '#fff', cursor: 'pointer', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
+            <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
           </button>
           <div style={{ flex: 1, height: 40, background: '#fff', borderRadius: 999, boxShadow: '0 2px 10px rgba(0,0,0,0.14)', display: 'flex', alignItems: 'center', padding: '0 14px', gap: 8 }}>
-            <LIcon name="pin" size={16} color={OK.green} strokeWidth={2.2}/>
+            <Icon name="pin" size={16} color={OK.green} strokeWidth={2.2}/>
             <span style={{ fontFamily: FA, fontSize: 12.5, fontWeight: 700, color: OK.ink }}>Libreville · autour de moi</span>
           </div>
         </div>
@@ -4211,12 +4199,12 @@ function AnnuaireMapScreen() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                   <span style={{ fontFamily: FA, fontSize: 14, fontWeight: 800, color: OK.ink }}>{selEntity.name}</span>
-                  {selEntity.verified && <LIcon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
+                  {selEntity.verified && <Icon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
                 </div>
                 <div style={{ fontFamily: FA, fontSize: 11.5, color: OK.ink2, marginTop: 1 }}>{selEntity.cat}</div>
-                <div style={{ fontFamily: FA, fontSize: 11, color: OK.ink3, marginTop: 3, display: 'flex', alignItems: 'center', gap: 4 }}><LIcon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>{selEntity.city}</div>
+                <div style={{ fontFamily: FA, fontSize: 11, color: OK.ink3, marginTop: 3, display: 'flex', alignItems: 'center', gap: 4 }}><Icon name="pin" size={11} color={OK.ink3} strokeWidth={2}/>{selEntity.city}</div>
               </div>
-              <LIcon name="chev-r" size={18} color={OK.ink3} strokeWidth={2}/>
+              <Icon name="chev-r" size={18} color={OK.ink3} strokeWidth={2}/>
             </button>
           </div>
         )}
@@ -4256,7 +4244,7 @@ function EntityScreen({ params }) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <h1 style={{ margin: 0, fontFamily: FA, fontWeight: 800, fontSize: 21, color: OK.ink, letterSpacing: -0.3 }}>{e.name}</h1>
-                {e.verified && <LIcon name="verified" size={17} color={OK.green} strokeWidth={2}/>}
+                {e.verified && <Icon name="verified" size={17} color={OK.green} strokeWidth={2}/>}
               </div>
               <div style={{ fontFamily: FA, fontWeight: 700, fontSize: 12, color: OK.green, marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.3 }}>{e.cat}</div>
             </div>
@@ -4275,7 +4263,7 @@ function EntityScreen({ params }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 10 }}>
             {[['pin', e.city], e.phone && ['phone', e.phone]].filter(Boolean).map(([ic, v]) => (
               <div key={ic} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                <LIcon name={ic} size={15} color={OK.green} strokeWidth={2}/>
+                <Icon name={ic} size={15} color={OK.green} strokeWidth={2}/>
                 <span style={{ fontFamily: FA, fontSize: 12.5, color: OK.ink, fontWeight: 600 }}>{v}</span>
               </div>
             ))}
@@ -4310,7 +4298,7 @@ function EntityScreen({ params }) {
                       <button key={t.id} onClick={() => navigate('tenant', { id: t.id })} style={{ textAlign: 'left', background: '#fff', borderRadius: 16, overflow: 'hidden', border: `1px solid ${OK.line}`, cursor: 'pointer', padding: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
                         <div style={{ position: 'relative', aspectRatio: '4 / 3' }}>
                           <Img src={t.img} style={{ position: 'absolute', inset: 0 }}/>
-                          <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 3, background: 'rgba(0,0,0,0.66)', color: '#fff', fontFamily: FA, fontWeight: 800, fontSize: 10, padding: '3px 7px', borderRadius: 999 }}><LIcon name="star" size={10} color={OK.gold}/> {t.rating.toString().replace('.', ',')}</span>
+                          <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 3, background: 'rgba(0,0,0,0.66)', color: '#fff', fontFamily: FA, fontWeight: 800, fontSize: 10, padding: '3px 7px', borderRadius: 999 }}><Icon name="star" size={10} color={OK.gold}/> {t.rating.toString().replace('.', ',')}</span>
                         </div>
                         <div style={{ padding: '9px 11px 11px' }}>
                           <div style={{ fontFamily: FA, fontSize: 13, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</div>
@@ -4336,7 +4324,7 @@ function EntityScreen({ params }) {
             {(reels.length ? reels.concat(allReels) : allReels).slice(0, 9).map((r, i) => (
               <div key={r.id + i} style={{ position: 'relative', aspectRatio: '9 / 16', borderRadius: 10, overflow: 'hidden' }}>
                 <Img src={r.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.55) 100%)"/>
-                <div style={{ position: 'absolute', top: 6, right: 6 }}><LIcon name="media" size={14} color="#fff" strokeWidth={2}/></div>
+                <div style={{ position: 'absolute', top: 6, right: 6 }}><Icon name="media" size={14} color="#fff" strokeWidth={2}/></div>
                 <span style={{ position: 'absolute', left: 6, bottom: 6, fontFamily: FA, fontSize: 9.5, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 3 }}>
                   ▶ {r.views}
                 </span>
@@ -4353,7 +4341,7 @@ function EntityScreen({ params }) {
                 {[['pin', 'Adresse', e.city], e.phone && ['phone', 'Téléphone', e.phone], ['verified', 'Statut', 'Compte officiel vérifié O’KABA']].filter(Boolean).map(([ic, l, v]) => (
                   <div key={l} style={{ display: 'flex', gap: 11, alignItems: 'flex-start' }}>
                     <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <LIcon name={ic} size={16} color={OK.green} strokeWidth={2}/>
+                      <Icon name={ic} size={16} color={OK.green} strokeWidth={2}/>
                     </div>
                     <div>
                       <div style={{ fontFamily: FA, fontSize: 10.5, fontWeight: 800, color: OK.ink3, letterSpacing: 0.3, textTransform: 'uppercase' }}>{l}</div>
@@ -4385,11 +4373,11 @@ function PostCard({ post, entity }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <span style={{ fontFamily: FA, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{entity.name}</span>
-            {entity.verified && <LIcon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
+            {entity.verified && <Icon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
           </div>
           <div style={{ fontFamily: FA, fontSize: 11, color: OK.ink3, marginTop: 1 }}>{post.time}</div>
         </div>
-        <LIcon name="dots" size={18} color={OK.ink3} strokeWidth={2}/>
+        <Icon name="dots" size={18} color={OK.ink3} strokeWidth={2}/>
       </div>
       {/* texte */}
       <p style={{ margin: '0 12px 10px', fontFamily: FA, fontSize: 13, color: OK.ink, lineHeight: 1.5 }}>{post.text}</p>
@@ -4398,19 +4386,19 @@ function PostCard({ post, entity }) {
       {/* actions */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 18, padding: '10px 14px 12px' }}>
         <button onClick={() => setLiked(l => !l)} style={{ display: 'flex', alignItems: 'center', gap: 6, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
-          <LIcon name={liked ? 'heart-f' : 'heart'} size={20} color={liked ? OK.red : OK.ink2} strokeWidth={2}/>
+          <Icon name={liked ? 'heart-f' : 'heart'} size={20} color={liked ? OK.red : OK.ink2} strokeWidth={2}/>
           <span style={{ fontFamily: FA, fontSize: 12.5, fontWeight: 700, color: OK.ink2 }}>{(post.likes + (liked ? 1 : 0)).toLocaleString('fr-FR')}</span>
         </button>
         <button onClick={() => notifyDemo('Commentaires ouverts')} style={{ display: 'flex', alignItems: 'center', gap: 6, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
-          <LIcon name="message" size={19} color={OK.ink2} strokeWidth={2}/>
+          <Icon name="message" size={19} color={OK.ink2} strokeWidth={2}/>
           <span style={{ fontFamily: FA, fontSize: 12.5, fontWeight: 700, color: OK.ink2 }}>{post.comments}</span>
         </button>
         <button onClick={() => notifyDemo('Publication prête à être partagée')} style={{ display: 'flex', alignItems: 'center', gap: 6, border: 'none', background: 'transparent', cursor: 'pointer', padding: 0 }}>
-          <LIcon name="share" size={18} color={OK.ink2} strokeWidth={2}/>
+          <Icon name="share" size={18} color={OK.ink2} strokeWidth={2}/>
           <span style={{ fontFamily: FA, fontSize: 12.5, fontWeight: 700, color: OK.ink2 }}>{post.shares}</span>
         </button>
         <div style={{ flex: 1 }}/>
-        <LIcon name="bookmark" size={18} color={OK.ink2} strokeWidth={2}/>
+        <Icon name="bookmark" size={18} color={OK.ink2} strokeWidth={2}/>
       </div>
     </div>
   );
@@ -4437,8 +4425,8 @@ function TenantScreen({ params }) {
   return (
     <Screen bg={OK.bg} statusDark={true} noScroll edgeTop footer={
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, background: '#fff', borderTop: `1px solid ${OK.line}`, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, display: 'flex', gap: 10, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
-        <button onClick={() => setFav(f => !f)} style={{ width: 52, height: 52, borderRadius: 13, border: `1.5px solid ${OK.line}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name={fav ? 'heart-f' : 'heart'} size={21} color={fav ? OK.red : OK.ink2} strokeWidth={2}/></button>
-        <button onClick={() => navigate('messages')} style={{ width: 52, height: 52, borderRadius: 13, border: `1.5px solid ${OK.green}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name="message" size={20} color={OK.green} strokeWidth={2}/></button>
+        <button onClick={() => setFav(f => !f)} style={{ width: 52, height: 52, borderRadius: 13, border: `1.5px solid ${OK.line}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name={fav ? 'heart-f' : 'heart'} size={21} color={fav ? OK.red : OK.ink2} strokeWidth={2}/></button>
+        <button onClick={() => navigate('messages')} style={{ width: 52, height: 52, borderRadius: 13, border: `1.5px solid ${OK.green}`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="message" size={20} color={OK.green} strokeWidth={2}/></button>
         <button onClick={() => notifyDemo(`${t.cta || 'Réservation'} enregistrée pour la démonstration`)} style={{ flex: 1, height: 52, borderRadius: 13, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FA, fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 8px 20px rgba(11,124,57,0.32)' }}>{t.cta || 'Réserver'}</button>
       </div>
     }>
@@ -4459,8 +4447,8 @@ function TenantScreen({ params }) {
           borderBottom: headerSolid ? '1px solid rgba(255,255,255,0.16)' : '1px solid transparent',
           boxShadow: headerSolid ? '0 5px 18px rgba(0,0,0,0.14)' : 'none', transition: 'background .12s ease, box-shadow .12s ease' }}/>
         <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, right: 14, zIndex: 30, display: 'flex', justifyContent: 'space-between' }}>
-          <button onClick={back} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
-          <button onClick={() => notifyDemo(`${t.name} prêt à être partagé`)} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: headerSolid ? '#fff' : '#3a3a3a', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="share" size={17} color={headerSolid ? OK.green : '#fff'} strokeWidth={2}/></button>
+          <button onClick={back} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.94)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
+          <button onClick={() => notifyDemo(`${t.name} prêt à être partagé`)} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: headerSolid ? '#fff' : '#3a3a3a', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="share" size={17} color={headerSolid ? OK.green : '#fff'} strokeWidth={2}/></button>
           <div style={{ position: 'absolute', left: 56, right: 56, top: 10, textAlign: 'center', opacity: headerSolid ? 1 : 0, transition: 'opacity .15s ease',
             fontFamily: FA, fontSize: 14, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', pointerEvents: 'none' }}>{t.name}</div>
         </div>
@@ -4471,7 +4459,7 @@ function TenantScreen({ params }) {
         {/* Identity */}
           <div style={{ padding: '14px 18px 0' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
-              {hasReviews && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FA, fontSize: 13, fontWeight: 800, color: OK.ink }}><LIcon name="star" size={14} color={OK.star}/> {t.rating.toString().replace('.', ',')} <span style={{ color: OK.ink2, fontWeight: 600 }}>({t.reviews} avis)</span></span>}
+              {hasReviews && <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FA, fontSize: 13, fontWeight: 800, color: OK.ink }}><Icon name="star" size={14} color={OK.star}/> {t.rating.toString().replace('.', ',')} <span style={{ color: OK.ink2, fontWeight: 600 }}>({t.reviews} avis)</span></span>}
               {hasReviews && t.priceLevel ? <span style={{ width: 3, height: 3, borderRadius: 3, background: OK.ink3 }}/> : null}
               {t.priceLevel ? <span style={{ fontFamily: FA, fontSize: 12.5, color: OK.ink2, fontWeight: 700 }}>{t.priceLevel}</span> : null}
               {t.priceLevel && <span style={{ width: 3, height: 3, borderRadius: 3, background: OK.ink3 }}/>} 
@@ -4480,9 +4468,9 @@ function TenantScreen({ params }) {
           </div>
           {/* lien complexe */}
           <button onClick={() => navigate('entity', { id: 'baie-des-rois' })} style={{ marginTop: 13, width: '100%', textAlign: 'left', background: 'rgba(11,124,57,0.055)', border: `1px solid rgba(11,124,57,0.18)`, borderRadius: 14, padding: '11px 13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 9, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name="shop" size={17} color="#fff" strokeWidth={2}/></div>
+            <div style={{ width: 32, height: 32, borderRadius: 9, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="shop" size={17} color="#fff" strokeWidth={2}/></div>
             <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: FA, fontSize: 12.5, fontWeight: 800, color: OK.green }}>La Baie des Rois</div><div style={{ fontFamily: FA, fontSize: 11, color: OK.ink2, marginTop: 1 }}>Enseigne du site aménagé par la FMCT · Libreville</div></div>
-            <LIcon name="chev-r" size={16} color={OK.green} strokeWidth={2.4}/>
+            <Icon name="chev-r" size={16} color={OK.green} strokeWidth={2.4}/>
           </button>
         </div>
 
@@ -4578,7 +4566,7 @@ function TenantScreen({ params }) {
                   t.collectionRef && ['check', 'Source', `${t.collectionRef} · collectée le ${t.collectedAt}`],
                 ].filter(Boolean).map(([ic, l, v], i) => (
                   <div key={l} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: i ? `1px solid ${OK.line}` : 'none' }}>
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name={ic} size={17} color={OK.green} strokeWidth={2}/></div>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name={ic} size={17} color={OK.green} strokeWidth={2}/></div>
                     <div><div style={{ fontFamily: FA, fontSize: 10.5, fontWeight: 800, color: OK.ink3, letterSpacing: 0.3, textTransform: 'uppercase' }}>{l}</div><div style={{ fontFamily: FA, fontSize: 13, fontWeight: 600, color: OK.ink, marginTop: 1 }}>{v}</div></div>
                   </div>
                 ))}
@@ -4615,7 +4603,7 @@ function BaieHub({ params }) {
       <div style={{ position: 'relative', aspectRatio: '4 / 3' }}>
         <Img src={t.img} style={{ position: 'absolute', inset: 0, backgroundSize: t.imgFit || 'cover', backgroundPosition: t.imgPosition || 'center', backgroundColor: t.imgFit === 'contain' ? '#fff' : OK.bg2 }}/>
         {Number.isFinite(t.rating) ? (
-          <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 3, background: 'rgba(0,0,0,0.66)', color: '#fff', fontFamily: FA, fontWeight: 800, fontSize: 10, padding: '3px 7px', borderRadius: 999 }}><LIcon name="star" size={10} color={OK.gold}/> {t.rating.toString().replace('.', ',')}</span>
+          <span style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 3, background: 'rgba(0,0,0,0.66)', color: '#fff', fontFamily: FA, fontWeight: 800, fontSize: 10, padding: '3px 7px', borderRadius: 999 }}><Icon name="star" size={10} color={OK.gold}/> {t.rating.toString().replace('.', ',')}</span>
         ) : (
           <span style={{ position: 'absolute', top: 8, left: 8, background: OK.gold, color: '#3a2c00', fontFamily: FA, fontWeight: 800, fontSize: 9.5, padding: '4px 8px', borderRadius: 999 }}>Fiche terrain</span>
         )}
@@ -4646,11 +4634,11 @@ function BaieHub({ params }) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <h1 style={{ margin: 0, fontFamily: FA, fontWeight: 800, fontSize: 21, color: OK.ink, letterSpacing: -0.3 }}>{e.name}</h1>
-                {e.verified && <LIcon name="verified" size={17} color={OK.green} strokeWidth={2}/>}
+                {e.verified && <Icon name="verified" size={17} color={OK.green} strokeWidth={2}/>}
               </div>
               <div style={{ fontFamily: FA, fontWeight: 700, fontSize: 12, color: OK.green, marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.3 }}>{e.cat}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 7 }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FA, fontSize: 12.5, fontWeight: 800, color: OK.ink }}><LIcon name="star" size={13} color={OK.star}/> {e.rating.toString().replace('.', ',')}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FA, fontSize: 12.5, fontWeight: 800, color: OK.ink }}><Icon name="star" size={13} color={OK.star}/> {e.rating.toString().replace('.', ',')}</span>
                 <StatusPill open={true} time={e.hours.replace('Tous les jours · ', '')}/>
               </div>
             </div>
@@ -4664,14 +4652,14 @@ function BaieHub({ params }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 10 }}>
             {[['pin', e.city], ['phone', e.phone]].map(([ic, v]) => (
               <div key={ic} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                <LIcon name={ic} size={15} color={OK.green} strokeWidth={2}/>
+                <Icon name={ic} size={15} color={OK.green} strokeWidth={2}/>
                 <span style={{ fontFamily: FA, fontSize: 12.5, color: OK.ink, fontWeight: 600 }}>{v}</span>
               </div>
             ))}
           </div>
           <div style={{ display: 'flex', gap: 9, marginTop: 14 }}>
             {[['navigate', OK.green], ['phone', OK.blue], ['globe', OK.green], ['whatsapp', OK.wa], ['fb', OK.fb]].map(([ic, bg], i) => (
-              <button key={i} onClick={() => notifyDemo(['Itinéraire', 'Appel', 'Site web', 'WhatsApp', 'Facebook'][i])} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}><LIcon name={ic} size={19} color="#fff" strokeWidth={2}/></button>
+              <button key={i} onClick={() => notifyDemo(['Itinéraire', 'Appel', 'Site web', 'WhatsApp', 'Facebook'][i])} style={{ width: 42, height: 42, borderRadius: 999, border: 'none', cursor: 'pointer', background: bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }}><Icon name={ic} size={19} color="#fff" strokeWidth={2}/></button>
             ))}
           </div>
         </div>
@@ -4718,7 +4706,7 @@ function BaieHub({ params }) {
                 <div style={{ position: 'absolute', top: 12, right: 12, background: OK.gold, color: '#3a2c00', padding: '4px 10px', borderRadius: 999, fontFamily: FA, fontWeight: 800, fontSize: 10.5 }}>Événement</div>
                 <div style={{ position: 'absolute', left: 16, right: 16, bottom: 14 }}>
                   <div style={{ fontFamily: FA, fontWeight: 800, fontSize: 18, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>{ev.title}</div>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 6, fontFamily: FA, fontWeight: 700, fontSize: 11.5, color: '#fff' }}><LIcon name="calendar" size={13} color={OK.gold} strokeWidth={2.2}/>{ev.when}</div>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 6, fontFamily: FA, fontWeight: 700, fontSize: 11.5, color: '#fff' }}><Icon name="calendar" size={13} color={OK.gold} strokeWidth={2.2}/>{ev.when}</div>
                 </div>
               </button>
             ))}
@@ -4731,7 +4719,7 @@ function BaieHub({ params }) {
             <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 16, overflow: 'hidden' }}>
               {[['clock', 'Horaires', e.hours], ['pin', 'Adresse', e.city], ['car', 'Parking', 'Gratuit · 400 places'], ['telecom', 'Wi-Fi', 'Gratuit sur tout le site'], ['wallet', 'Paiement', 'Espèces · Mobile Money · Carte']].map(([ic, l, v], i) => (
                 <div key={l} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: i ? `1px solid ${OK.line}` : 'none' }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name={ic} size={18} color={OK.green} strokeWidth={2}/></div>
+                  <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name={ic} size={18} color={OK.green} strokeWidth={2}/></div>
                   <div style={{ flex: 1 }}><div style={{ fontFamily: FA, fontSize: 10.5, fontWeight: 800, color: OK.ink3, letterSpacing: 0.3, textTransform: 'uppercase' }}>{l}</div><div style={{ fontFamily: FA, fontSize: 13, fontWeight: 600, color: OK.ink, marginTop: 1 }}>{v}</div></div>
                 </div>
               ))}
@@ -4885,7 +4873,7 @@ function TourismeScreen() {
           <Img src="assets/tour-plage.jpg" style={{ position: 'absolute', inset: 0, backgroundPosition: 'center 52%' }}
             overlay="linear-gradient(180deg, rgba(3,28,13,0.26) 0%, rgba(3,28,13,0.04) 32%, rgba(3,28,13,0.76) 100%)"/>
           <div style={{ position: 'absolute', top: APP_HEADER_TOP, left: 16, zIndex: 3 }}>
-            <button onClick={back} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,.25)', background: 'rgba(4,35,17,.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="back" size={19} color="#fff" strokeWidth={2.2}/></button>
+            <button onClick={back} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,.25)', background: 'rgba(4,35,17,.45)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color="#fff" strokeWidth={2.2}/></button>
           </div>
           <div style={{ position: 'absolute', left: 18, right: 20, bottom: 20 }}>
             <h1 style={{ margin: 0, maxWidth: 250, fontFamily: FT, fontSize: 34, lineHeight: .96, fontWeight: 900, letterSpacing: -.9, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,.42)' }}>Découvrez le<br/>Gabon</h1>
@@ -4924,8 +4912,8 @@ function TourismeSpotsScreen({ params }) {
           {spots.map(spot => (
             <button key={spot.id} onClick={() => navigate('tourisme-place', { id: spot.id })} style={{ width: '100%', padding: 0, border: `1px solid ${OK.line}`, borderRadius: 17, overflow: 'hidden', background: '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', minHeight: 112, boxShadow: '0 4px 13px rgba(17,55,30,.07)' }}>
               <div style={{ width: 118, flexShrink: 0, position: 'relative' }}><Img src={spot.img} style={{ position: 'absolute', inset: 0 }}/></div>
-              <div style={{ flex: 1, minWidth: 0, padding: '13px 12px' }}><div style={{ fontFamily: FT, fontSize: 15, lineHeight: 1.18, fontWeight: 850, color: OK.ink }}>{spot.name}</div><div style={{ marginTop: 5, fontFamily: FT, fontSize: 10.5, fontWeight: 700, color: OK.green }}>{spot.cat}</div><div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 4, fontFamily: FT, fontSize: 10, color: OK.ink3 }}><LIcon name="pin" size={11} color={OK.ink3}/>{spot.city}</div></div>
-              <div style={{ alignSelf: 'center', marginRight: 10 }}><LIcon name="chev-r" size={16} color={OK.green} strokeWidth={2.3}/></div>
+              <div style={{ flex: 1, minWidth: 0, padding: '13px 12px' }}><div style={{ fontFamily: FT, fontSize: 15, lineHeight: 1.18, fontWeight: 850, color: OK.ink }}>{spot.name}</div><div style={{ marginTop: 5, fontFamily: FT, fontSize: 10.5, fontWeight: 700, color: OK.green }}>{spot.cat}</div><div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 4, fontFamily: FT, fontSize: 10, color: OK.ink3 }}><Icon name="pin" size={11} color={OK.ink3}/>{spot.city}</div></div>
+              <div style={{ alignSelf: 'center', marginRight: 10 }}><Icon name="chev-r" size={16} color={OK.green} strokeWidth={2.3}/></div>
             </button>
           ))}
           {!spots.length && <EmptyState icon="pin" title="Bientôt disponible" body="De nouvelles adresses seront ajoutées à cette rubrique dans une prochaine version."/>}
@@ -4942,8 +4930,8 @@ function TourismePlaceScreen({ params }) {
   return (
     <Screen bg="#F7F7F2" statusDark={true} edgeTop>
       <div data-screen-label={`Destination — ${spot.name}`}>
-        <div style={{ position: 'relative', height: 330 }}><Img src={spot.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(3,28,13,.48) 0%, rgba(3,28,13,.04) 35%, rgba(3,28,13,.86) 100%)"/><button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 16, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,.28)', background: 'rgba(4,35,17,.48)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="back" size={19} color="#fff" strokeWidth={2.2}/></button><div style={{ position: 'absolute', left: 18, right: 18, bottom: 20 }}><div style={{ fontFamily: FT, fontSize: 10.5, fontWeight: 850, color: OK.gold, textTransform: 'uppercase', letterSpacing: 1.1 }}>{spot.cat}</div><h1 style={{ margin: '7px 0 0', fontFamily: FT, fontSize: 29, lineHeight: 1.05, fontWeight: 900, color: '#fff' }}>{spot.name}</h1><div style={{ marginTop: 9, display: 'flex', alignItems: 'center', gap: 6, fontFamily: FT, fontSize: 11.5, fontWeight: 650, color: 'rgba(255,255,255,.9)' }}><LIcon name="pin" size={13} color={OK.gold}/>{spot.city}</div></div></div>
-        <div style={{ padding: '18px 16px 32px' }}><div style={{ padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 5px 16px rgba(17,55,30,.06)' }}><div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><strong style={{ fontFamily: FT, fontSize: 16, color: OK.green }}>À découvrir</strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontSize: 11.5, fontWeight: 850, color: OK.ink }}><LIcon name="star" size={13} color={OK.star}/>{spot.rating.toString().replace('.', ',')}</span></div><p style={{ margin: '11px 0 0', fontFamily: FT, fontSize: 13, lineHeight: 1.62, color: OK.ink2 }}>{spot.description}</p></div><button onClick={() => notifyDemo(`Itinéraire vers ${spot.name} préparé`)} style={{ width: '100%', height: 50, marginTop: 14, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FT, fontSize: 13.5, fontWeight: 850, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 7px 18px rgba(11,124,57,.22)' }}><LIcon name="pin" size={17} color="#fff"/>Préparer l’itinéraire</button></div>
+        <div style={{ position: 'relative', height: 330 }}><Img src={spot.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(3,28,13,.48) 0%, rgba(3,28,13,.04) 35%, rgba(3,28,13,.86) 100%)"/><button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 16, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,.28)', background: 'rgba(4,35,17,.48)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color="#fff" strokeWidth={2.2}/></button><div style={{ position: 'absolute', left: 18, right: 18, bottom: 20 }}><div style={{ fontFamily: FT, fontSize: 10.5, fontWeight: 850, color: OK.gold, textTransform: 'uppercase', letterSpacing: 1.1 }}>{spot.cat}</div><h1 style={{ margin: '7px 0 0', fontFamily: FT, fontSize: 29, lineHeight: 1.05, fontWeight: 900, color: '#fff' }}>{spot.name}</h1><div style={{ marginTop: 9, display: 'flex', alignItems: 'center', gap: 6, fontFamily: FT, fontSize: 11.5, fontWeight: 650, color: 'rgba(255,255,255,.9)' }}><Icon name="pin" size={13} color={OK.gold}/>{spot.city}</div></div></div>
+        <div style={{ padding: '18px 16px 32px' }}><div style={{ padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 5px 16px rgba(17,55,30,.06)' }}><div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}><strong style={{ fontFamily: FT, fontSize: 16, color: OK.green }}>À découvrir</strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontSize: 11.5, fontWeight: 850, color: OK.ink }}><Icon name="star" size={13} color={OK.star}/>{spot.rating.toString().replace('.', ',')}</span></div><p style={{ margin: '11px 0 0', fontFamily: FT, fontSize: 13, lineHeight: 1.62, color: OK.ink2 }}>{spot.description}</p></div><button onClick={() => notifyDemo(`Itinéraire vers ${spot.name} préparé`)} style={{ width: '100%', height: 50, marginTop: 14, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FT, fontSize: 13.5, fontWeight: 850, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 7px 18px rgba(11,124,57,.22)' }}><Icon name="pin" size={17} color="#fff"/>Préparer l’itinéraire</button></div>
       </div>
     </Screen>
   );
@@ -4963,7 +4951,7 @@ function EventsScreen() {
             <button key={event.id} onClick={() => navigate('event', { event })} style={{ width: '100%', height: 190, position: 'relative', overflow: 'hidden', borderRadius: 18, border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', boxShadow: '0 6px 18px rgba(14,48,27,.13)' }}>
               <Img src={event.img || event.poster} style={{ position: 'absolute', inset: 0, backgroundPosition: 'center 25%' }} overlay="linear-gradient(180deg, rgba(3,25,12,.08) 22%, rgba(3,25,12,.88) 100%)"/>
               <span style={{ position: 'absolute', top: 11, right: 11, padding: '5px 9px', borderRadius: 999, background: OK.gold, color: '#3a2c00', fontFamily: FT, fontSize: 9.5, fontWeight: 900 }}>ÉVÉNEMENT</span>
-              <div style={{ position: 'absolute', left: 14, right: 14, bottom: 13 }}><div style={{ fontFamily: FT, fontSize: 18, lineHeight: 1.12, fontWeight: 900, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,.4)' }}>{event.title}</div><div style={{ marginTop: 7, display: 'flex', alignItems: 'center', gap: 5, fontFamily: FT, fontSize: 10.5, fontWeight: 700, color: OK.gold }}><LIcon name="calendar" size={12} color={OK.gold}/>{event.date}{event.time ? ` · ${event.time}` : ''}</div><div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 5, fontFamily: FT, fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,.9)' }}><LIcon name="pin" size={12} color="#fff"/>{event.place}</div></div>
+              <div style={{ position: 'absolute', left: 14, right: 14, bottom: 13 }}><div style={{ fontFamily: FT, fontSize: 18, lineHeight: 1.12, fontWeight: 900, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,.4)' }}>{event.title}</div><div style={{ marginTop: 7, display: 'flex', alignItems: 'center', gap: 5, fontFamily: FT, fontSize: 10.5, fontWeight: 700, color: OK.gold }}><Icon name="calendar" size={12} color={OK.gold}/>{event.date}{event.time ? ` · ${event.time}` : ''}</div><div style={{ marginTop: 4, display: 'flex', alignItems: 'center', gap: 5, fontFamily: FT, fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,.9)' }}><Icon name="pin" size={12} color="#fff"/>{event.place}</div></div>
             </button>
           ))}
         </div>
@@ -5039,7 +5027,7 @@ function BaieScreen() {
               <button key={c.label} onClick={c.go} style={{
                 position: 'relative', height: 154, borderRadius: 18, overflow: 'hidden', border: `1px solid ${OK.line}`, cursor: 'pointer', padding: 0, textAlign: 'left', background: '#fff', boxShadow: '0 5px 16px rgba(4,35,18,.08)' }}>
                 <Img src={c.img} style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 76, backgroundPosition: 'center 46%', borderRadius: '17px 17px 0 0' }}/>
-                <span style={{ position: 'absolute', top: 10, left: 10, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 999, background: 'rgba(255,255,255,.94)', boxShadow: '0 2px 8px rgba(0,0,0,.14)' }}><LIcon name={c.icon} size={16} color={c.tone} strokeWidth={2}/></span>
+                <span style={{ position: 'absolute', top: 10, left: 10, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 999, background: 'rgba(255,255,255,.94)', boxShadow: '0 2px 8px rgba(0,0,0,.14)' }}><Icon name={c.icon} size={16} color={c.tone} strokeWidth={2}/></span>
                 <span style={{ position: 'absolute', top: 13, right: 12, color: '#fff', fontSize: 15, lineHeight: 1, textShadow: '0 1px 5px rgba(0,0,0,.45)' }}>↗</span>
                 <span style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '9px 10px 10px', background: '#fff' }}>
                   <span style={{ display: 'block', fontFamily: FT, fontWeight: 850, fontSize: 12.5, color: OK.ink, lineHeight: 1.17 }}>{c.label}</span>
@@ -5081,7 +5069,7 @@ function BaieScreen() {
                 <span style={{ position: 'absolute', left: 'calc(36% + 13px)', right: 12, top: 15, bottom: 13 }}>
                   <span style={{ display: 'inline-block', padding: '4px 8px', borderRadius: 999, background: '#FFF3CF', color: '#805C00', fontFamily: FT, fontSize: 8.5, fontWeight: 900, letterSpacing: .4 }}>À VENIR</span>
                   <span style={{ display: 'block', marginTop: 8, fontFamily: FT, fontSize: 15, lineHeight: 1.16, fontWeight: 850, color: OK.ink }}>{featuredBaieEvent.title}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 7, fontFamily: FT, fontSize: 10, fontWeight: 750, color: OK.green }}><LIcon name="calendar" size={12} color={OK.green}/>{featuredBaieEvent.date}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 7, fontFamily: FT, fontSize: 10, fontWeight: 750, color: OK.green }}><Icon name="calendar" size={12} color={OK.green}/>{featuredBaieEvent.date}</span>
                   <span style={{ display: 'block', marginTop: 4, fontFamily: FT, fontSize: 9.5, fontWeight: 650, color: OK.ink3 }}>{featuredBaieEvent.time} · La Baie des Rois</span>
                 </span>
               </button>
@@ -5104,7 +5092,7 @@ function BaieScreen() {
                   <div style={{ display: 'inline-block', background: '#EAF6EE', color: OK.green, padding: '4px 8px', borderRadius: 999, fontFamily: FT, fontWeight: 800, fontSize: 9.5 }}>{featuredSpot.group}</div>
                   <div style={{ marginTop: 8, fontFamily: FT, fontWeight: 850, fontSize: 16, color: OK.ink, lineHeight: 1.12 }}>{featuredSpot.name}</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 7 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontWeight: 800, fontSize: 10.5, color: OK.ink }}><LIcon name="star" size={12} color={OK.gold}/>{featuredSpot.rating.toString().replace('.', ',')}</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontWeight: 800, fontSize: 10.5, color: OK.ink }}><Icon name="star" size={12} color={OK.gold}/>{featuredSpot.rating.toString().replace('.', ',')}</span>
                     <span style={{ fontFamily: FT, fontWeight: 650, fontSize: 10, color: OK.ink3 }}>{featuredSpot.cat}</span>
                   </div>
                 </div>
@@ -5133,7 +5121,7 @@ function BaieScreen() {
                   <div style={{ position: 'absolute', left: 13, right: 13, bottom: 13 }}>
                     <div style={{ fontFamily: FT, fontWeight: 850, fontSize: 16, lineHeight: 1.12, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>{p.name}</div>
                     <div style={{ marginTop: 4, fontFamily: FT, fontSize: 10.5, fontWeight: 600, color: 'rgba(255,255,255,0.9)', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.subtitle}</div>
-                    <div style={{ marginTop: 9, display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FT, fontWeight: 800, fontSize: 10.5, color: '#fff' }}>Découvrir <LIcon name="arrow-r" size={13} color={OK.gold} strokeWidth={2.6}/></div>
+                    <div style={{ marginTop: 9, display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FT, fontWeight: 800, fontSize: 10.5, color: '#fff' }}>Découvrir <Icon name="arrow-r" size={13} color={OK.gold} strokeWidth={2.6}/></div>
                   </div>
                 </button>
               ))}
@@ -5176,7 +5164,7 @@ function BaieSpotsScreen({ params }) {
                   <span style={{ display: 'block', fontFamily: FT, fontSize: 17, lineHeight: 1.15, fontWeight: 800, color: OK.ink }}>{place.name}</span>
                   <span style={{ display: 'block', marginTop: 4, fontFamily: FT, fontSize: 11.5, lineHeight: 1.3, fontWeight: 650, color: OK.ink2 }}>{place.subtitle}</span>
                 </span>
-                <LIcon name="chev-r" size={17} color={OK.green} strokeWidth={2.4}/>
+                <Icon name="chev-r" size={17} color={OK.green} strokeWidth={2.4}/>
               </span>
             </button>
           ))}
@@ -5227,8 +5215,8 @@ function BaieServiceHero({ place, label, back }) {
     <div data-baie-service-hero style={{ position: 'relative', zIndex: 0, height: 292, flexShrink: 0, background: place.imageFit === 'contain' ? '#fff' : OK.bg2 }}>
       <Img src={place.image} alt={place.name} style={{ position: 'absolute', inset: 0, backgroundSize: place.imageFit || 'cover', backgroundPosition: place.imagePosition || 'center', backgroundColor: place.imageFit === 'contain' ? '#fff' : OK.bg2 }} overlay="linear-gradient(180deg, rgba(3,18,10,0.34) 0%, transparent 35%, rgba(3,18,10,0.74) 100%)"/>
       <div style={{ position: 'absolute', top: APP_EDGE_TOP, left: 15, right: 15, display: 'flex', justifyContent: 'space-between' }}>
-        <button onClick={back} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
-        <button onClick={() => notifyDemo(`${place.name} prêt à être partagé`)} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(4,25,12,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="share" size={17} color="#fff" strokeWidth={2}/></button>
+        <button onClick={back} aria-label="Retour" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
+        <button onClick={() => notifyDemo(`${place.name} prêt à être partagé`)} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(4,25,12,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="share" size={17} color="#fff" strokeWidth={2}/></button>
       </div>
       <div style={{ position: 'absolute', left: 17, right: 17, bottom: 17 }}>
         <span style={{ display: 'inline-block', padding: '4px 9px', borderRadius: 999, background: OK.gold, color: '#3A2C00', fontFamily: FT, fontWeight: 850, fontSize: 9.5 }}>{label}</span>
@@ -5269,7 +5257,7 @@ function BaieRestaurantScreen({ place }) {
   return <Screen bg={OK.bg2} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Restaurant — ${place.name}`} className="baie-service-page">
     <BaieServiceHero place={place} label="Restaurant & bar" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 9, fontFamily: FT, fontSize: 12.5, fontWeight: 750, color: OK.ink }}><LIcon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>{d.hours}</span></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, fontFamily: FT, fontSize: 12.5, fontWeight: 750, color: OK.ink }}><Icon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>{d.hours}</span></div>
       <p style={{ margin: '13px 0 0', fontFamily: FT, fontSize: 13.5, lineHeight: 1.62, color: OK.ink2 }}>{place.description}</p>
     </div>
     <BaieTabs tabs={[["infos", "Infos"], ["avis", "Avis"], ["menu", "Menu"], ["photos", "Photos"]]} active={tab} onChange={setTab}/>
@@ -5291,14 +5279,14 @@ function BaieHotelScreen({ place }) {
   return <Screen bg={OK.bg2} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Hôtel — ${place.name}`} className="baie-service-page">
     <BaieServiceHero place={place} label="Hôtel" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontFamily: FT, fontSize: 12.5, fontWeight: 750 }}><LIcon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>Bord de mer</span></div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontFamily: FT, fontSize: 12.5, fontWeight: 750 }}><Icon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>Bord de mer</span></div>
       <p style={{ margin: '13px 0 0', fontFamily: FT, fontSize: 13.5, lineHeight: 1.62, color: OK.ink2 }}>{place.description}</p>
       <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}><button onClick={() => notifyDemo('Dates du séjour')} style={{ height: 48, borderRadius: 12, border: `1px solid ${OK.line}`, background: '#fff', textAlign: 'left', padding: '0 12px', fontFamily: FT, cursor: 'pointer' }}><small style={{ color: OK.ink3 }}>Dates</small><br/><b style={{ fontSize: 11.5 }}>25 – 27 juil.</b></button><button onClick={() => notifyDemo('Voyageurs')} style={{ height: 48, borderRadius: 12, border: `1px solid ${OK.line}`, background: '#fff', textAlign: 'left', padding: '0 12px', fontFamily: FT, cursor: 'pointer' }}><small style={{ color: OK.ink3 }}>Voyageurs</small><br/><b style={{ fontSize: 11.5 }}>2 adultes</b></button></div>
     </div>
     <BaieTabs tabs={[["chambres", "Chambres"], ["equipements", "Équipements"], ["photos", "Photos"], ["infos", "Infos"]]} active={tab} onChange={setTab}/>
     <div style={{ padding: '11px 17px 24px' }}>
       {tab === 'chambres' && <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>{rooms.map(([name, desc, price, image]) => <div key={name} style={{ display: 'flex', minHeight: 116, overflow: 'hidden', borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}><Img src={image} style={{ width: 112, flexShrink: 0 }}/><div style={{ padding: 11, flex: 1 }}><div style={{ fontFamily: FT, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{name}</div><div style={{ marginTop: 4, fontFamily: FT, fontSize: 10.5, lineHeight: 1.4, color: OK.ink3 }}>{desc}</div><div style={{ marginTop: 10, fontFamily: FT, fontSize: 13, fontWeight: 850, color: OK.green }}>{fcfa(price)} <small style={{ fontWeight: 600, color: OK.ink3 }}>/ nuit</small></div></div></div>)}</div>}
-      {tab === 'equipements' && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>{amenities.map((item, i) => <div key={item} style={{ minHeight: 72, padding: 12, borderRadius: 13, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', gap: 9 }}><LIcon name={['weather','sante','restaurant','briefcase','telecom','car'][i % 6]} size={18} color={OK.green}/><span style={{ fontFamily: FT, fontSize: 11.5, fontWeight: 750, color: OK.ink }}>{item}</span></div>)}</div>}
+      {tab === 'equipements' && <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>{amenities.map((item, i) => <div key={item} style={{ minHeight: 72, padding: 12, borderRadius: 13, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', gap: 9 }}><Icon name={['weather','sante','restaurant','briefcase','telecom','car'][i % 6]} size={18} color={OK.green}/><span style={{ fontFamily: FT, fontSize: 11.5, fontWeight: 750, color: OK.ink }}>{item}</span></div>)}</div>}
       {tab === 'photos' && <BaiePhotos place={place}/>} 
       {tab === 'infos' && <div style={{ padding: 15, borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}><h2 style={{ margin: 0, fontFamily: FT, fontSize: 15, color: OK.green }}>À propos de l’hôtel</h2><p style={{ margin: '9px 0 0', fontFamily: FT, fontSize: 12.5, lineHeight: 1.6, color: OK.ink2 }}>{place.description}</p><p style={{ margin: '12px 0 0', fontFamily: FT, fontSize: 12.5, lineHeight: 1.6, color: OK.ink2 }}><b>Adresse</b><br/>Zone Nord · La Baie des Rois, Libreville</p></div>}
     </div>
@@ -5313,11 +5301,11 @@ function BaieLeisureScreen({ place }) {
     <BaieServiceHero place={place} label="Loisirs & événements" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <p style={{ margin: 0, fontFamily: FT, fontSize: 13.5, lineHeight: 1.62, color: OK.ink2 }}>{place.description}</p>
-      <div style={{ marginTop: 14, display: 'flex', gap: 8 }}><div style={{ flex: 1, padding: 11, borderRadius: 12, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><LIcon name="calendar" size={15} color={OK.green}/><span style={{ fontFamily: FT, fontSize: 10, fontWeight: 800, color: OK.ink3 }}>DATE</span></div><div style={{ marginTop: 5, fontFamily: FT, fontSize: 11.5, fontWeight: 750 }}>{d.date}</div></div><div style={{ flex: 1, padding: 11, borderRadius: 12, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><LIcon name="clock" size={15} color={OK.green}/><span style={{ fontFamily: FT, fontSize: 10, fontWeight: 800, color: OK.ink3 }}>HORAIRE</span></div><div style={{ marginTop: 5, fontFamily: FT, fontSize: 11.5, fontWeight: 750 }}>{d.time}</div></div></div>
+      <div style={{ marginTop: 14, display: 'flex', gap: 8 }}><div style={{ flex: 1, padding: 11, borderRadius: 12, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="calendar" size={15} color={OK.green}/><span style={{ fontFamily: FT, fontSize: 10, fontWeight: 800, color: OK.ink3 }}>DATE</span></div><div style={{ marginTop: 5, fontFamily: FT, fontSize: 11.5, fontWeight: 750 }}>{d.date}</div></div><div style={{ flex: 1, padding: 11, borderRadius: 12, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><Icon name="clock" size={15} color={OK.green}/><span style={{ fontFamily: FT, fontSize: 10, fontWeight: 800, color: OK.ink3 }}>HORAIRE</span></div><div style={{ marginTop: 5, fontFamily: FT, fontSize: 11.5, fontWeight: 750 }}>{d.time}</div></div></div>
     </div>
     <BaieTabs tabs={[["billets", "Billets & tarifs"], ["programme", "Programme"], ["photos", "Photos"], ["infos", "Infos"]]} active={tab} onChange={setTab}/>
     <div style={{ padding: '11px 17px 24px' }}>
-      {tab === 'billets' && <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{d.tickets.map(([name, desc, price]) => <button key={name} onClick={() => notifyDemo(`${name} sélectionné`)} style={{ padding: 14, borderRadius: 14, border: `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', gap: 10, alignItems: 'center' }}><div style={{ flex: 1 }}><div style={{ fontFamily: FT, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{name}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 11, color: OK.ink3 }}>{desc}</div></div><div style={{ fontFamily: FT, fontSize: 13, fontWeight: 850, color: OK.green }}>{price ? fcfa(price) : 'Gratuit'}</div><LIcon name="chev-r" size={15} color={OK.green}/></button>)}</div>}
+      {tab === 'billets' && <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{d.tickets.map(([name, desc, price]) => <button key={name} onClick={() => notifyDemo(`${name} sélectionné`)} style={{ padding: 14, borderRadius: 14, border: `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', gap: 10, alignItems: 'center' }}><div style={{ flex: 1 }}><div style={{ fontFamily: FT, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{name}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 11, color: OK.ink3 }}>{desc}</div></div><div style={{ fontFamily: FT, fontSize: 13, fontWeight: 850, color: OK.green }}>{price ? fcfa(price) : 'Gratuit'}</div><Icon name="chev-r" size={15} color={OK.green}/></button>)}</div>}
       {tab === 'programme' && <div style={{ paddingLeft: 8 }}>{[['Accueil des participants', d.time.split(' – ')[0]], ['Expérience principale', 'Selon le créneau choisi'], ['Temps libre sur la promenade', 'Après l’activité']].map(([name, time], i) => <div key={name} style={{ display: 'flex', gap: 12, paddingBottom: 18 }}><div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><span style={{ width: 10, height: 10, borderRadius: 10, background: i === 0 ? OK.gold : OK.green }}/>{i < 2 && <span style={{ width: 2, flex: 1, marginTop: 4, background: OK.line }}/>}</div><div><div style={{ fontFamily: FT, fontSize: 13, fontWeight: 800 }}>{name}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 11.5, color: OK.ink3 }}>{time}</div></div></div>)}</div>}
       {tab === 'photos' && <BaiePhotos place={place}/>} 
       {tab === 'infos' && <div><div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>{place.highlights.map(v => <span key={v} style={{ padding: '7px 10px', borderRadius: 999, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FT, fontSize: 11, fontWeight: 700, color: OK.green }}>{v}</span>)}</div><div style={{ marginTop: 14, padding: 14, borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FT, fontSize: 12.5, lineHeight: 1.6, color: OK.ink2 }}><b>Lieu</b><br/>La Baie des Rois · Promenade Nord, Libreville<br/><br/><b>Accès</b><br/>Présentez votre réservation ou billet depuis O’KABA.</div></div>}
@@ -5353,17 +5341,17 @@ function EventImmersiveScreen({ params }) {
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 58%, rgba(0,0,0,.78) 100%)' }}/>
 
       <header style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, height: `calc(58px + ${APP_SAFE_TOP})`, padding: `calc(${APP_SAFE_TOP} + 6px) 12px 8px`, display: 'grid', gridTemplateColumns: '44px 1fr 44px', alignItems: 'center' }}>
-        <button onClick={back} aria-label="Fermer" style={{ width: 44, height: 44, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="close" size={25} color="#fff" strokeWidth={2}/></button>
+        <button onClick={back} aria-label="Fermer" style={{ width: 44, height: 44, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.32)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="close" size={25} color="#fff" strokeWidth={2}/></button>
         {media.length > 1 && <strong data-event-counter style={{ justifySelf: 'center', fontFamily: FT, fontSize: 14, lineHeight: 1, fontWeight: 850, color: '#fff' }}>{mediaIndex + 1} sur {media.length}</strong>}
       </header>
 
       {media.length > 1 && <>
-        <button onClick={showPrevious} aria-label="Affiche précédente" style={{ position: 'absolute', left: 7, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="chev-l" size={23} color="#fff" strokeWidth={2.2}/></button>
-        <button onClick={showNext} aria-label="Affiche suivante" style={{ position: 'absolute', right: 7, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="chev-r" size={23} color="#fff" strokeWidth={2.2}/></button>
+        <button onClick={showPrevious} aria-label="Affiche précédente" style={{ position: 'absolute', left: 7, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="chev-l" size={23} color="#fff" strokeWidth={2.2}/></button>
+        <button onClick={showNext} aria-label="Affiche suivante" style={{ position: 'absolute', right: 7, top: '50%', transform: 'translateY(-50%)', zIndex: 10, width: 38, height: 48, padding: 0, border: 'none', borderRadius: 999, background: 'rgba(0,0,0,.26)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="chev-r" size={23} color="#fff" strokeWidth={2.2}/></button>
       </>}
 
       <footer data-event-footer style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 10, padding: `16px 16px calc(16px + env(safe-area-inset-bottom))` }}>
-        <button onClick={() => navigate('event-ticket', { event })} style={{ width: '100%', height: 54, borderRadius: 16, border: 'none', background: `linear-gradient(135deg, ${OK.green} 0%, ${OK.greenDeep} 100%)`, color: '#fff', fontFamily: FX, fontSize: 15, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, cursor: 'pointer', boxShadow: '0 10px 26px rgba(0,0,0,.4)' }}><LIcon name="ticket" size={19} color="#fff" strokeWidth={2}/>Réserver</button>
+        <button onClick={() => navigate('event-ticket', { event })} style={{ width: '100%', height: 54, borderRadius: 16, border: 'none', background: `linear-gradient(135deg, ${OK.green} 0%, ${OK.greenDeep} 100%)`, color: '#fff', fontFamily: FX, fontSize: 15, fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, cursor: 'pointer', boxShadow: '0 10px 26px rgba(0,0,0,.4)' }}><Icon name="ticket" size={19} color="#fff" strokeWidth={2}/>Réserver</button>
       </footer>
     </div>
   </Screen>;
@@ -5413,7 +5401,7 @@ function EventTicketScreen({ params }) {
 
         {step === 1 && <div style={{ padding: '14px 16px 32px' }}>
           <div style={{ padding: 14, borderRadius: 17, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(11,124,57,.1)', color: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name="ticket" size={22} color={OK.green} strokeWidth={2}/></div>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: 'rgba(11,124,57,.1)', color: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="ticket" size={22} color={OK.green} strokeWidth={2}/></div>
             <div style={{ flex: 1, minWidth: 0 }}><div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: FX, fontSize: 14, fontWeight: 850, color: OK.ink }}>{event.title}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 10.5, fontWeight: 650, color: OK.ink3 }}>{date}{event.time ? ` · ${event.time}` : ''} · {place}</div></div>
           </div>
 
@@ -5429,7 +5417,7 @@ function EventTicketScreen({ params }) {
             <button onClick={() => setQty(value => Math.min(8, value + 1))} aria-label="Ajouter" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: OK.bg2, color: OK.green, fontFamily: FX, fontSize: 18, fontWeight: 900, cursor: 'pointer' }}>+</button>
           </div>
 
-          <button onClick={goToRecap} style={{ width: '100%', height: 50, marginTop: 21, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer<LIcon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
+          <button onClick={goToRecap} style={{ width: '100%', height: 50, marginTop: 21, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer<Icon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
         </div>}
 
         {step === 2 && <div style={{ padding: '14px 16px 32px' }}>
@@ -5452,7 +5440,7 @@ function EventTicketScreen({ params }) {
         </div>}
 
         {step === 3 && <div style={{ padding: '24px 18px 34px', textAlign: 'center' }}>
-          <div style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(11,124,57,.05)' }}><LIcon name="verified" size={38} color={OK.green} strokeWidth={2}/></div>
+          <div style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(11,124,57,.05)' }}><Icon name="verified" size={38} color={OK.green} strokeWidth={2}/></div>
           <h1 style={{ margin: '20px 0 0', fontFamily: FX, fontSize: 23, fontWeight: 900, color: OK.ink }}>Votre billet est confirmé</h1>
           <p style={{ margin: '8px auto 0', maxWidth: 285, fontFamily: FT, fontSize: 12.5, lineHeight: 1.55, color: OK.ink3 }}>Présentez le code ci-dessous à l’entrée de « {event.title} ».</p>
           <div style={{ marginTop: 20, padding: '21px 15px', borderRadius: 20, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 8px 24px rgba(18,51,31,.08)' }}>
@@ -5460,7 +5448,7 @@ function EventTicketScreen({ params }) {
             <div style={{ width: 168, height: 168, margin: '0 auto', padding: 10, borderRadius: 16, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {qrUrl
                 ? <img src={qrUrl} alt="QR code des billets" style={{ width: '100%', height: '100%', objectFit: 'contain' }}/>
-                : <LIcon name="qr" size={64} color={OK.ink3} strokeWidth={1.6}/>}
+                : <Icon name="qr" size={64} color={OK.ink3} strokeWidth={1.6}/>}
             </div>
             <div style={{ marginTop: 12, fontFamily: FT, fontSize: 11.5, fontWeight: 700, color: OK.ink2, lineHeight: 1.5 }}>
               Scannez ce QR code pour ouvrir vos billets et les télécharger en PDF.
@@ -5580,7 +5568,7 @@ function useBaieNewsFavorites() {
 }
 
 function BaieNewsBookmark({ active, onClick, dark = false, size = 38 }) {
-  return <button onClick={(event) => { event.stopPropagation(); onClick(); }} aria-label={active ? 'Retirer des favoris' : 'Ajouter aux favoris'} style={{ width: size, height: size, borderRadius: 999, border: dark ? '1px solid rgba(255,255,255,0.28)' : `1px solid ${OK.line}`, background: dark ? 'rgba(5,35,18,0.58)' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}><LIcon name={active ? 'bookmark-f' : 'bookmark'} size={17} color={active ? OK.gold : (dark ? '#fff' : OK.green)} strokeWidth={2}/></button>;
+  return <button onClick={(event) => { event.stopPropagation(); onClick(); }} aria-label={active ? 'Retirer des favoris' : 'Ajouter aux favoris'} style={{ width: size, height: size, borderRadius: 999, border: dark ? '1px solid rgba(255,255,255,0.28)' : `1px solid ${OK.line}`, background: dark ? 'rgba(5,35,18,0.58)' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}><Icon name={active ? 'bookmark-f' : 'bookmark'} size={17} color={active ? OK.gold : (dark ? '#fff' : OK.green)} strokeWidth={2}/></button>;
 }
 
 function BaieNewsRow({ article, favorite, onToggle, onOpen }) {
@@ -5611,7 +5599,7 @@ function BaieInformationScreen() {
   return <Screen bg="#fff" statusDark={true} lightStatus>
     <div data-screen-label="Informations — Baie des Rois" className="baie-news-page">
       <div style={{ position: 'sticky', top: 0, zIndex: 30, padding: `${APP_HEADER_TOP_PLUS_2} 16px 10px`, display: 'flex', alignItems: 'center', gap: 11, background: '#fff', borderBottom: `1px solid ${OK.line}` }}>
-        <button onClick={back} aria-label="Retour" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="back" size={18} color={OK.ink} strokeWidth={2.2}/></button>
+        <button onClick={back} aria-label="Retour" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color={OK.ink} strokeWidth={2.2}/></button>
         <div style={{ flex: 1 }}><div style={{ fontFamily: FX, fontSize: 20, fontWeight: 850, color: OK.ink }}>Informations</div><div style={{ marginTop: 1, fontFamily: FT, fontSize: 10.5, color: OK.ink3 }}>La Baie des Rois • Presse gabonaise</div></div>
       </div>
 
@@ -5637,7 +5625,7 @@ function BaieInformationScreen() {
         <div style={{ padding: '15px 16px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontFamily: FX, fontSize: 15, fontWeight: 850, color: OK.ink }}>En ce moment</span><span style={{ width: 34, height: 3, borderRadius: 3, background: OK.gold }}/></div>
       </>}
 
-      {tab === 'favorites' && articles.length === 0 && <div style={{ padding: '76px 35px', textAlign: 'center' }}><div style={{ width: 66, height: 66, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="bookmark" size={27} color={OK.green}/></div><div style={{ marginTop: 16, fontFamily: FX, fontSize: 16, fontWeight: 850, color: OK.ink }}>Aucun article favori</div><p style={{ margin: '7px 0 0', fontFamily: FT, fontSize: 12, lineHeight: 1.55, color: OK.ink3 }}>Touchez le marque-page d’un article pour le retrouver facilement ici.</p><button onClick={() => setTab('latest')} style={{ marginTop: 17, height: 40, padding: '0 17px', borderRadius: 999, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 11.5, fontWeight: 800, cursor: 'pointer' }}>Voir les actualités</button></div>}
+      {tab === 'favorites' && articles.length === 0 && <div style={{ padding: '76px 35px', textAlign: 'center' }}><div style={{ width: 66, height: 66, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="bookmark" size={27} color={OK.green}/></div><div style={{ marginTop: 16, fontFamily: FX, fontSize: 16, fontWeight: 850, color: OK.ink }}>Aucun article favori</div><p style={{ margin: '7px 0 0', fontFamily: FT, fontSize: 12, lineHeight: 1.55, color: OK.ink3 }}>Touchez le marque-page d’un article pour le retrouver facilement ici.</p><button onClick={() => setTab('latest')} style={{ marginTop: 17, height: 40, padding: '0 17px', borderRadius: 999, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 11.5, fontWeight: 800, cursor: 'pointer' }}>Voir les actualités</button></div>}
 
       {articles.length > 0 && <div>{articles.map(article => <BaieNewsRow key={article.id} article={article} favorite={favorites.includes(article.id)} onToggle={() => toggleFavorite(article.id)} onOpen={() => navigate('baie-article', { id: article.id })}/>)}</div>}
       <div style={{ height: 28 }}/>
@@ -5661,15 +5649,15 @@ function BaieArticleScreen({ params }) {
     <article data-screen-label={`Article — ${article.title}`} className="baie-article-page">
       <div style={{ height: 260, position: 'relative', overflow: 'hidden' }}>
         <Img src={article.image} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(2,20,9,0.42) 0%, rgba(2,20,9,0.02) 48%, rgba(2,20,9,0.36) 100%)"/>
-        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="back" size={18} color="#fff" strokeWidth={2.2}/></button>
-        <div style={{ position: 'absolute', top: APP_EDGE_TOP, right: 14, display: 'flex', gap: 8 }}><button onClick={shareArticle} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="share" size={17} color="#fff" strokeWidth={2}/></button><BaieNewsBookmark active={favorite} onClick={() => toggleFavorite(article.id)} dark size={40}/></div>
+        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color="#fff" strokeWidth={2.2}/></button>
+        <div style={{ position: 'absolute', top: APP_EDGE_TOP, right: 14, display: 'flex', gap: 8 }}><button onClick={shareArticle} aria-label="Partager" style={{ width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="share" size={17} color="#fff" strokeWidth={2}/></button><BaieNewsBookmark active={favorite} onClick={() => toggleFavorite(article.id)} dark size={40}/></div>
       </div>
       <div style={{ padding: '19px 18px 34px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontFamily: FT, fontSize: 10, color: OK.ink3 }}><span style={{ color: OK.green, fontWeight: 900, letterSpacing: 0.55 }}>{article.category}</span><span>•</span><b>{article.source}</b><span>•</span><span>{article.date}</span></div>
         <h1 style={{ margin: '11px 0 0', fontFamily: FX, fontSize: 24, lineHeight: 1.18, letterSpacing: -0.55, color: OK.ink }}>{article.title}</h1>
         <p style={{ margin: '13px 0 0', paddingBottom: 16, borderBottom: `1px solid ${OK.line}`, fontFamily: FT, fontSize: 13.5, lineHeight: 1.6, fontWeight: 650, color: OK.ink2 }}>{article.excerpt}</p>
         <div style={{ marginTop: 17 }}>{article.body.map((paragraph, index) => <p key={index} style={{ margin: index ? '15px 0 0' : 0, fontFamily: FT, fontSize: 14, lineHeight: 1.72, color: OK.ink2 }}>{paragraph}</p>)}</div>
-        <button onClick={() => window.open(article.url, '_blank', 'noopener,noreferrer')} style={{ width: '100%', height: 49, marginTop: 24, borderRadius: 13, border: 'none', background: OK.green, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: FT, fontSize: 12.5, fontWeight: 850, cursor: 'pointer' }}>Lire sur {article.source}<LIcon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
+        <button onClick={() => window.open(article.url, '_blank', 'noopener,noreferrer')} style={{ width: '100%', height: 49, marginTop: 24, borderRadius: 13, border: 'none', background: OK.green, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: FT, fontSize: 12.5, fontWeight: 850, cursor: 'pointer' }}>Lire sur {article.source}<Icon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
       </div>
     </article>
   </Screen>;
@@ -5829,7 +5817,7 @@ function Traffic3DScreen() {
               {trafficPoints.map((point, index) => <TrafficMapPoint key={`${mode}-${index}`} point={point} congested={congested}/>)}
             </div>
 
-            <div style={{ position: 'absolute', left: 13, top: 13, zIndex: 20, display: 'flex', alignItems: 'center', gap: 7, padding: '7px 10px', borderRadius: 10, background: 'rgba(255,255,255,.95)', border: '1px solid rgba(11,124,57,.12)', color: OK.ink, fontFamily: FT, fontSize: 9.5, fontWeight: 850, letterSpacing: .25, boxShadow: '0 4px 14px rgba(20,48,29,.13)' }}><LIcon name="map" size={13} color={OK.green}/> CARTE ROUTIÈRE · HORS LIGNE</div>
+            <div style={{ position: 'absolute', left: 13, top: 13, zIndex: 20, display: 'flex', alignItems: 'center', gap: 7, padding: '7px 10px', borderRadius: 10, background: 'rgba(255,255,255,.95)', border: '1px solid rgba(11,124,57,.12)', color: OK.ink, fontFamily: FT, fontSize: 9.5, fontWeight: 850, letterSpacing: .25, boxShadow: '0 4px 14px rgba(20,48,29,.13)' }}><Icon name="map" size={13} color={OK.green}/> CARTE ROUTIÈRE · HORS LIGNE</div>
 
             <div style={{ position: 'absolute', right: 13, top: 13, zIndex: 20, display: 'flex', flexDirection: 'column', overflow: 'hidden', borderRadius: 11, background: 'rgba(255,255,255,.96)', boxShadow: '0 5px 16px rgba(0,0,0,.16)' }}>
               <div style={{ width: 36, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid rgba(12,39,25,.1)', fontFamily: FX, fontSize: 10, fontWeight: 900, color: OK.green }}>N</div>
@@ -5854,7 +5842,7 @@ function Traffic3DScreen() {
               {cars.map((car, index) => <TrafficCar3D key={`${mode}-${index}`} car={car} congested={congested}/>)}
             </div>
 
-            <div style={{ position: 'absolute', left: 14, top: 14, zIndex: 20, display: 'flex', alignItems: 'center', gap: 7, padding: '7px 10px', borderRadius: 10, background: 'rgba(3,22,14,.82)', border: '1px solid rgba(255,255,255,.17)', color: '#fff', fontFamily: FT, fontSize: 9.5, fontWeight: 850, letterSpacing: .4, backdropFilter: 'blur(10px)' }}><LIcon name="navigate" size={12} color={OK.gold}/> CARTE 3D · VUE DRONE</div>
+            <div style={{ position: 'absolute', left: 14, top: 14, zIndex: 20, display: 'flex', alignItems: 'center', gap: 7, padding: '7px 10px', borderRadius: 10, background: 'rgba(3,22,14,.82)', border: '1px solid rgba(255,255,255,.17)', color: '#fff', fontFamily: FT, fontSize: 9.5, fontWeight: 850, letterSpacing: .4, backdropFilter: 'blur(10px)' }}><Icon name="navigate" size={12} color={OK.gold}/> CARTE 3D · VUE DRONE</div>
 
             <div style={{ position: 'absolute', right: 13, top: 13, zIndex: 20, display: 'flex', flexDirection: 'column', overflow: 'hidden', borderRadius: 11, background: 'rgba(255,255,255,.93)', boxShadow: '0 5px 16px rgba(0,0,0,.2)' }}>
               <div style={{ width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center', borderBottom: '1px solid rgba(12,39,25,.1)', fontFamily: FX, fontSize: 10, fontWeight: 900, color: OK.green }}>N</div>
@@ -5961,7 +5949,7 @@ function TrafficMapScreen() {
           </g>
         </svg>
 
-        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: 58, left: 14, zIndex: 70, width: 42, height: 42, borderRadius: 999, border: '1px solid rgba(11,124,57,.14)', background: 'rgba(255,255,255,.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 5px 16px rgba(22,54,34,.18)', backdropFilter: 'blur(8px)' }}><LIcon name="back" size={19} color={OK.green} strokeWidth={2.3}/></button>
+        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: 58, left: 14, zIndex: 70, width: 42, height: 42, borderRadius: 999, border: '1px solid rgba(11,124,57,.14)', background: 'rgba(255,255,255,.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 5px 16px rgba(22,54,34,.18)', backdropFilter: 'blur(8px)' }}><Icon name="back" size={19} color={OK.green} strokeWidth={2.3}/></button>
         <div style={{ position: 'absolute', top: 59, right: 14, zIndex: 70, minHeight: 40, padding: '0 15px', borderRadius: 999, background: congested ? 'rgba(218,38,38,.95)' : 'rgba(11,124,57,.95)', color: '#fff', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 5px 16px rgba(22,54,34,.2)', backdropFilter: 'blur(8px)', fontFamily: FT, fontSize: 12, fontWeight: 850 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: '#fff', boxShadow: '0 0 0 3px rgba(255,255,255,.2)' }}/>{congested ? 'Embouteillage' : 'Trafic fluide'}</div>
       </div>
     </Screen>
@@ -6047,7 +6035,7 @@ function TrafficRealMapScreen() {
         </svg>
 
         <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', boxShadow: 'inset 0 95px 55px -65px rgba(255,255,255,.76), inset 0 -80px 55px -65px rgba(11,39,24,.13)' }}/>
-        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: 58, left: 14, zIndex: 70, width: 42, height: 42, borderRadius: 999, border: '1px solid rgba(11,124,57,.14)', background: 'rgba(255,255,255,.96)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 5px 18px rgba(22,54,34,.2)', backdropFilter: 'blur(10px)' }}><LIcon name="back" size={19} color={OK.green} strokeWidth={2.3}/></button>
+        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: 58, left: 14, zIndex: 70, width: 42, height: 42, borderRadius: 999, border: '1px solid rgba(11,124,57,.14)', background: 'rgba(255,255,255,.96)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 5px 18px rgba(22,54,34,.2)', backdropFilter: 'blur(10px)' }}><Icon name="back" size={19} color={OK.green} strokeWidth={2.3}/></button>
         <div style={{ position: 'absolute', top: 59, right: 14, zIndex: 70, minHeight: 40, padding: '0 15px', borderRadius: 999, background: congested ? 'rgba(199,37,37,.96)' : 'rgba(11,124,57,.96)', color: '#fff', display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 5px 18px rgba(22,54,34,.22)', backdropFilter: 'blur(10px)', fontFamily: FT, fontSize: 12, fontWeight: 850 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: '#fff', boxShadow: '0 0 0 3px rgba(255,255,255,.2)' }}/>{congested ? 'Embouteillage' : 'Trafic fluide'}</div>
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" style={{ position: 'absolute', right: 8, bottom: 10, zIndex: 70, padding: '4px 7px', borderRadius: 5, background: 'rgba(255,255,255,.88)', color: '#42534A', fontFamily: FT, fontSize: 8.5, fontWeight: 700, textDecoration: 'none', boxShadow: '0 2px 8px rgba(20,45,30,.12)' }}>© OpenStreetMap contributors</a>
       </div>
@@ -6098,7 +6086,7 @@ function WeatherScreen() {
         <img src="assets/smartcity-meteo.jpg" alt="Ciel à Libreville" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', transform: 'scale(1.03)' }}/>
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(4,45,27,.05) 0%, rgba(5,42,27,.16) 46%, rgba(3,27,18,.58) 100%)' }}/>
 
-        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: 58, left: 14, zIndex: 70, width: 42, height: 42, borderRadius: 999, border: '1px solid rgba(255,255,255,.42)', background: 'rgba(8,70,41,.28)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 6px 20px rgba(4,37,22,.2)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}><LIcon name="back" size={19} color="#fff" strokeWidth={2.3}/></button>
+        <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: 58, left: 14, zIndex: 70, width: 42, height: 42, borderRadius: 999, border: '1px solid rgba(255,255,255,.42)', background: 'rgba(8,70,41,.28)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 6px 20px rgba(4,37,22,.2)', backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }}><Icon name="back" size={19} color="#fff" strokeWidth={2.3}/></button>
         <div style={{ position: 'absolute', top: 62, left: 0, right: 0, textAlign: 'center', fontFamily: FX, fontSize: 13, fontWeight: 850, color: '#fff', textShadow: '0 2px 8px rgba(3,31,19,.35)' }}>Météo · Libreville</div>
 
         <section style={{ position: 'absolute', left: 15, right: 15, top: 118, bottom: 22, padding: '19px 17px 17px', borderRadius: 30, border: '1px solid rgba(255,255,255,.42)', background: 'linear-gradient(145deg, rgba(255,255,255,.3), rgba(225,241,236,.13))', boxShadow: '0 24px 55px rgba(2,35,21,.3), inset 0 1px 0 rgba(255,255,255,.45)', backdropFilter: 'blur(24px) saturate(1.08)', WebkitBackdropFilter: 'blur(24px) saturate(1.08)', color: '#fff', display: 'flex', flexDirection: 'column' }}>
@@ -6113,9 +6101,9 @@ function WeatherScreen() {
           </div>
 
           <div style={{ marginTop: 16, minHeight: 55, padding: '0 13px', borderRadius: 18, background: 'rgba(4,55,34,.78)', border: '1px solid rgba(255,255,255,.12)', display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 9, boxShadow: '0 8px 20px rgba(3,35,21,.16)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}><LIcon name="weather" size={18} color={OK.gold}/><div><div style={{ fontFamily: FT, fontSize: 9.5, color: 'rgba(255,255,255,.65)' }}>Lever</div><div style={{ fontFamily: FX, fontSize: 12, fontWeight: 850 }}>06:21</div></div></div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}><Icon name="weather" size={18} color={OK.gold}/><div><div style={{ fontFamily: FT, fontSize: 9.5, color: 'rgba(255,255,255,.65)' }}>Lever</div><div style={{ fontFamily: FX, fontSize: 12, fontWeight: 850 }}>06:21</div></div></div>
             <div style={{ fontFamily: FT, fontSize: 10.5, fontWeight: 750, color: 'rgba(255,255,255,.82)', whiteSpace: 'nowrap' }}>12 h 05</div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 7 }}><div style={{ textAlign: 'right' }}><div style={{ fontFamily: FT, fontSize: 9.5, color: 'rgba(255,255,255,.65)' }}>Coucher</div><div style={{ fontFamily: FX, fontSize: 12, fontWeight: 850 }}>18:26</div></div><LIcon name="weather" size={18} color="#DCE8E4"/></div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 7 }}><div style={{ textAlign: 'right' }}><div style={{ fontFamily: FT, fontSize: 9.5, color: 'rgba(255,255,255,.65)' }}>Coucher</div><div style={{ fontFamily: FX, fontSize: 12, fontWeight: 850 }}>18:26</div></div><Icon name="weather" size={18} color="#DCE8E4"/></div>
           </div>
 
           <div style={{ marginTop: 12, minHeight: 43, borderRadius: 16, background: 'rgba(4,55,34,.72)', border: '1px solid rgba(255,255,255,.11)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, fontFamily: FT, fontSize: 12, color: 'rgba(255,255,255,.82)' }}><WeatherGlyph type="rain" size={25}/><span>Risque de pluie</span><strong style={{ fontFamily: FX, fontSize: 13.5, color: '#fff' }}>35 %</strong></div>
@@ -6166,7 +6154,7 @@ function ParkingScreen() {
             <button key={p.name} onClick={() => navigate('parking-reservation', { parking: p })} style={{ width: '100%', textAlign: 'left', cursor: 'pointer', border: 'none', padding: 0, borderRadius: 19, overflow: 'hidden', position: 'relative', height: 174, boxShadow: '0 5px 17px rgba(0,0,0,0.13)' }}>
               <Img src={p.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(90deg, rgba(7,42,21,0.9) 0%, rgba(7,42,21,0.58) 60%, rgba(7,42,21,0.24) 100%)"/>
               <div style={{ position: 'absolute', left: 16, top: 16, right: 16 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontWeight: 750, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,.14)', padding: '5px 10px', borderRadius: 999 }}><LIcon name="pin" size={12} color="#fff" strokeWidth={2}/> {p.name}</span><span style={{ padding: '5px 9px', borderRadius: 999, background: 'rgba(3,29,16,.55)', color: '#fff', fontFamily: FT, fontSize: 10, fontWeight: 800 }}><LIcon name="navigate" size={11} color={OK.gold}/> {p.distance}</span></div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontWeight: 750, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,.14)', padding: '5px 10px', borderRadius: 999 }}><Icon name="pin" size={12} color="#fff" strokeWidth={2}/> {p.name}</span><span style={{ padding: '5px 9px', borderRadius: 999, background: 'rgba(3,29,16,.55)', color: '#fff', fontFamily: FT, fontSize: 10, fontWeight: 800 }}><Icon name="navigate" size={11} color={OK.gold}/> {p.distance}</span></div>
               </div>
               <div style={{ position: 'absolute', left: 16, right: 16, bottom: 14 }}>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 5 }}><span style={{ fontFamily: FX, fontWeight: 800, fontSize: 34, color: '#fff', lineHeight: 0.9 }}>{p.free}</span><span style={{ fontFamily: FX, fontWeight: 700, fontSize: 13, color: OK.gold, marginBottom: 3 }}>places libres</span></div>
@@ -6226,9 +6214,9 @@ function ParkingReservationScreen({ params }) {
             {durations.map(([hours, label, price]) => <button key={hours} onClick={() => setDuration(hours)} style={{ minHeight: 62, padding: '10px 12px', borderRadius: 14, border: duration === hours ? `1.5px solid ${OK.green}` : `1px solid ${OK.line}`, background: duration === hours ? 'rgba(11,124,57,.08)' : '#fff', cursor: 'pointer', textAlign: 'left' }}><div style={{ fontFamily: FX, fontSize: 12.5, fontWeight: 850, color: OK.ink }}>{label}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 10.5, fontWeight: 750, color: duration === hours ? OK.green : OK.ink3 }}>{fcfa(price)}</div></button>)}
           </div>
 
-          <label style={{ display: 'block', marginTop: 18 }}><span style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 850, color: OK.ink }}>Immatriculation du véhicule</span><div style={{ display: 'flex', alignItems: 'center', gap: 9, height: 50, marginTop: 9, padding: '0 13px', borderRadius: 14, border: `1px solid ${plate ? OK.green : OK.line}`, background: '#fff' }}><LIcon name="car" size={18} color={OK.green}/><input value={plate} onChange={event => setPlate(event.target.value.toUpperCase())} maxLength={12} placeholder="Ex. GA 1234 AA" style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, textTransform: 'uppercase' }}/></div></label>
+          <label style={{ display: 'block', marginTop: 18 }}><span style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 850, color: OK.ink }}>Immatriculation du véhicule</span><div style={{ display: 'flex', alignItems: 'center', gap: 9, height: 50, marginTop: 9, padding: '0 13px', borderRadius: 14, border: `1px solid ${plate ? OK.green : OK.line}`, background: '#fff' }}><Icon name="car" size={18} color={OK.green}/><input value={plate} onChange={event => setPlate(event.target.value.toUpperCase())} maxLength={12} placeholder="Ex. GA 1234 AA" style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, textTransform: 'uppercase' }}/></div></label>
 
-          <button disabled={!canContinue} onClick={() => setStep(2)} style={{ width: '100%', height: 50, marginTop: 21, borderRadius: 14, border: 'none', background: canContinue ? OK.green : '#AABBB1', color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: canContinue ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer<LIcon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
+          <button disabled={!canContinue} onClick={() => setStep(2)} style={{ width: '100%', height: 50, marginTop: 21, borderRadius: 14, border: 'none', background: canContinue ? OK.green : '#AABBB1', color: '#fff', fontFamily: FX, fontSize: 13, fontWeight: 850, cursor: canContinue ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer<Icon name="chev-r" size={16} color="#fff" strokeWidth={2.2}/></button>
         </div>}
 
         {step === 2 && <div style={{ padding: '14px 16px 32px' }}>
@@ -6251,7 +6239,7 @@ function ParkingReservationScreen({ params }) {
         </div>}
 
         {step === 3 && <div style={{ padding: '24px 18px 34px', textAlign: 'center' }}>
-          <div style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(11,124,57,.05)' }}><LIcon name="verified" size={38} color={OK.green} strokeWidth={2}/></div>
+          <div style={{ width: 76, height: 76, margin: '0 auto', borderRadius: 999, background: 'rgba(11,124,57,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 0 10px rgba(11,124,57,.05)' }}><Icon name="verified" size={38} color={OK.green} strokeWidth={2}/></div>
           <h1 style={{ margin: '20px 0 0', fontFamily: FX, fontSize: 23, fontWeight: 900, color: OK.ink }}>Votre place est réservée</h1>
           <p style={{ margin: '8px auto 0', maxWidth: 285, fontFamily: FT, fontSize: 12.5, lineHeight: 1.55, color: OK.ink3 }}>Présentez le code ci-dessous à l’entrée du {parking.name}.</p>
           <div style={{ marginTop: 20, padding: '21px 15px', borderRadius: 20, background: '#fff', border: `1px solid ${OK.line}`, boxShadow: '0 8px 24px rgba(18,51,31,.08)' }}>
@@ -6325,9 +6313,9 @@ function PharmaciesScreen() {
       <div data-screen-label="Pharmacies Baie des Rois">
         <GreenHeader title="Pharmacies" onBack={back}/>
         <div style={{ padding: '13px 15px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, height: 46, padding: '0 12px', borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}><LIcon name="search" size={17} color={OK.ink3}/><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Rechercher une pharmacie" style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: FT, fontSize: 12.5, color: OK.ink }}/></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, height: 46, padding: '0 12px', borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}><Icon name="search" size={17} color={OK.ink3}/><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Rechercher une pharmacie" style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: FT, fontSize: 12.5, color: OK.ink }}/></div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginTop: 10, padding: 4, borderRadius: 13, background: '#DCE6DF' }}>
-            {[['list', 'Liste'], ['map', 'Carte']].map(([id, label]) => <button key={id} onClick={() => setView(id)} style={{ height: 36, border: 'none', borderRadius: 10, background: view === id ? '#fff' : 'transparent', color: view === id ? OK.green : OK.ink3, boxShadow: view === id ? '0 2px 8px rgba(20,51,31,.09)' : 'none', fontFamily: FX, fontSize: 11.5, fontWeight: 850, cursor: 'pointer' }}><LIcon name={id === 'map' ? 'map' : 'list'} size={14} color={view === id ? OK.green : OK.ink3}/> {label}</button>)}
+            {[['list', 'Liste'], ['map', 'Carte']].map(([id, label]) => <button key={id} onClick={() => setView(id)} style={{ height: 36, border: 'none', borderRadius: 10, background: view === id ? '#fff' : 'transparent', color: view === id ? OK.green : OK.ink3, boxShadow: view === id ? '0 2px 8px rgba(20,51,31,.09)' : 'none', fontFamily: FX, fontSize: 11.5, fontWeight: 850, cursor: 'pointer' }}><Icon name={id === 'map' ? 'map' : 'list'} size={14} color={view === id ? OK.green : OK.ink3}/> {label}</button>)}
           </div>
           <div style={{ display: 'flex', gap: 7, overflowX: 'auto', padding: '10px 0 2px', scrollbarWidth: 'none' }}>
             {[['all', 'Toutes'], ['open', 'Ouvertes'], ['24h', '24 h/24'], ['delivery', 'Livraison']].map(([id, label]) => <button key={id} onClick={() => setFilter(id)} style={{ flexShrink: 0, height: 32, padding: '0 12px', borderRadius: 999, border: filter === id ? 'none' : `1px solid ${OK.line}`, background: filter === id ? OK.green : '#fff', color: filter === id ? '#fff' : OK.ink2, fontFamily: FT, fontSize: 10.5, fontWeight: 800, cursor: 'pointer' }}>{label}</button>)}
@@ -6345,9 +6333,9 @@ function PharmaciesScreen() {
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginTop: 10 }}>{pharmacy.alwaysOpen && <span style={{ padding: '4px 8px', borderRadius: 999, background: 'rgba(245,184,0,.13)', color: '#9B6B00', fontFamily: FT, fontSize: 9, fontWeight: 800 }}>24 h/24</span>}{pharmacy.delivery && <span style={{ padding: '4px 8px', borderRadius: 999, background: 'rgba(11,124,57,.09)', color: OK.green, fontFamily: FT, fontSize: 9, fontWeight: 800 }}>Livraison</span>}<span style={{ padding: '4px 8px', borderRadius: 999, background: OK.bg2, color: OK.ink2, fontFamily: FT, fontSize: 9, fontWeight: 700 }}>{pharmacy.hours}</span></div>
                 <div style={{ display: 'grid', gridTemplateColumns: pharmacy.whatsapp ? '1fr 1fr 1fr' : '1fr 1fr', gap: 7, marginTop: 11 }}>
-                  <button onClick={() => callPharmacy(pharmacy)} style={{ height: 36, borderRadius: 11, border: `1px solid ${OK.line}`, background: '#fff', color: OK.green, fontFamily: FT, fontSize: 10, fontWeight: 850, cursor: 'pointer' }}><LIcon name="phone" size={13} color={OK.green}/> Appeler</button>
-                  {pharmacy.whatsapp && <button onClick={() => whatsappPharmacy(pharmacy)} style={{ height: 36, borderRadius: 11, border: 'none', background: '#21B35B', color: '#fff', fontFamily: FT, fontSize: 10, fontWeight: 850, cursor: 'pointer' }}><LIcon name="whatsapp" size={13} color="#fff"/> WhatsApp</button>}
-                  <button onClick={() => routeToPharmacy(pharmacy)} style={{ height: 36, borderRadius: 11, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 10, fontWeight: 850, cursor: 'pointer' }}><LIcon name="navigate" size={13} color="#fff"/> Itinéraire</button>
+                  <button onClick={() => callPharmacy(pharmacy)} style={{ height: 36, borderRadius: 11, border: `1px solid ${OK.line}`, background: '#fff', color: OK.green, fontFamily: FT, fontSize: 10, fontWeight: 850, cursor: 'pointer' }}><Icon name="phone" size={13} color={OK.green}/> Appeler</button>
+                  {pharmacy.whatsapp && <button onClick={() => whatsappPharmacy(pharmacy)} style={{ height: 36, borderRadius: 11, border: 'none', background: '#21B35B', color: '#fff', fontFamily: FT, fontSize: 10, fontWeight: 850, cursor: 'pointer' }}><Icon name="whatsapp" size={13} color="#fff"/> WhatsApp</button>}
+                  <button onClick={() => routeToPharmacy(pharmacy)} style={{ height: 36, borderRadius: 11, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 10, fontWeight: 850, cursor: 'pointer' }}><Icon name="navigate" size={13} color="#fff"/> Itinéraire</button>
                 </div>
               </article>;
             })}
@@ -6435,9 +6423,9 @@ function FuelStationsScreen() {
       <div data-screen-label="Stations carburant Baie des Rois">
         <GreenHeader title="Carburant" onBack={back}/>
         <div style={{ padding: '13px 15px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, height: 46, padding: '0 12px', borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}><LIcon name="search" size={17} color={OK.ink3}/><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Rechercher une station ou une enseigne" style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: FT, fontSize: 12, color: OK.ink }}/></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, height: 46, padding: '0 12px', borderRadius: 14, background: '#fff', border: `1px solid ${OK.line}` }}><Icon name="search" size={17} color={OK.ink3}/><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Rechercher une station ou une enseigne" style={{ flex: 1, minWidth: 0, border: 'none', outline: 'none', background: 'transparent', fontFamily: FT, fontSize: 12, color: OK.ink }}/></div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 5, marginTop: 10, padding: 4, borderRadius: 13, background: '#DCE6DF' }}>
-            {[['list', 'Liste'], ['map', 'Carte']].map(([id, label]) => <button key={id} onClick={() => setView(id)} style={{ height: 36, border: 'none', borderRadius: 10, background: view === id ? '#fff' : 'transparent', color: view === id ? OK.green : OK.ink3, boxShadow: view === id ? '0 2px 8px rgba(20,51,31,.09)' : 'none', fontFamily: FX, fontSize: 11.5, fontWeight: 850, cursor: 'pointer' }}><LIcon name={id === 'map' ? 'map' : 'list'} size={14} color={view === id ? OK.green : OK.ink3}/> {label}</button>)}
+            {[['list', 'Liste'], ['map', 'Carte']].map(([id, label]) => <button key={id} onClick={() => setView(id)} style={{ height: 36, border: 'none', borderRadius: 10, background: view === id ? '#fff' : 'transparent', color: view === id ? OK.green : OK.ink3, boxShadow: view === id ? '0 2px 8px rgba(20,51,31,.09)' : 'none', fontFamily: FX, fontSize: 11.5, fontWeight: 850, cursor: 'pointer' }}><Icon name={id === 'map' ? 'map' : 'list'} size={14} color={view === id ? OK.green : OK.ink3}/> {label}</button>)}
           </div>
           <div style={{ display: 'flex', gap: 7, overflowX: 'auto', padding: '10px 0 2px', scrollbarWidth: 'none' }}>
             {[['all', 'Toutes'], ['engen', 'Engen'], ['ola', 'OLA Energy'], ['petrogabon', 'PetroGabon']].map(([id, label]) => <button key={id} onClick={() => selectBrand(id)} style={{ flexShrink: 0, height: 34, padding: '0 12px', borderRadius: 999, border: filter === id ? 'none' : `1px solid ${OK.line}`, background: filter === id ? (FUEL_BRANDS[id]?.color || OK.green) : '#fff', color: filter === id ? '#fff' : OK.ink2, fontFamily: FT, fontSize: 10.5, fontWeight: 850, cursor: 'pointer' }}>{label}</button>)}
@@ -6459,7 +6447,7 @@ function FuelStationsScreen() {
                   </div>
                 </div>
                 <div style={{ marginTop: 10, padding: '8px 10px', borderRadius: 11, background: brand.soft, fontFamily: FT, fontSize: 9.5, lineHeight: 1.4, color: OK.ink2 }}>Prix, horaires et disponibilité à confirmer directement auprès de l’enseigne.</div>
-                <button onClick={() => routeToStation(station)} style={{ width: '100%', height: 38, marginTop: 10, borderRadius: 11, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 10.5, fontWeight: 850, cursor: 'pointer' }}><LIcon name="navigate" size={13} color="#fff"/> Lancer l’itinéraire</button>
+                <button onClick={() => routeToStation(station)} style={{ width: '100%', height: 38, marginTop: 10, borderRadius: 11, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 10.5, fontWeight: 850, cursor: 'pointer' }}><Icon name="navigate" size={13} color="#fff"/> Lancer l’itinéraire</button>
               </article>;
             })}
           </div>
@@ -6474,13 +6462,13 @@ function FuelStationsScreen() {
               const point = fuelMapPoint(station);
               const brand = FUEL_BRANDS[station.brand];
               const active = selectedStation.id === station.id;
-              return <button key={station.id} onClick={() => setSelected(station.id)} aria-label={station.name} style={{ position: 'absolute', left: point.x, top: point.y, width: active ? 48 : 39, height: active ? 48 : 39, transform: 'translate(-50%, -50%)', borderRadius: 999, border: '3px solid #fff', background: brand.color, color: '#fff', boxShadow: active ? `0 0 0 7px ${brand.color}28, 0 5px 14px rgba(14,46,28,.28)` : '0 3px 10px rgba(14,46,28,.24)', cursor: 'pointer', zIndex: active ? 10 : 8, transition: 'width .18s ease, height .18s ease', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="fuel" size={active ? 21 : 17} color="#fff" strokeWidth={2}/></button>;
+              return <button key={station.id} onClick={() => setSelected(station.id)} aria-label={station.name} style={{ position: 'absolute', left: point.x, top: point.y, width: active ? 48 : 39, height: active ? 48 : 39, transform: 'translate(-50%, -50%)', borderRadius: 999, border: '3px solid #fff', background: brand.color, color: '#fff', boxShadow: active ? `0 0 0 7px ${brand.color}28, 0 5px 14px rgba(14,46,28,.28)` : '0 3px 10px rgba(14,46,28,.24)', cursor: 'pointer', zIndex: active ? 10 : 8, transition: 'width .18s ease, height .18s ease', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="fuel" size={active ? 21 : 17} color="#fff" strokeWidth={2}/></button>;
             })}
           </div>
           <div style={{ position: 'absolute', left: 11, right: 11, bottom: 11, padding: 12, borderRadius: 16, background: 'rgba(255,255,255,.96)', boxShadow: '0 7px 24px rgba(18,48,31,.2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 9 }}><div style={{ display: 'flex', alignItems: 'center', gap: 9, minWidth: 0 }}><FuelBrandLogo brand={selectedStation.brand} size={40}/><div style={{ minWidth: 0 }}><div style={{ fontFamily: FX, fontSize: 12.5, fontWeight: 850, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{selectedStation.name}</div><div style={{ marginTop: 3, fontFamily: FT, fontSize: 9.5, color: FUEL_BRANDS[selectedStation.brand].color, fontWeight: 800 }}>{FUEL_BRANDS[selectedStation.brand].label}</div></div></div><strong style={{ flexShrink: 0, fontFamily: FX, fontSize: 11.5, color: OK.green }}>{selectedStation.distance.toFixed(2).replace('.', ',')} km</strong></div>
             <div style={{ marginTop: 7, fontFamily: FT, fontSize: 9.5, lineHeight: 1.35, color: OK.ink3 }}>{selectedStation.address}</div>
-            <button onClick={() => routeToStation(selectedStation)} style={{ width: '100%', height: 37, marginTop: 9, borderRadius: 11, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 10.5, fontWeight: 850, cursor: 'pointer' }}><LIcon name="navigate" size={13} color="#fff"/> Itinéraire</button>
+            <button onClick={() => routeToStation(selectedStation)} style={{ width: '100%', height: 37, marginTop: 9, borderRadius: 11, border: 'none', background: OK.green, color: '#fff', fontFamily: FT, fontSize: 10.5, fontWeight: 850, cursor: 'pointer' }}><Icon name="navigate" size={13} color="#fff"/> Itinéraire</button>
           </div>
           <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" style={{ position: 'absolute', right: 7, top: 7, zIndex: 20, padding: '4px 6px', borderRadius: 5, background: 'rgba(255,255,255,.9)', color: '#42534A', fontFamily: FT, fontSize: 8, fontWeight: 700, textDecoration: 'none' }}>© OpenStreetMap</a>
         </div>}
@@ -6533,7 +6521,7 @@ function SmartCityScreen() {
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 3, marginTop: 4 }}>
                     <span style={{ fontFamily: FX, fontWeight: 800, fontSize: 44, color: '#fff', lineHeight: 0.85, letterSpacing: -1.5 }}>29</span>
                     <span style={{ fontFamily: FX, fontWeight: 700, fontSize: 15, color: '#fff', marginTop: 4 }}>°C</span>
-                    <LIcon name="weather" size={28} color={OK.gold} strokeWidth={1.7} style={{ marginLeft: 6 }}/>
+                    <Icon name="weather" size={28} color={OK.gold} strokeWidth={1.7} style={{ marginLeft: 6 }}/>
                   </div>
                   <div style={{ fontFamily: FX, fontWeight: 700, fontSize: 12, color: OK.gold, marginTop: 4 }}>Ensoleillé · humide</div>
                   <div style={{ display: 'flex', gap: 12, marginTop: 'auto' }}>
@@ -6548,7 +6536,7 @@ function SmartCityScreen() {
                 </div>
                 <div style={{ width: 118, borderRadius: 15, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.16)', padding: '11px 12px', display: 'flex', flexDirection: 'column', gap: 9 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><LIcon name="car" size={15} color="#fff" strokeWidth={2}/><span style={{ fontFamily: FX, fontWeight: 700, fontSize: 10.5, color: 'rgba(255,255,255,0.85)' }}>Trafic</span></span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}><Icon name="car" size={15} color="#fff" strokeWidth={2}/><span style={{ fontFamily: FX, fontWeight: 700, fontSize: 10.5, color: 'rgba(255,255,255,0.85)' }}>Trafic</span></span>
                     <span style={{ width: 7, height: 7, borderRadius: 7, background: '#3BD37E', boxShadow: '0 0 7px #3BD37E' }}/>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28 }}>
@@ -6571,15 +6559,15 @@ function SmartCityScreen() {
                   overlay="linear-gradient(90deg, rgba(7,42,21,0.9) 0%, rgba(7,42,21,0.5) 55%, rgba(7,42,21,0.2) 100%)"/>
                 <div style={{ position: 'absolute', left: 16, top: 15 }}>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontWeight: 800, fontSize: 9.5, letterSpacing: 0.4, color: '#3a2c00', background: OK.gold, padding: '4px 9px', borderRadius: 999 }}>
-                    <LIcon name="loisir" size={12} color="#3a2c00" strokeWidth={2}/> ESPACES DE JEUX
+                    <Icon name="loisir" size={12} color="#3a2c00" strokeWidth={2}/> ESPACES DE JEUX
                   </span>
                 </div>
                 <div style={{ position: 'absolute', left: 16, right: 16, bottom: 16 }}>
                   <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 20, color: '#fff', letterSpacing: -0.3, textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>{ev.title}</div>
                   <div style={{ fontFamily: FX, fontWeight: 600, fontSize: 11.5, color: 'rgba(255,255,255,0.86)', marginTop: 2 }}>{ev.tag}</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FX, fontWeight: 700, fontSize: 11, color: OK.gold }}><LIcon name="calendar" size={12} color={OK.gold} strokeWidth={2.2}/>{ev.date}</span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FX, fontWeight: 600, fontSize: 11, color: 'rgba(255,255,255,0.85)' }}><LIcon name="pin" size={12} color="rgba(255,255,255,0.85)" strokeWidth={2}/>{ev.venue}</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FX, fontWeight: 700, fontSize: 11, color: OK.gold }}><Icon name="calendar" size={12} color={OK.gold} strokeWidth={2.2}/>{ev.date}</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FX, fontWeight: 600, fontSize: 11, color: 'rgba(255,255,255,0.85)' }}><Icon name="pin" size={12} color="rgba(255,255,255,0.85)" strokeWidth={2}/>{ev.venue}</span>
                   </div>
                 </div>
               </button>
@@ -6621,7 +6609,7 @@ function SmartCityScreen() {
                 overlay="linear-gradient(90deg, rgba(7,42,21,0.86) 0%, rgba(7,42,21,0.45) 60%, rgba(7,42,21,0.2) 100%)"/>
               <div style={{ position: 'absolute', left: 16, top: 16, right: 16 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontWeight: 700, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', padding: '4px 10px', borderRadius: 999 }}>
-                  <LIcon name="pin" size={12} color="#fff" strokeWidth={2}/> {p.name}
+                  <Icon name="pin" size={12} color="#fff" strokeWidth={2}/> {p.name}
                 </span>
               </div>
               <div style={{ position: 'absolute', left: 16, bottom: 15 }}>
@@ -6724,7 +6712,7 @@ function PubStepper({ steps, step }) {
             <div style={{ width: 24, height: 24, borderRadius: 999, background: i <= step ? OK.green : '#fff', color: i <= step ? '#fff' : OK.ink3,
               border: i <= step ? 'none' : `1px solid ${OK.line}`,
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FX, fontSize: 12, fontWeight: 800 }}>
-              {i < step ? <LIcon name="check" size={13} color="#fff" strokeWidth={3}/> : i + 1}
+              {i < step ? <Icon name="check" size={13} color="#fff" strokeWidth={3}/> : i + 1}
             </div>
             {i === step && <span style={{ fontFamily: FX, fontSize: 11, fontWeight: 800, color: OK.ink }}>{s}</span>}
           </div>
@@ -6743,7 +6731,7 @@ function PubBar({ label, onClick, disabled, icon = 'arrow-r' }) {
         background: disabled ? OK.bg2 : OK.green, color: disabled ? OK.ink3 : '#fff', cursor: disabled ? 'default' : 'pointer',
         fontFamily: FX, fontSize: 15.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         boxShadow: disabled ? 'none' : '0 8px 20px rgba(11,124,57,0.30)' }}>
-        {label} <LIcon name={icon} size={18} color={disabled ? OK.ink3 : '#fff'} strokeWidth={2.4}/>
+        {label} <Icon name={icon} size={18} color={disabled ? OK.ink3 : '#fff'} strokeWidth={2.4}/>
       </button>
     </div>
   );
@@ -6758,7 +6746,7 @@ function PubCard({ title, icon, children, style }) {
     <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 18, padding: '16px 15px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', ...style }}>
       {title && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-          {icon && <span style={{ width: 30, height: 30, borderRadius: 9, background: 'rgba(11,124,57,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name={icon} size={16} color={OK.green} strokeWidth={2}/></span>}
+          {icon && <span style={{ width: 30, height: 30, borderRadius: 9, background: 'rgba(11,124,57,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name={icon} size={16} color={OK.green} strokeWidth={2}/></span>}
           <span style={{ fontFamily: FX, fontSize: 14.5, fontWeight: 800, color: OK.ink }}>{title}</span>
         </div>
       )}
@@ -7039,7 +7027,7 @@ function EwStepper({ step, onJump }) {
               <span style={{ width: 30, height: 30, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FX, fontSize: 13, fontWeight: 800,
                 background: done ? OK.green : current ? OK.gold : '#fff', color: done ? '#fff' : current ? '#3D2F00' : OK.ink3,
                 border: done || current ? 'none' : `1.5px solid ${OK.line}`, boxShadow: current ? '0 0 0 4px rgba(245,184,0,0.22)' : 'none' }}>
-                {done ? <LIcon name="check" size={15} color="#fff" strokeWidth={3}/> : index + 1}
+                {done ? <Icon name="check" size={15} color="#fff" strokeWidth={3}/> : index + 1}
               </span>
               <span style={{ fontFamily: FX, fontSize: 9.5, fontWeight: current ? 800 : 650, color: current ? OK.ink : OK.ink3, whiteSpace: 'nowrap' }}>{label}</span>
             </button>
@@ -7057,7 +7045,7 @@ function EwHelper({ step, open, onToggle }) {
       <button onClick={onToggle} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 36, padding: '0 12px 0 4px', borderRadius: 999, border: 0, cursor: 'pointer', background: OK.gold, color: '#3D2F00', fontFamily: FX, fontSize: 12.5, fontWeight: 800, boxShadow: '0 4px 12px rgba(245,184,0,0.3)' }}>
         <span style={{ width: 28, height: 28, borderRadius: 999, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src="assets/okaba-mark-green.png" alt="" style={{ width: 20, height: 20, objectFit: 'contain' }}/></span>
         {open ? 'Masquer l’aide' : 'Appuie et je te dis quoi faire'}
-        <LIcon name={open ? 'chev-u' : 'chev-d'} size={15} color="#3D2F00" strokeWidth={2.4}/>
+        <Icon name={open ? 'chev-u' : 'chev-d'} size={15} color="#3D2F00" strokeWidth={2.4}/>
       </button>
       {open && (
         <div style={{ marginTop: 10, display: 'flex', gap: 10, padding: '12px 13px', background: '#fff', border: `1.5px solid ${OK.green}`, borderRadius: 16, boxShadow: '0 4px 14px rgba(11,124,57,0.08)' }}>
@@ -7076,7 +7064,7 @@ function EwSection({ index, title, icon, children }) {
   return (
     <div style={{ margin: '14px 16px 0', background: '#fff', borderRadius: 18, overflow: 'hidden', border: `1px solid ${OK.line}`, boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '12px 15px', background: OK.green, color: '#fff' }}>
-        <LIcon name={icon} size={17} color="#fff"/>
+        <Icon name={icon} size={17} color="#fff"/>
         <span style={{ fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>{index ? `${index}. ` : ''}{title}</span>
       </div>
       <div style={{ padding: '15px 15px 16px' }}>{children}</div>
@@ -7109,7 +7097,7 @@ function EwSwitch({ on, onChange, label }) {
 function EwCheck({ on, onClick, children, note, small }) {
   return (
     <button onClick={onClick} style={{ width: '100%', display: 'flex', gap: 9, alignItems: 'flex-start', padding: small ? '6px 0' : '8px 0', border: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
-      <span style={{ width: 19, height: 19, marginTop: 1, borderRadius: 6, flexShrink: 0, border: on ? 'none' : `1.5px solid #C9CFCB`, background: on ? OK.green : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{on && <LIcon name="check" size={12} color="#fff" strokeWidth={3}/>}</span>
+      <span style={{ width: 19, height: 19, marginTop: 1, borderRadius: 6, flexShrink: 0, border: on ? 'none' : `1.5px solid #C9CFCB`, background: on ? OK.green : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{on && <Icon name="check" size={12} color="#fff" strokeWidth={3}/>}</span>
       <span style={{ fontFamily: FX, fontSize: small ? 12.5 : 13, fontWeight: small ? 650 : 800, color: OK.ink, lineHeight: 1.35 }}>{children}{note && <span style={{ display: 'block', marginTop: 2, fontSize: 11.5, fontWeight: 600, color: OK.ink3 }}>{note}</span>}</span>
     </button>
   );
@@ -7119,10 +7107,10 @@ function EwAccordion({ open, onToggle, icon, iconColor = OK.green, title, count,
   return (
     <div style={{ borderTop: `1px solid ${OK.line}` }}>
       <button onClick={onToggle} aria-expanded={open} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 4px 12px 10px', border: 0, cursor: 'pointer', textAlign: 'left', background: open ? 'rgba(11,124,57,0.07)' : 'transparent', borderRadius: open ? 10 : 0 }}>
-        <LIcon name={icon} size={17} color={iconColor}/>
+        <Icon name={icon} size={17} color={iconColor}/>
         <span style={{ flex: 1, minWidth: 0, fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{title}</span>
         {count != null && <span style={{ minWidth: 22, height: 20, padding: '0 6px', borderRadius: 999, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 10.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{count}</span>}
-        <LIcon name={open ? 'chev-u' : 'chev-d'} size={17} color={OK.ink3} strokeWidth={2.2}/>
+        <Icon name={open ? 'chev-u' : 'chev-d'} size={17} color={OK.ink3} strokeWidth={2.2}/>
       </button>
       {open && <div style={{ padding: '6px 6px 12px 10px' }}>{children}</div>}
     </div>
@@ -7254,7 +7242,7 @@ function EtabWizard({ onExit }) {
     return (
       <Screen bg={OK.bg2} statusDark>
         <div data-screen-label="Établissement soumis" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 28px', textAlign: 'center' }}>
-          <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}><LIcon name="check" size={48} color="#fff" strokeWidth={3}/></div>
+          <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}><Icon name="check" size={48} color="#fff" strokeWidth={3}/></div>
           <h1 style={{ margin: '24px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 25, color: OK.ink }}>{paid ? 'Paiement confirmé' : 'Demande envoyée'}</h1>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: '#8A6B00', background: 'rgba(245,184,0,0.16)', border: '1px solid rgba(245,184,0,0.4)', padding: '5px 12px', borderRadius: 999 }}><span style={{ width: 7, height: 7, borderRadius: 7, background: OK.gold }}/> En attente de vérification</span>
           <p style={{ margin: '14px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, maxWidth: 300 }}>
@@ -7290,7 +7278,7 @@ function EtabWizard({ onExit }) {
           <div style={{ margin: '0 16px', display: 'flex', flexDirection: 'column', gap: 9 }}>
             {methods.map(method => { const on = payMethod === method.id; return (
               <button key={method.id} onClick={() => setPayMethod(method.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px', borderRadius: 15, cursor: 'pointer', textAlign: 'left', background: '#fff', border: on ? `2px solid ${OK.green}` : `1px solid ${OK.line}` }}>
-                <span style={{ width: 38, height: 38, borderRadius: 11, background: method.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name={method.id === 'card' ? 'wallet' : 'phone'} size={18} color="#fff"/></span>
+                <span style={{ width: 38, height: 38, borderRadius: 11, background: method.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={method.id === 'card' ? 'wallet' : 'phone'} size={18} color="#fff"/></span>
                 <span style={{ flex: 1 }}><span style={{ display: 'block', fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>{method.label}</span><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>{method.sub}</span></span>
                 <span style={{ width: 20, height: 20, borderRadius: 999, border: on ? `6px solid ${OK.green}` : `1.5px solid ${OK.line}` }}/>
               </button>
@@ -7311,15 +7299,15 @@ function EtabWizard({ onExit }) {
     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, background: '#fff', borderTop: `1px solid ${OK.line}`, padding: `11px 16px ${APP_DETAIL_BOTTOM_PADDING}`, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
       {step < 4 ? (
         <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={prev} style={{ ...btnBase, flex: 1, border: `1.5px solid ${OK.ink}`, background: '#fff', color: OK.ink, fontSize: 14 }}><LIcon name="arrow-l" size={17} color={OK.ink}/>Retour</button>
-          <button onClick={next} style={{ ...btnBase, flex: 1.5, border: 'none', background: OK.green, color: '#fff', fontSize: 15, boxShadow: '0 8px 20px rgba(11,124,57,0.28)', opacity: stepValid ? 1 : 0.55 }}>Suivant<LIcon name="arrow-r" size={17} color="#fff" strokeWidth={2.4}/></button>
+          <button onClick={prev} style={{ ...btnBase, flex: 1, border: `1.5px solid ${OK.ink}`, background: '#fff', color: OK.ink, fontSize: 14 }}><Icon name="arrow-l" size={17} color={OK.ink}/>Retour</button>
+          <button onClick={next} style={{ ...btnBase, flex: 1.5, border: 'none', background: OK.green, color: '#fff', fontSize: 15, boxShadow: '0 8px 20px rgba(11,124,57,0.28)', opacity: stepValid ? 1 : 0.55 }}>Suivant<Icon name="arrow-r" size={17} color="#fff" strokeWidth={2.4}/></button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <button onClick={() => finish(true)} style={{ ...btnBase, border: 'none', background: OK.green, color: '#fff', fontSize: 15, boxShadow: '0 8px 20px rgba(11,124,57,0.28)', opacity: stepValid ? 1 : 0.55 }}><LIcon name="wallet" size={18} color="#fff"/>{quote ? `Finaliser et payer ${ewMoney(quote.total)}` : 'Finaliser et payer en ligne'}</button>
+          <button onClick={() => finish(true)} style={{ ...btnBase, border: 'none', background: OK.green, color: '#fff', fontSize: 15, boxShadow: '0 8px 20px rgba(11,124,57,0.28)', opacity: stepValid ? 1 : 0.55 }}><Icon name="wallet" size={18} color="#fff"/>{quote ? `Finaliser et payer ${ewMoney(quote.total)}` : 'Finaliser et payer en ligne'}</button>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={prev} style={{ ...btnBase, height: 44, flex: 1, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontSize: 13 }}><LIcon name="arrow-l" size={15} color={OK.ink}/>Retour</button>
-            <button onClick={() => finish(false)} style={{ ...btnBase, height: 44, flex: 2, border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontSize: 13 }}><LIcon name="check-c" size={16} color={OK.green}/>Valider (payer plus tard)</button>
+            <button onClick={prev} style={{ ...btnBase, height: 44, flex: 1, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontSize: 13 }}><Icon name="arrow-l" size={15} color={OK.ink}/>Retour</button>
+            <button onClick={() => finish(false)} style={{ ...btnBase, height: 44, flex: 2, border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontSize: 13 }}><Icon name="check-c" size={16} color={OK.green}/>Valider (payer plus tard)</button>
           </div>
         </div>
       )}
@@ -7339,7 +7327,7 @@ function EtabWizard({ onExit }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {EW_FORMS.map(item => { const on = form === item.id; return (
                   <button key={item.id} onClick={() => setForm(item.id)} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 12px', borderRadius: 13, cursor: 'pointer', textAlign: 'left', background: on ? 'rgba(11,124,57,0.06)' : '#fff', border: on ? `1.5px solid ${OK.green}` : `1.5px solid ${OK.line}` }}>
-                    <span style={{ width: 34, height: 34, borderRadius: 10, background: on ? OK.green : OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name={item.icon} size={17} color={on ? '#fff' : OK.ink2}/></span>
+                    <span style={{ width: 34, height: 34, borderRadius: 10, background: on ? OK.green : OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={item.icon} size={17} color={on ? '#fff' : OK.ink2}/></span>
                     <span style={{ flex: 1 }}><span style={{ display: 'block', fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{item.label}</span><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>{item.sub}</span></span>
                     <span style={{ width: 19, height: 19, borderRadius: 999, border: on ? `6px solid ${OK.green}` : `1.5px solid ${OK.line}` }}/>
                   </button>
@@ -7362,7 +7350,7 @@ function EtabWizard({ onExit }) {
 
         {step === 1 && <EwSection index={2} title="Catégories d’activité *" icon="grid">
           <p style={{ margin: '0 0 10px', fontFamily: FX, fontSize: 12.5, color: OK.ink2, lineHeight: 1.5 }}>Sélectionnez toutes les catégories correspondant à votre activité : plus c’est pertinent, plus vous serez visible.</p>
-          {cats.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>{cats.map(item => <button key={item} onClick={() => toggleCat(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px', borderRadius: 999, border: 0, cursor: 'pointer', background: 'rgba(11,124,57,0.1)', color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>{item}<LIcon name="close" size={11} color={OK.green} strokeWidth={2.6}/></button>)}</div>}
+          {cats.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>{cats.map(item => <button key={item} onClick={() => toggleCat(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px', borderRadius: 999, border: 0, cursor: 'pointer', background: 'rgba(11,124,57,0.1)', color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>{item}<Icon name="close" size={11} color={OK.green} strokeWidth={2.6}/></button>)}</div>}
           {err('cats') && <p style={{ ...EW_ERROR, margin: '0 0 8px' }}>{err('cats')}</p>}
           <div style={{ borderBottom: `1px solid ${OK.line}` }}>
             {EW_CATEGORIES.map(group => {
@@ -7390,18 +7378,18 @@ function EtabWizard({ onExit }) {
                   : <select value={district} onChange={event => setDistrict(event.target.value)} style={{ ...PUB_FIELD, appearance: 'auto', color: district ? OK.ink : OK.ink3 }}><option value="">Sélectionner</option>{districts.map(item => <option key={item}>{item}</option>)}</select>}
               </EwField></div>
             </div>
-            <button onClick={() => { setCustomDistrict(value => !value); setDistrict(''); }} style={{ alignSelf: 'flex-start', marginTop: -6, padding: 0, border: 0, background: 'transparent', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontSize: 12, fontWeight: 700, color: OK.green }}><LIcon name={customDistrict ? 'list' : 'plus'} size={14} color={OK.green}/>{customDistrict ? 'Choisir dans la liste' : 'Mon quartier n’est pas listé ?'}</button>
+            <button onClick={() => { setCustomDistrict(value => !value); setDistrict(''); }} style={{ alignSelf: 'flex-start', marginTop: -6, padding: 0, border: 0, background: 'transparent', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontSize: 12, fontWeight: 700, color: OK.green }}><Icon name={customDistrict ? 'list' : 'plus'} size={14} color={OK.green}/>{customDistrict ? 'Choisir dans la liste' : 'Mon quartier n’est pas listé ?'}</button>
             <EwField label="Adresse ou repère" optional><input value={address} onChange={event => setAddress(event.target.value)} placeholder="Ex : Face à la pharmacie du Bord de mer" style={PUB_FIELD}/></EwField>
             <div>
               <button onClick={locate} disabled={locating} style={{ width: '100%', height: 46, borderRadius: 13, cursor: 'pointer', border: `1.5px solid ${OK.green}`, background: gps ? 'rgba(11,124,57,0.07)' : '#fff', color: OK.green, fontFamily: FX, fontSize: 13.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
-                <LIcon name={gps ? 'check-c' : 'navigate'} size={17} color={OK.green}/>{locating ? 'Localisation…' : gps ? 'Position enregistrée' : 'Me géolocaliser ici (GPS)'}
+                <Icon name={gps ? 'check-c' : 'navigate'} size={17} color={OK.green}/>{locating ? 'Localisation…' : gps ? 'Position enregistrée' : 'Me géolocaliser ici (GPS)'}
               </button>
               <p style={{ ...EW_HINT, textAlign: 'center' }}>{gps ? `${gps.lat.toFixed(4)}, ${gps.lng.toFixed(4)}${gps.approx ? ' · position approximative (démo)' : ''}` : 'Touchez si vous êtes actuellement sur le lieu de la structure.'}</p>
             </div>
             <div style={{ height: 1, background: OK.line }}/>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 8 }}>
-                <LIcon name="clock" size={16} color={OK.ink}/><span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap' }}>Horaires</span><span style={{ fontFamily: FX, fontSize: 12, color: OK.ink3 }}>(facultatif)</span>
+                <Icon name="clock" size={16} color={OK.ink}/><span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap' }}>Horaires</span><span style={{ fontFamily: FX, fontSize: 12, color: OK.ink3 }}>(facultatif)</span>
                 <button onClick={copyMonday} style={{ marginLeft: 'auto', padding: 0, border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: OK.green, whiteSpace: 'nowrap' }}>Copier lundi partout</button>
               </div>
               {EW_DAYS.map((day, index) => { const value = hours[day]; return (
@@ -7439,14 +7427,14 @@ function EtabWizard({ onExit }) {
                 <div style={{ width: 104, flexShrink: 0 }}>
                   <label style={PUB_LABEL}>Logo</label>
                   <EwFilePick accept="image/*" onPick={file => setLogo(URL.createObjectURL(file))} style={{ display: 'flex', width: 104, height: 104, borderRadius: 16, overflow: 'hidden', border: logo ? 'none' : `1.5px dashed ${OK.green}`, background: logo ? `center/cover url(${logo})` : 'rgba(11,124,57,0.05)', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 4, color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>
-                    {!logo && <><LIcon name="camera" size={20} color={OK.green}/>Choisir</>}
+                    {!logo && <><Icon name="camera" size={20} color={OK.green}/>Choisir</>}
                   </EwFilePick>
                   <p style={EW_HINT}>Carré, 400×400</p>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <label style={PUB_LABEL}>Image de couverture</label>
                   <EwFilePick accept="image/*" onPick={file => setCover(URL.createObjectURL(file))} style={{ display: 'flex', height: 104, borderRadius: 16, overflow: 'hidden', border: cover ? 'none' : `1.5px dashed ${OK.green}`, background: cover ? `center/cover url(${cover})` : 'rgba(11,124,57,0.05)', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 4, color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>
-                    {!cover && <><LIcon name="camera" size={20} color={OK.green}/>Choisir une bannière</>}
+                    {!cover && <><Icon name="camera" size={20} color={OK.green}/>Choisir une bannière</>}
                   </EwFilePick>
                   <p style={EW_HINT}>Bannière 1200×400</p>
                 </div>
@@ -7456,7 +7444,7 @@ function EtabWizard({ onExit }) {
               </EwField>
               <EwField label="Mots-clés" optional hint="Appuyez sur Entrée ou une virgule après chaque mot-clé.">
                 <div style={{ ...PUB_FIELD, height: 'auto', minHeight: 50, padding: '8px 10px', display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-                  {tags.map(tag => <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, height: 28, padding: '0 6px 0 10px', borderRadius: 999, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FX, fontSize: 12, fontWeight: 700, color: OK.ink }}>{tag}<button onClick={() => setTags(current => current.filter(item => item !== tag))} aria-label={`Retirer ${tag}`} style={{ width: 18, height: 18, border: 0, borderRadius: 999, background: OK.bg2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}><LIcon name="close" size={10} color={OK.ink2}/></button></span>)}
+                  {tags.map(tag => <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, height: 28, padding: '0 6px 0 10px', borderRadius: 999, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FX, fontSize: 12, fontWeight: 700, color: OK.ink }}>{tag}<button onClick={() => setTags(current => current.filter(item => item !== tag))} aria-label={`Retirer ${tag}`} style={{ width: 18, height: 18, border: 0, borderRadius: 999, background: OK.bg2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}><Icon name="close" size={10} color={OK.ink2}/></button></span>)}
                   <input value={tagDraft} onChange={event => { if (event.target.value.endsWith(',')) { setTagDraft(event.target.value); setTimeout(addTag, 0); } else setTagDraft(event.target.value); }} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); addTag(); } }} onBlur={addTag} placeholder={tags.length ? '' : 'Ex : grillades, terrasse, livraison…'} style={{ flex: 1, minWidth: 110, border: 0, outline: 0, background: 'transparent', fontFamily: FX, fontSize: 13.5, color: OK.ink }}/>
                 </div>
               </EwField>
@@ -7471,9 +7459,9 @@ function EtabWizard({ onExit }) {
               {gallery.map((photo, index) => (
                 <div key={index} style={{ position: 'relative', aspectRatio: '1' }}>
                   <EwFilePick accept="image/*" onPick={file => setGallery(current => current.map((item, itemIndex) => itemIndex === index ? URL.createObjectURL(file) : item))} style={{ position: 'absolute', inset: 0, borderRadius: 13, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, border: photo ? 'none' : '1.5px dashed #C9CFCB', background: photo ? `center/cover url(${photo})` : '#fff', fontFamily: FX, fontSize: 11.5, fontWeight: 700, color: OK.ink3 }}>
-                    {!photo && <><LIcon name="plus" size={18} color={OK.ink3}/>Choisir</>}
+                    {!photo && <><Icon name="plus" size={18} color={OK.ink3}/>Choisir</>}
                   </EwFilePick>
-                  {photo && <button onClick={() => setGallery(current => current.map((item, itemIndex) => itemIndex === index ? null : item))} aria-label="Retirer la photo" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><LIcon name="close" size={11} color="#fff"/></button>}
+                  {photo && <button onClick={() => setGallery(current => current.map((item, itemIndex) => itemIndex === index ? null : item))} aria-label="Retirer la photo" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="close" size={11} color="#fff"/></button>}
                 </div>
               ))}
             </div>
@@ -7488,12 +7476,12 @@ function EtabWizard({ onExit }) {
                 <div key={index} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
                   <input value={doc.label} onChange={event => setDocs(current => current.map((item, itemIndex) => itemIndex === index ? { ...item, label: event.target.value } : item))} placeholder="Libellé (ex : Menu)" style={{ ...PUB_FIELD, height: 44, flex: 1, minWidth: 0, fontSize: 13 }}/>
                   <EwFilePick accept=".pdf,image/*,.doc,.docx,.xls,.xlsx" onPick={file => setDocs(current => current.map((item, itemIndex) => itemIndex === index ? { ...item, file: file.name, label: item.label || file.name.replace(/\.[^.]+$/, '') } : item))} style={{ flex: 1, minWidth: 0, height: 40, borderRadius: 13, border: `1.5px solid ${doc.file ? OK.green : OK.line}`, background: doc.file ? 'rgba(11,124,57,0.06)' : '#fff', display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px', fontFamily: FX, fontSize: 12, fontWeight: 700, color: doc.file ? OK.green : OK.ink2, overflow: 'hidden' }}>
-                    <LIcon name={doc.file ? 'doc' : 'plus'} size={15} color={doc.file ? OK.green : OK.ink2}/><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.file || 'Choisir un fichier'}</span>
+                    <Icon name={doc.file ? 'doc' : 'plus'} size={15} color={doc.file ? OK.green : OK.ink2}/><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.file || 'Choisir un fichier'}</span>
                   </EwFilePick>
-                  <button onClick={() => setDocs(current => current.length > 1 ? current.filter((_, itemIndex) => itemIndex !== index) : [{ label: '', file: '' }])} aria-label="Supprimer le fichier" style={{ width: 40, height: 44, flexShrink: 0, borderRadius: 12, border: `1.5px solid rgba(224,36,27,0.35)`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="close" size={15} color={OK.red}/></button>
+                  <button onClick={() => setDocs(current => current.length > 1 ? current.filter((_, itemIndex) => itemIndex !== index) : [{ label: '', file: '' }])} aria-label="Supprimer le fichier" style={{ width: 40, height: 44, flexShrink: 0, borderRadius: 12, border: `1.5px solid rgba(224,36,27,0.35)`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={15} color={OK.red}/></button>
                 </div>
               ))}
-              <button onClick={() => setDocs(current => [...current, { label: '', file: '' }])} style={{ alignSelf: 'flex-start', height: 36, padding: '0 12px', borderRadius: 11, cursor: 'pointer', border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontFamily: FX, fontSize: 12.5, fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 5 }}><LIcon name="plus" size={14} color={OK.green}/>Ajouter un document</button>
+              <button onClick={() => setDocs(current => [...current, { label: '', file: '' }])} style={{ alignSelf: 'flex-start', height: 36, padding: '0 12px', borderRadius: 11, cursor: 'pointer', border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontFamily: FX, fontSize: 12.5, fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 5 }}><Icon name="plus" size={14} color={OK.green}/>Ajouter un document</button>
             </div>
           </EwSection>
         </>}
@@ -7515,7 +7503,7 @@ function EtabWizard({ onExit }) {
           {err('tier') && <p style={EW_ERROR}>{err('tier')}</p>}
           {quote && <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: '5px 12px' }}>{quote.offer.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>✓ {perk}</span>)}</div>}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, margin: '18px 2px 6px' }}><LIcon name="sliders" size={16} color={OK.ink}/><span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>Options & extras</span></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, margin: '18px 2px 6px' }}><Icon name="sliders" size={16} color={OK.ink}/><span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>Options & extras</span></div>
           <div style={{ borderBottom: `1px solid ${OK.line}` }}>
             <EwAccordion open={openOpt === 'badge'} onToggle={() => setOpenOpt(openOpt === 'badge' ? '' : 'badge')} icon="verified" title="Badge Certifié">
               {quote?.offer.badgeIncluded
@@ -7550,7 +7538,7 @@ function EtabWizard({ onExit }) {
             <div style={{ fontFamily: FX, fontSize: 11.5, fontWeight: 800, letterSpacing: 0.6, color: OK.ink2, textTransform: 'uppercase' }}>Votre devis estimé</div>
             {!quote ? <p style={{ margin: '6px 0 0', fontFamily: FX, fontSize: 12, color: OK.ink3 }}>Sélectionnez une offre pour voir le devis.</p> : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
-                {quote.lines.map(line => <div key={line.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}><LIcon name={line.icon} size={14} color={OK.green}/><span style={{ flex: 1 }}>{line.label}</span><span style={{ fontWeight: 700, color: OK.ink }}>{ewMoney(line.amount)}</span></div>)}
+                {quote.lines.map(line => <div key={line.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}><Icon name={line.icon} size={14} color={OK.green}/><span style={{ flex: 1 }}>{line.label}</span><span style={{ fontWeight: 700, color: OK.ink }}>{ewMoney(line.amount)}</span></div>)}
               </div>
             )}
             <div style={{ borderTop: `1px solid ${OK.line}`, marginTop: 12, paddingTop: 10 }}>
@@ -7560,7 +7548,7 @@ function EtabWizard({ onExit }) {
             </div>
           </div>
           <div style={{ marginTop: 12, display: 'flex', gap: 9, padding: '11px 12px', borderRadius: 13, background: OK.bg2 }}>
-            <span style={{ flexShrink: 0, marginTop: 1 }}><LIcon name="shield" size={16} color={OK.green}/></span>
+            <span style={{ flexShrink: 0, marginTop: 1 }}><Icon name="shield" size={16} color={OK.green}/></span>
             <p style={{ margin: 0, fontFamily: FX, fontSize: 11.5, color: OK.ink2, lineHeight: 1.5 }}>Deux options : <b>valider sans payer</b> (notre équipe vous contacte pour finaliser), ou <b>payer en ligne</b> (Airtel Money, Moov Money ou carte) pour publier votre fiche plus vite.</p>
           </div>
         </EwSection>}
@@ -7625,7 +7613,7 @@ function EtabScreen() {
           <div style={{ position: 'relative', minHeight: 300, padding: '52px 20px 34px', borderRadius: '0 0 26px 26px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             <Img src="assets/etab-entry-hero-gabon.jpg" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(4,26,14,0.42) 0%, rgba(6,42,24,0.35) 42%, rgba(4,26,14,0.82) 100%)"/>
             <button onClick={() => canBack ? back() : navigate('home')} aria-label="Retour" style={{ position: 'relative', width: 38, height: 38, borderRadius: 999, border: '1px solid rgba(255,255,255,0.22)', cursor: 'pointer', background: 'rgba(255,255,255,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <LIcon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+              <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
             </button>
             <h1 style={{ margin: 'auto 0 0', position: 'relative', fontFamily: FX, fontWeight: 800, fontSize: 28, lineHeight: 1.12, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>Référencer un<br/>établissement</h1>
             <p style={{ margin: '10px 0 0', position: 'relative', fontFamily: FX, fontSize: 13, color: 'rgba(255,255,255,0.88)', lineHeight: 1.5, maxWidth: 285 }}>Ajoutez un lieu à l’annuaire pour le rendre visible de tous les Gabonais.</p>
@@ -7639,7 +7627,7 @@ function EtabScreen() {
                     <div style={{ fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink }}>{choice.title}</div>
                     <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, marginTop: 5, lineHeight: 1.4 }}>{choice.sub}</div>
                   </div>
-                  <LIcon name="chev-r" size={17} color={OK.ink3} strokeWidth={2.4}/>
+                  <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2.4}/>
                 </div>
               </button>
             ))}
@@ -7684,7 +7672,7 @@ function EtabScreen() {
     return (
       <Screen bg={OK.bg2} statusDark>
         <div data-screen-label="Établissement soumis" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 28px', textAlign: 'center' }}>
-          <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}><LIcon name="check" size={48} color="#fff" strokeWidth={3}/></div>
+          <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}><Icon name="check" size={48} color="#fff" strokeWidth={3}/></div>
           <h1 style={{ margin: '24px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 25, color: OK.ink }}>{isOther ? 'Merci à vous !' : 'Demande envoyée'}</h1>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: '#8A6B00', background: 'rgba(197,150,0,0.16)', border: '1px solid rgba(197,150,0,0.4)', padding: '5px 12px', borderRadius: 999 }}><span style={{ width: 7, height: 7, borderRadius: 7, background: OK.gold }}/> En attente de validation</span>
           <p style={{ margin: '14px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, maxWidth: 285 }}><strong style={{ color: OK.ink }}>« {name || 'Votre établissement'} »</strong> {isOther ? 'a bien été signalé. Nos équipes vérifient les informations avant publication dans l’annuaire, sous' : 'est en cours de vérification par nos équipes. Sa fiche sera publiée dans l’annuaire sous'} <strong style={{ color: OK.ink }}>24 à 48 h</strong>.</p>
@@ -7708,7 +7696,7 @@ function EtabScreen() {
         <div data-screen-label="Aperçu établissement">
           <div style={{ position: 'relative', height: 190 }}>
             <Img src={coverImg} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.34), transparent 50%)"/>
-            <button onClick={() => setPreview(false)} aria-label="Retour" style={{ position: 'absolute', top: 14, left: 14, width: 40, height: 40, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="back" size={19} color={OK.ink}/></button>
+            <button onClick={() => setPreview(false)} aria-label="Retour" style={{ position: 'absolute', top: 14, left: 14, width: 40, height: 40, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink}/></button>
             <span style={{ position: 'absolute', top: 18, right: 14, fontFamily: FX, fontWeight: 800, fontSize: 11.5, color: '#fff', background: 'rgba(0,0,0,.42)', padding: '5px 11px', borderRadius: 999 }}>Aperçu</span>
           </div>
           <div style={{ padding: '0 18px 26px', marginTop: -34, position: 'relative' }}>
@@ -7720,7 +7708,7 @@ function EtabScreen() {
             {desc && <p style={{ margin: '14px 0 0', fontFamily: FX, fontSize: 13, color: OK.ink2, lineHeight: 1.6 }}>{desc}</p>}
             <div style={{ background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 16, overflow: 'hidden', marginTop: 18 }}>
               {[['pin', 'Adresse', [addr, quartier, ville].filter(Boolean).join(' · ') || 'Non renseignée'], ['clock', 'Horaires', hours ? `${rythme} · ${hours}` : rythme], ['phone', 'Téléphone', tel || 'Non renseigné']].map(([icon, label, value], index) => (
-                <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: index ? `1px solid ${OK.line}` : 'none' }}><LIcon name={icon} size={17} color={OK.green}/><div><div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ fontFamily: FX, fontSize: 13, fontWeight: 600, color: OK.ink }}>{value}</div></div></div>
+                <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: index ? `1px solid ${OK.line}` : 'none' }}><Icon name={icon} size={17} color={OK.green}/><div><div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ fontFamily: FX, fontSize: 13, fontWeight: 600, color: OK.ink }}>{value}</div></div></div>
               ))}
             </div>
           </div>
@@ -7747,7 +7735,7 @@ function EtabScreen() {
           <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.green, margin: '14px 18px 0' }}>Quel type d’établissement ?</div>
           <p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>La fiche sera référencée dans l’annuaire O’KABA.</p>
           <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-            {Object.entries(ETAB_TYPES).map(([id, type]) => <button key={id} onClick={() => setSel(id)} style={{ position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', padding: 0, textAlign: 'left', border: sel === id ? `2.5px solid ${OK.green}` : 'none', boxShadow: '0 2px 8px rgba(0,0,0,.1)' }}><Img src={type.img} style={{ position: 'absolute', inset: 0, ...(id === 'loisir' ? { backgroundPosition: 'center 45%' } : {}) }} overlay="linear-gradient(180deg, rgba(0,0,0,.05) 28%, rgba(0,0,0,.68) 100%)"/>{sel === id && <span style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="check" size={14} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 11, right: 11, bottom: 10, fontFamily: FX, fontWeight: 800, fontSize: 13.5, color: '#fff' }}>{type.label}</span></button>)}
+            {Object.entries(ETAB_TYPES).map(([id, type]) => <button key={id} onClick={() => setSel(id)} style={{ position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', padding: 0, textAlign: 'left', border: sel === id ? `2.5px solid ${OK.green}` : 'none', boxShadow: '0 2px 8px rgba(0,0,0,.1)' }}><Img src={type.img} style={{ position: 'absolute', inset: 0, ...(id === 'loisir' ? { backgroundPosition: 'center 45%' } : {}) }} overlay="linear-gradient(180deg, rgba(0,0,0,.05) 28%, rgba(0,0,0,.68) 100%)"/>{sel === id && <span style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 11, right: 11, bottom: 10, fontFamily: FX, fontWeight: 800, fontSize: 13.5, color: '#fff' }}>{type.label}</span></button>)}
           </div>
         </div>}
 
@@ -7762,7 +7750,7 @@ function EtabScreen() {
           <PubCard title="Localisation" icon="pin"><div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div><label style={PUB_LABEL}>Adresse</label><input value={addr} onChange={event => setAddr(event.target.value)} placeholder="Ex : Bord de mer, Boulevard Triomphal" style={PUB_FIELD}/></div>
             <div style={{ display: 'flex', gap: 12 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Quartier</label><input value={quartier} onChange={event => setQuartier(event.target.value)} placeholder="Ex : Louis" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Ville</label><input value={ville} onChange={event => setVille(event.target.value)} placeholder="Ex : Libreville" style={PUB_FIELD}/></div></div>
-            <div style={{ height: 140, borderRadius: 14, overflow: 'hidden', position: 'relative', border: `1px solid ${OK.line}` }}><Img src="assets/etab-carte.jpg" style={{ position: 'absolute', inset: 0 }} overlay="rgba(11,124,57,.18)"/><div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-100%)' }}><LIcon name="pin" size={32} color={OK.green}/></div></div>
+            <div style={{ height: 140, borderRadius: 14, overflow: 'hidden', position: 'relative', border: `1px solid ${OK.line}` }}><Img src="assets/etab-carte.jpg" style={{ position: 'absolute', inset: 0 }} overlay="rgba(11,124,57,.18)"/><div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-100%)' }}><Icon name="pin" size={32} color={OK.green}/></div></div>
           </div></PubCard>
           <PubCard title="Contact & horaires" icon="phone"><div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ display: 'flex', gap: 12 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Téléphone</label><input value={tel} onChange={event => setTel(event.target.value)} placeholder="+241 …" inputMode="tel" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>WhatsApp</label><input value={wa} onChange={event => setWa(event.target.value)} placeholder="+241 …" inputMode="tel" style={PUB_FIELD}/></div></div>
@@ -7778,7 +7766,7 @@ function EtabScreen() {
 
         {step === iMedia && <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <PubCard title="Logo & couverture" icon="camera"><div style={{ display: 'flex', gap: 12 }}><button style={{ width: 92, height: 92, borderRadius: 16, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.06)', color: OK.green, fontWeight: 800 }}>Logo</button><button style={{ flex: 1, height: 92, borderRadius: 16, border: 0, padding: 0, position: 'relative', overflow: 'hidden' }}><Img src={coverImg} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, transparent, rgba(0,0,0,.5))"/><span style={{ position: 'absolute', left: 0, right: 0, bottom: 10, color: '#fff', fontWeight: 800 }}>Photo de couverture</span></button></div></PubCard>
-          <PubCard title="Galerie" icon="camera"><div style={{ display: 'flex', gap: 10 }}><button onClick={() => setMedia(current => [...current, { type: 'photo' }])} style={{ flex: 1, height: 44, borderRadius: 12, border: `1.5px solid ${OK.green}`, background: 'rgba(11,124,57,.06)', color: OK.green, fontWeight: 800 }}>Photo</button><button onClick={() => setMedia(current => [...current, { type: 'video' }])} style={{ flex: 1, height: 44, borderRadius: 12, border: `1.5px solid ${OK.red}`, background: 'rgba(224,36,27,.05)', color: OK.red, fontWeight: 800 }}>Vidéo</button></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>{media.map((item, index) => <div key={`${item.type}-${index}`} style={{ position: 'relative', aspectRatio: '1', borderRadius: 12, overflow: 'hidden' }}><Img src={coverImg} style={{ position: 'absolute', inset: 0 }}/>{item.type === 'video' && <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.25)' }}><LIcon name="video" size={22} color="#fff"/></span>}<button onClick={() => setMedia(current => current.filter((_, itemIndex) => itemIndex !== index))} aria-label="Supprimer" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="close" size={12} color="#fff"/></button></div>)}</div></PubCard>
+          <PubCard title="Galerie" icon="camera"><div style={{ display: 'flex', gap: 10 }}><button onClick={() => setMedia(current => [...current, { type: 'photo' }])} style={{ flex: 1, height: 44, borderRadius: 12, border: `1.5px solid ${OK.green}`, background: 'rgba(11,124,57,.06)', color: OK.green, fontWeight: 800 }}>Photo</button><button onClick={() => setMedia(current => [...current, { type: 'video' }])} style={{ flex: 1, height: 44, borderRadius: 12, border: `1.5px solid ${OK.red}`, background: 'rgba(224,36,27,.05)', color: OK.red, fontWeight: 800 }}>Vidéo</button></div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 12 }}>{media.map((item, index) => <div key={`${item.type}-${index}`} style={{ position: 'relative', aspectRatio: '1', borderRadius: 12, overflow: 'hidden' }}><Img src={coverImg} style={{ position: 'absolute', inset: 0 }}/>{item.type === 'video' && <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,.25)' }}><Icon name="video" size={22} color="#fff"/></span>}<button onClick={() => setMedia(current => current.filter((_, itemIndex) => itemIndex !== index))} aria-label="Supprimer" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={12} color="#fff"/></button></div>)}</div></PubCard>
         </div>}
 
         {step === iPkg && <div style={{ padding: '10px 16px 20px' }}><div style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.green }}>Choisissez votre forfait</div><p style={{ margin: '4px 0 14px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Référencez-vous gratuitement, ou passez Pro pour être vérifié et mis en avant.</p><div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>{ETAB_PKG.map(offer => { const on = pkg === offer.id; return <button key={offer.id} onClick={() => setPkg(offer.id)} style={{ textAlign: 'left', cursor: 'pointer', background: '#fff', borderRadius: 16, padding: '14px 15px', border: on ? `2px solid ${offer.tone}` : `1px solid ${OK.line}` }}><div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flex: 1 }}><div style={{ fontFamily: FX, fontSize: 16, fontWeight: 800, color: OK.ink }}>{offer.name}</div><div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>{offer.tag}</div></div><strong style={{ fontFamily: FX, fontSize: 20, color: OK.ink }}>{offer.priceStr}</strong>{offer.per && <span style={{ fontSize: 11, color: OK.ink3 }}>{offer.per}</span>}</div>{on && <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${OK.line}`, display: 'grid', gap: 7 }}>{offer.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 12, color: OK.ink2 }}>✓ {perk}</span>)}</div>}</button>; })}</div></div>}
@@ -7807,9 +7795,9 @@ function ProximityServicesScreen() {
             <div style={{ fontFamily: FX, fontSize: 19, fontWeight: 800, color: OK.ink, lineHeight: 1.25 }}>De qui avez-vous besoin ?</div>
             <p style={{ margin: '4px 0 13px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Trouvez un savoir-faire disponible près de chez vous.</p>
             <div style={{ height: 50, borderRadius: 15, background: '#fff', border: `1px solid ${OK.line}`, display: 'flex', alignItems: 'center', gap: 10, padding: '0 14px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
-              <LIcon name="search" size={17} color={OK.ink3}/>
+              <Icon name="search" size={17} color={OK.ink3}/>
               <input value={query} onChange={event => setQuery(event.target.value)} placeholder="Plombier, nounou, carreleur…" style={{ flex: 1, minWidth: 0, border: 0, outline: 0, background: 'transparent', fontFamily: FX, fontSize: 13.5, color: OK.ink }}/>
-              {query && <button onClick={() => setQuery('')} aria-label="Effacer" style={{ width: 28, height: 28, borderRadius: 999, border: 0, background: OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="close" size={13} color={OK.ink2}/></button>}
+              {query && <button onClick={() => setQuery('')} aria-label="Effacer" style={{ width: 28, height: 28, borderRadius: 999, border: 0, background: OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={13} color={OK.ink2}/></button>}
             </div>
           </div>
 
@@ -7821,9 +7809,9 @@ function ProximityServicesScreen() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontFamily: FX, fontSize: 11, fontWeight: 800, color: OK.green, textTransform: 'uppercase', letterSpacing: .25, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{provider.jobs?.[0] || 'Service de proximité'}</div>
                   <div style={{ marginTop: 4, fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink, lineHeight: 1.25 }}>{provider.name}</div>
-                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}><LIcon name="pin" size={13} color={OK.ink3}/><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{provider.city}</span></div>
+                  <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}><Icon name="pin" size={13} color={OK.ink3}/><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{provider.city}</span></div>
                 </div>
-                <span style={{ width: 34, height: 34, borderRadius: 999, background: 'rgba(11,124,57,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><LIcon name="chev-r" size={16} color={OK.green}/></span>
+                <span style={{ width: 34, height: 34, borderRadius: 999, background: 'rgba(11,124,57,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="chev-r" size={16} color={OK.green}/></span>
               </button>)}
               {!filtered.length && <div style={{ padding: '30px 20px', borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}`, textAlign: 'center' }}><div style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>Aucun prestataire trouvé</div><div style={{ marginTop: 4, fontFamily: FX, fontSize: 12, color: OK.ink2 }}>Essayez un autre métier ou un autre quartier.</div></div>}
             </div>
@@ -7845,8 +7833,8 @@ function ProximityVitrine({ provider, preview = false }) {
     <div style={{ padding: '20px 16px 17px', borderRadius: 22, background: 'linear-gradient(145deg, #EAF6EE, #FFF8E1)', textAlign: 'center', border: '1px solid rgba(11,124,57,.12)' }}>
       <div style={{ width: 104, height: 104, margin: '0 auto', borderRadius: 999, overflow: 'hidden', border: '4px solid #fff', boxShadow: '0 6px 18px rgba(0,0,0,.14)' }}><Img src={photo} style={{ width: '100%', height: '100%' }}/></div>
       <div style={{ marginTop: 12, fontFamily: FX, fontSize: 11, fontWeight: 800, color: OK.green, textTransform: 'uppercase', letterSpacing: .4 }}>{provider.jobs?.[0]}</div>
-      <div style={{ marginTop: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}><h1 style={{ margin: 0, fontFamily: FX, fontSize: 21, color: OK.ink }}>{provider.name}</h1>{provider.verified && <LIcon name="verified" size={18} color={OK.green}/>}</div>
-      <div style={{ marginTop: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}><LIcon name="pin" size={13} color={OK.ink3}/><span style={{ fontFamily: FX, fontSize: 12, color: OK.ink2 }}>{provider.city}</span></div>
+      <div style={{ marginTop: 3, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}><h1 style={{ margin: 0, fontFamily: FX, fontSize: 21, color: OK.ink }}>{provider.name}</h1>{provider.verified && <Icon name="verified" size={18} color={OK.green}/>}</div>
+      <div style={{ marginTop: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}><Icon name="pin" size={13} color={OK.ink3}/><span style={{ fontFamily: FX, fontSize: 12, color: OK.ink2 }}>{provider.city}</span></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', marginTop: 17, paddingTop: 15, borderTop: '1px solid rgba(11,124,57,.13)' }}>
         {[[provider.rating ? String(provider.rating).replace('.', ',') : '—', 'Note'], [provider.experience || 'Nouveau', 'Expérience'], [provider.verified ? 'Vérifiée' : 'À vérifier', 'Identité']].map(([value, label], index) => <div key={label} style={{ borderLeft: index ? '1px solid rgba(11,124,57,.13)' : 'none' }}><div style={{ fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.ink }}>{value}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 9.5, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div></div>)}
       </div>
@@ -7857,7 +7845,7 @@ function ProximityVitrine({ provider, preview = false }) {
       <button onClick={() => action(() => notifyDemo(`Demande de devis envoyée à ${provider.name}`))} style={{ flex: 1, height: 48, border: `1.5px solid ${OK.green}`, borderRadius: 14, background: '#fff', color: OK.green, fontFamily: FX, fontSize: 13.5, fontWeight: 800 }}>Devis</button>
     </div>
     <div style={{ marginTop: 14, padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>À propos</div><p style={{ margin: '8px 0 0', fontFamily: FX, fontSize: 13, lineHeight: 1.6, color: OK.ink2 }}>{provider.bio}</p>{provider.jobs?.length > 1 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 12 }}>{provider.jobs.map(job => <span key={job} style={{ padding: '6px 10px', borderRadius: 999, background: 'rgba(11,124,57,.08)', color: OK.green, fontFamily: FX, fontSize: 10.5, fontWeight: 800 }}>{job}</span>)}</div>}</div>
-    <div style={{ marginTop: 12, padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>Disponibilité et tarif</div><div style={{ display: 'grid', gap: 13, marginTop: 13 }}>{[['clock', 'Disponibilité', provider.availability || 'Sur rendez-vous'], ['pin', 'Zone d’intervention', provider.zone || provider.city], ['wallet', 'Tarif indicatif', provider.priceLabel || 'Sur devis']].map(([icon, label, value]) => <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 11 }}><span style={{ width: 36, height: 36, borderRadius: 11, background: OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name={icon} size={16} color={OK.green}/></span><div><div style={{ fontFamily: FX, fontSize: 10, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ marginTop: 1, fontFamily: FX, fontSize: 12.5, fontWeight: 650, color: OK.ink }}>{value}</div></div></div>)}</div></div>
+    <div style={{ marginTop: 12, padding: 16, borderRadius: 18, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>Disponibilité et tarif</div><div style={{ display: 'grid', gap: 13, marginTop: 13 }}>{[['clock', 'Disponibilité', provider.availability || 'Sur rendez-vous'], ['pin', 'Zone d’intervention', provider.zone || provider.city], ['wallet', 'Tarif indicatif', provider.priceLabel || 'Sur devis']].map(([icon, label, value]) => <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 11 }}><span style={{ width: 36, height: 36, borderRadius: 11, background: OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={16} color={OK.green}/></span><div><div style={{ fontFamily: FX, fontSize: 10, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ marginTop: 1, fontFamily: FX, fontSize: 12.5, fontWeight: 650, color: OK.ink }}>{value}</div></div></div>)}</div></div>
     <div style={{ marginTop: 15 }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink, marginBottom: 9 }}>Réalisations</div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: Math.max(1, Math.min(provider.photos || 1, 6)) }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 13, overflow: 'hidden' }}><Img src={photo} style={{ position: 'absolute', inset: 0, backgroundPosition: index % 2 ? 'center 35%' : 'center' }}/></div>)}</div></div>
   </div>;
 }
@@ -7889,7 +7877,7 @@ function ProximityProfileScreen({ params }) {
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
               <div style={{ width: 62, height: 62, borderRadius: 16, overflow: 'hidden', border: '3px solid #fff', background: OK.bg2, flexShrink: 0, marginTop: -36, boxShadow: '0 3px 12px rgba(0,0,0,.14)' }}><Img src={provider.cover || family?.img} style={{ width: '100%', height: '100%' }}/></div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><h1 style={{ margin: 0, fontFamily: FX, fontSize: 19, lineHeight: 1.2, color: OK.ink }}>{provider.name}</h1>{provider.verified && <LIcon name="verified" size={17} color={OK.green}/>}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><h1 style={{ margin: 0, fontFamily: FX, fontSize: 19, lineHeight: 1.2, color: OK.ink }}>{provider.name}</h1>{provider.verified && <Icon name="verified" size={17} color={OK.green}/>}</div>
                 <div style={{ marginTop: 4, fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: OK.green, textTransform: 'uppercase' }}>{provider.jobs?.join(' · ')}</div>
               </div>
             </div>
@@ -7912,7 +7900,7 @@ function ProximityProfileScreen({ params }) {
               ['clock', 'Disponibilité', provider.availability || 'Sur rendez-vous'],
               ['wallet', 'Tarif', provider.priceLabel || 'Sur devis'],
               ['message', 'Langue de service', 'Français'],
-            ].map(([icon, label, value], index) => <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: index ? `1px solid ${OK.line}` : 'none' }}><span style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(11,124,57,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name={icon} size={16} color={OK.green}/></span><div><div style={{ fontFamily: FX, fontSize: 10, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 12.5, fontWeight: 650, color: OK.ink }}>{value}</div></div></div>)}
+            ].map(([icon, label, value], index) => <div key={label} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '13px 14px', borderTop: index ? `1px solid ${OK.line}` : 'none' }}><span style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(11,124,57,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={icon} size={16} color={OK.green}/></span><div><div style={{ fontFamily: FX, fontSize: 10, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>{label}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 12.5, fontWeight: 650, color: OK.ink }}>{value}</div></div></div>)}
           </div>
 
           <div style={{ marginTop: 14 }}><div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink, marginBottom: 9 }}>Réalisations</div><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: Math.max(1, Math.min(provider.photos || 1, 6)) }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 12, overflow: 'hidden' }}><Img src={provider.cover || family?.img} style={{ position: 'absolute', inset: 0, backgroundPosition: index % 2 ? 'center 35%' : 'center' }}/></div>)}</div></div>
@@ -7929,7 +7917,7 @@ function PublicationIntroScreen({ label, hero, heroPosition = 'center', title, s
         <div style={{ position: 'relative', minHeight: 300, padding: '52px 20px 34px', borderRadius: '0 0 26px 26px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
           <Img src={hero} style={{ position: 'absolute', inset: 0, backgroundPosition: heroPosition }} overlay="linear-gradient(180deg, rgba(4,26,14,0.38) 0%, rgba(6,42,24,0.3) 42%, rgba(4,26,14,0.84) 100%)"/>
           <button onClick={onBack} aria-label="Retour" style={{ position: 'relative', width: 38, height: 38, borderRadius: 999, border: '1px solid rgba(255,255,255,0.22)', cursor: 'pointer', background: 'rgba(255,255,255,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+            <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
           </button>
           <h1 style={{ margin: 'auto 0 0', position: 'relative', maxWidth: 285, fontFamily: FX, fontWeight: 800, fontSize: 28, lineHeight: 1.12, color: '#fff', letterSpacing: -0.5, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{title}</h1>
           <p style={{ margin: '10px 0 0', position: 'relative', fontFamily: FX, fontSize: 13, color: 'rgba(255,255,255,0.9)', lineHeight: 1.5, maxWidth: 300 }}>{subtitle}</p>
@@ -7944,7 +7932,7 @@ function PublicationIntroScreen({ label, hero, heroPosition = 'center', title, s
                   <div style={{ fontFamily: FX, fontSize: 15.5, fontWeight: 800, color: OK.ink }}>{choice.title}</div>
                   <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, marginTop: 5, lineHeight: 1.4 }}>{choice.sub}</div>
                 </div>
-                <LIcon name="chev-r" size={17} color={OK.ink3} strokeWidth={2.4}/>
+                <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2.4}/>
               </div>
             </button>
           ))}
@@ -8054,9 +8042,9 @@ function LegacyProposerServiceScreen() {
     steps={['Vous présentez votre métier', 'Vous complétez votre profil', 'Votre service devient visible']}
   />;
 
-  if (submittedId) return <Screen bg={OK.bg2} statusDark><div data-screen-label="Service créé" style={{ position: 'absolute', inset: 0, padding: '0 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}><div style={{ width: 92, height: 92, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,.3)' }}><LIcon name="check" size={46} color="#fff" strokeWidth={3}/></div><h1 style={{ margin: '22px 0 0', fontFamily: FX, fontSize: 24, color: OK.ink }}>Service créé</h1><p style={{ margin: '10px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Votre profil <strong style={{ color: OK.ink }}>{name}</strong> apparaît maintenant dans les Services de proximité.</p>{identity && <span style={{ marginTop: 12, padding: '5px 11px', borderRadius: 999, background: 'rgba(245,184,0,.18)', color: '#745700', fontFamily: FX, fontSize: 10.5, fontWeight: 800 }}>Identité en cours de validation</span>}<div style={{ width: '100%', display: 'grid', gap: 10, marginTop: 24 }}><button onClick={() => navigate('proximity-profile', { id: submittedId })} style={{ height: 52, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir mon profil</button><button onClick={() => navigate('proximity-services')} style={{ height: 52, border: `1.5px solid ${OK.line}`, borderRadius: 14, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir les services de proximité</button></div></div></Screen>;
+  if (submittedId) return <Screen bg={OK.bg2} statusDark><div data-screen-label="Service créé" style={{ position: 'absolute', inset: 0, padding: '0 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}><div style={{ width: 92, height: 92, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,.3)' }}><Icon name="check" size={46} color="#fff" strokeWidth={3}/></div><h1 style={{ margin: '22px 0 0', fontFamily: FX, fontSize: 24, color: OK.ink }}>Service créé</h1><p style={{ margin: '10px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Votre profil <strong style={{ color: OK.ink }}>{name}</strong> apparaît maintenant dans les Services de proximité.</p>{identity && <span style={{ marginTop: 12, padding: '5px 11px', borderRadius: 999, background: 'rgba(245,184,0,.18)', color: '#745700', fontFamily: FX, fontSize: 10.5, fontWeight: 800 }}>Identité en cours de validation</span>}<div style={{ width: '100%', display: 'grid', gap: 10, marginTop: 24 }}><button onClick={() => navigate('proximity-profile', { id: submittedId })} style={{ height: 52, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir mon profil</button><button onClick={() => navigate('proximity-services')} style={{ height: 52, border: `1.5px solid ${OK.line}`, borderRadius: 14, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir les services de proximité</button></div></div></Screen>;
 
-  if (preview) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, display: 'flex', gap: 10, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff' }}><button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FX, fontWeight: 800 }}>Modifier</button><button onClick={() => { setPreview(false); setOffer(true); }} style={{ flex: 1.35, height: 52, borderRadius: 14, border: 0, background: OK.green, color: '#fff', fontFamily: FX, fontWeight: 800 }}>Choisir mon forfait</button></div>}><div data-screen-label="Aperçu service"><GreenHeader title="Aperçu de la fiche" onBack={() => setPreview(false)}/><div style={{ position: 'relative', height: 190 }}><Img src={cover} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.5))"/></div><div style={{ padding: '0 16px 24px', marginTop: -26, position: 'relative' }}><PubCard><div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ width: 58, height: 58, borderRadius: 15, overflow: 'hidden', border: '3px solid #fff', marginTop: -34 }}><Img src={cover} style={{ width: '100%', height: '100%' }}/></div><div><div style={{ display: 'flex', gap: 5, alignItems: 'center' }}><strong style={{ fontFamily: FX, fontSize: 18, color: OK.ink }}>{name}</strong>{identity && <LIcon name="verified" size={16} color={OK.green}/>}</div><div style={{ color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800, textTransform: 'uppercase' }}>{[mainJob, ...secondaryJobs].join(' · ')}</div></div></div><p style={{ fontFamily: FX, fontSize: 13, color: OK.ink2, lineHeight: 1.55 }}>{bio}</p><div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>{[priceLabel, `${quarter || city} · ${radius}`, emergency && 'Urgences 24/7'].filter(Boolean).map(item => <span key={item} style={{ padding: '6px 9px', borderRadius: 999, background: OK.bg2, fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink2 }}>{item}</span>)}</div></PubCard><div style={{ marginTop: 12 }}><PubCard title="Disponibilités & contact" icon="clock"><div style={{ fontFamily: FX, fontSize: 12.5, lineHeight: 1.7, color: OK.ink2 }}>{days.join(', ')} · {hours}<br/>{phone}{whatsapp && whatsapp !== phone ? ` · WhatsApp ${whatsapp}` : ''}</div></PubCard></div><div style={{ marginTop: 12 }}><PubCard title="Portfolio" icon="camera"><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: photos }).slice(0, 6).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/></div>)}</div></PubCard></div></div></div></Screen>;
+  if (preview) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, display: 'flex', gap: 10, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff' }}><button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FX, fontWeight: 800 }}>Modifier</button><button onClick={() => { setPreview(false); setOffer(true); }} style={{ flex: 1.35, height: 52, borderRadius: 14, border: 0, background: OK.green, color: '#fff', fontFamily: FX, fontWeight: 800 }}>Choisir mon forfait</button></div>}><div data-screen-label="Aperçu service"><GreenHeader title="Aperçu de la fiche" onBack={() => setPreview(false)}/><div style={{ position: 'relative', height: 190 }}><Img src={cover} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.5))"/></div><div style={{ padding: '0 16px 24px', marginTop: -26, position: 'relative' }}><PubCard><div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ width: 58, height: 58, borderRadius: 15, overflow: 'hidden', border: '3px solid #fff', marginTop: -34 }}><Img src={cover} style={{ width: '100%', height: '100%' }}/></div><div><div style={{ display: 'flex', gap: 5, alignItems: 'center' }}><strong style={{ fontFamily: FX, fontSize: 18, color: OK.ink }}>{name}</strong>{identity && <Icon name="verified" size={16} color={OK.green}/>}</div><div style={{ color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800, textTransform: 'uppercase' }}>{[mainJob, ...secondaryJobs].join(' · ')}</div></div></div><p style={{ fontFamily: FX, fontSize: 13, color: OK.ink2, lineHeight: 1.55 }}>{bio}</p><div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>{[priceLabel, `${quarter || city} · ${radius}`, emergency && 'Urgences 24/7'].filter(Boolean).map(item => <span key={item} style={{ padding: '6px 9px', borderRadius: 999, background: OK.bg2, fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink2 }}>{item}</span>)}</div></PubCard><div style={{ marginTop: 12 }}><PubCard title="Disponibilités & contact" icon="clock"><div style={{ fontFamily: FX, fontSize: 12.5, lineHeight: 1.7, color: OK.ink2 }}>{days.join(', ')} · {hours}<br/>{phone}{whatsapp && whatsapp !== phone ? ` · WhatsApp ${whatsapp}` : ''}</div></PubCard></div><div style={{ marginTop: 12 }}><PubCard title="Portfolio" icon="camera"><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 7 }}>{Array.from({ length: photos }).slice(0, 6).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/></div>)}</div></PubCard></div></div></div></Screen>;
 
   if (offer) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<PubBar label="Soumettre pour validation" icon="check" onClick={submit}/>}><div data-screen-label="Forfait service"><GreenHeader title="Votre forfait" onBack={goBack}/><div style={{ padding: '16px' }}><h2 style={{ margin: 0, fontFamily: FX, fontSize: 19, color: OK.green }}>Choisissez votre visibilité</h2><p style={{ margin: '5px 0 14px', fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Une fiche simple est gratuite. Vous pourrez changer de forfait plus tard.</p><div style={{ display: 'grid', gap: 11 }}>{PROXIMITY_PKG.map(item => { const on = pkg === item.id; return <button key={item.id} onClick={() => setPkg(item.id)} style={{ padding: '14px 15px', textAlign: 'left', borderRadius: 16, border: on ? `2px solid ${item.tone}` : `1px solid ${OK.line}`, background: '#fff', cursor: 'pointer' }}><div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}><strong style={{ flex: 1, fontFamily: FX, fontSize: 16, color: OK.ink }}>{item.name}</strong><strong style={{ fontFamily: FX, fontSize: 19, color: OK.ink }}>{item.priceStr}</strong>{item.per && <span style={{ fontFamily: FX, fontSize: 10.5, color: OK.ink3 }}>{item.per}</span>}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 11, color: OK.ink3 }}>{item.tag}</div>{on && <div style={{ display: 'grid', gap: 6, marginTop: 11, paddingTop: 10, borderTop: `1px solid ${OK.line}` }}>{item.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>✓ {perk}</span>)}</div>}</button>; })}</div></div></div></Screen>;
 
@@ -8075,7 +8063,7 @@ function LegacyProposerServiceScreen() {
             <div style={{ padding: '13px 16px 0', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 11 }}>
               {PROXIMITY_FAMILIES.map(item => <button key={item.id} onClick={() => pickFamily(item.id)} style={{ position: 'relative', height: 118, padding: 0, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', border: familyId === item.id ? `3px solid ${OK.green}` : `1px solid ${OK.line}`, textAlign: 'left', boxShadow: familyId === item.id ? '0 5px 15px rgba(11,124,57,.2)' : '0 2px 7px rgba(0,0,0,.07)' }}>
                 <ProximityFamilyVisual item={item} selected={familyId === item.id}/>
-                {familyId === item.id && <span style={{ position: 'absolute', top: 8, right: 8, width: 25, height: 25, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="check" size={14} color="#fff" strokeWidth={3}/></span>}
+                {familyId === item.id && <span style={{ position: 'absolute', top: 8, right: 8, width: 25, height: 25, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></span>}
                 <span style={{ position: 'absolute', left: 11, right: 9, bottom: 10, color: '#fff', fontFamily: FX, fontSize: 13, lineHeight: 1.2, fontWeight: 800 }}>{item.label}</span>
               </button>)}
             </div>
@@ -8084,7 +8072,7 @@ function LegacyProposerServiceScreen() {
               <button onClick={() => setJobPhase('family')} style={{ width: 42, height: 42, padding: 0, borderRadius: 11, overflow: 'hidden', border: `1px solid ${OK.line}`, position: 'relative', flexShrink: 0 }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/></button>
               <div><div style={{ fontFamily: FX, fontSize: 17, fontWeight: 800, color: OK.green }}>Choisissez votre métier</div><div style={{ marginTop: 1, fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>{family?.label}</div></div>
             </div>
-            <div style={{ margin: '12px 16px 0', height: 46, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 13, display: 'flex', alignItems: 'center', gap: 9, padding: '0 13px' }}><LIcon name="search" size={16} color={OK.ink3}/><input value={jobSearch} onChange={event => setJobSearch(event.target.value)} placeholder="Rechercher un métier…" style={{ flex: 1, border: 0, outline: 0, fontFamily: FX, fontSize: 13.5, color: OK.ink }}/></div>
+            <div style={{ margin: '12px 16px 0', height: 46, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 13, display: 'flex', alignItems: 'center', gap: 9, padding: '0 13px' }}><Icon name="search" size={16} color={OK.ink3}/><input value={jobSearch} onChange={event => setJobSearch(event.target.value)} placeholder="Rechercher un métier…" style={{ flex: 1, border: 0, outline: 0, fontFamily: FX, fontSize: 13.5, color: OK.ink }}/></div>
             <div style={{ padding: '12px 16px 0', display: 'grid', gap: 8 }}>
               {searchedJobs.map(job => { const primary = mainJob === job; const secondary = secondaryJobs.includes(job); return <div key={job} style={{ minHeight: 56, padding: '7px 8px 7px 14px', borderRadius: 14, border: primary || secondary ? `2px solid ${OK.green}` : `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
                 <button onClick={() => chooseMain(job)} style={{ flex: 1, alignSelf: 'stretch', textAlign: 'left', border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 13.5, fontWeight: primary ? 800 : 650, color: primary ? OK.green : OK.ink }}>{job}{primary && <span style={{ display: 'block', marginTop: 2, fontSize: 9.5, color: OK.green }}>MÉTIER PRINCIPAL SÉLECTIONNÉ</span>}</button>
@@ -8107,15 +8095,15 @@ function LegacyProposerServiceScreen() {
         <GreenHeader title="Proposer un service" onBack={goBack}/>
         <EtabProgress steps={steps} step={step}/>
 
-        {step === 0 && <div><div style={{ margin: '12px 18px 0', fontFamily: FX, fontSize: 18, fontWeight: 800, color: OK.green }}>Quel est votre métier ?</div><p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, lineHeight: 1.45, color: OK.ink2 }}>Choisissez une famille, puis 1 métier principal et jusqu’à 2 métiers secondaires.</p><div style={{ margin: '13px 16px 0', height: 46, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 13, display: 'flex', alignItems: 'center', gap: 9, padding: '0 13px' }}><LIcon name="search" size={16} color={OK.ink3}/><input value={jobSearch} onChange={event => setJobSearch(event.target.value)} placeholder="Rechercher maçon, nounou, plombier…" style={{ flex: 1, border: 0, outline: 0, fontFamily: FX, fontSize: 13.5, color: OK.ink }}/></div>{!jobSearch && <div style={{ padding: '12px 16px 0', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 11 }}>{PROXIMITY_FAMILIES.map(item => <button key={item.id} onClick={() => pickFamily(item.id)} style={{ position: 'relative', height: 106, padding: 0, borderRadius: 15, overflow: 'hidden', cursor: 'pointer', border: familyId === item.id ? `2.5px solid ${OK.green}` : `1px solid ${OK.line}`, textAlign: 'left' }}><ProximityFamilyVisual item={item} selected={familyId === item.id}/>{familyId === item.id && <span style={{ position: 'absolute', top: 7, right: 7, width: 23, height: 23, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="check" size={13} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 10, right: 9, bottom: 9, color: '#fff', fontFamily: FX, fontSize: 12.5, lineHeight: 1.2, fontWeight: 800 }}>{item.label}</span></button>)}</div>}{(family || jobSearch) && <div style={{ padding: '14px 16px 0' }}><div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}><strong style={{ fontFamily: FX, fontSize: 14, color: OK.ink }}>{jobSearch ? 'Résultats' : family.label}</strong><span style={{ fontFamily: FX, fontSize: 10.5, color: OK.ink3 }}>{secondaryJobs.length}/2 secondaires</span></div><div style={{ display: 'grid', gap: 7 }}>{searchedJobs.map(job => { const primary = mainJob === job; const secondary = secondaryJobs.includes(job); return <div key={job} style={{ minHeight: 50, padding: '7px 8px 7px 13px', borderRadius: 13, border: primary || secondary ? `1.5px solid ${OK.green}` : `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}><button onClick={() => chooseMain(job)} style={{ flex: 1, textAlign: 'left', border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 13, fontWeight: primary ? 800 : 650, color: primary ? OK.green : OK.ink }}>{job}{primary && <span style={{ display: 'block', marginTop: 1, fontSize: 9.5, color: OK.green }}>MÉTIER PRINCIPAL</span>}</button>{!primary && <button onClick={() => toggleSecondary(job)} aria-label={`Métier secondaire ${job}`} style={{ minWidth: 34, height: 34, padding: '0 9px', borderRadius: 10, border: secondary ? 0 : `1px solid ${OK.line}`, background: secondary ? OK.green : OK.bg2, color: secondary ? '#fff' : OK.green, fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>{secondary ? '✓' : '+'}</button>}</div>; })}{searchedJobs.length === 0 && <div style={{ padding: 12, background: '#fff', borderRadius: 13, border: `1px solid ${OK.line}` }}><label style={PUB_LABEL}>Mon métier n’est pas dans la liste</label><div style={{ display: 'flex', gap: 8 }}><input value={customJob} onChange={event => setCustomJob(event.target.value)} placeholder="Saisissez votre métier" style={PUB_FIELD}/><button onClick={() => customJob.trim() && chooseMain(customJob.trim())} style={{ width: 86, border: 0, borderRadius: 12, background: OK.green, color: '#fff', fontWeight: 800 }}>Ajouter</button></div></div>}</div></div>}</div>}
+        {step === 0 && <div><div style={{ margin: '12px 18px 0', fontFamily: FX, fontSize: 18, fontWeight: 800, color: OK.green }}>Quel est votre métier ?</div><p style={{ margin: '4px 18px 0', fontFamily: FX, fontSize: 12.5, lineHeight: 1.45, color: OK.ink2 }}>Choisissez une famille, puis 1 métier principal et jusqu’à 2 métiers secondaires.</p><div style={{ margin: '13px 16px 0', height: 46, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 13, display: 'flex', alignItems: 'center', gap: 9, padding: '0 13px' }}><Icon name="search" size={16} color={OK.ink3}/><input value={jobSearch} onChange={event => setJobSearch(event.target.value)} placeholder="Rechercher maçon, nounou, plombier…" style={{ flex: 1, border: 0, outline: 0, fontFamily: FX, fontSize: 13.5, color: OK.ink }}/></div>{!jobSearch && <div style={{ padding: '12px 16px 0', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 11 }}>{PROXIMITY_FAMILIES.map(item => <button key={item.id} onClick={() => pickFamily(item.id)} style={{ position: 'relative', height: 106, padding: 0, borderRadius: 15, overflow: 'hidden', cursor: 'pointer', border: familyId === item.id ? `2.5px solid ${OK.green}` : `1px solid ${OK.line}`, textAlign: 'left' }}><ProximityFamilyVisual item={item} selected={familyId === item.id}/>{familyId === item.id && <span style={{ position: 'absolute', top: 7, right: 7, width: 23, height: 23, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={13} color="#fff" strokeWidth={3}/></span>}<span style={{ position: 'absolute', left: 10, right: 9, bottom: 9, color: '#fff', fontFamily: FX, fontSize: 12.5, lineHeight: 1.2, fontWeight: 800 }}>{item.label}</span></button>)}</div>}{(family || jobSearch) && <div style={{ padding: '14px 16px 0' }}><div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}><strong style={{ fontFamily: FX, fontSize: 14, color: OK.ink }}>{jobSearch ? 'Résultats' : family.label}</strong><span style={{ fontFamily: FX, fontSize: 10.5, color: OK.ink3 }}>{secondaryJobs.length}/2 secondaires</span></div><div style={{ display: 'grid', gap: 7 }}>{searchedJobs.map(job => { const primary = mainJob === job; const secondary = secondaryJobs.includes(job); return <div key={job} style={{ minHeight: 50, padding: '7px 8px 7px 13px', borderRadius: 13, border: primary || secondary ? `1.5px solid ${OK.green}` : `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}><button onClick={() => chooseMain(job)} style={{ flex: 1, textAlign: 'left', border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 13, fontWeight: primary ? 800 : 650, color: primary ? OK.green : OK.ink }}>{job}{primary && <span style={{ display: 'block', marginTop: 1, fontSize: 9.5, color: OK.green }}>MÉTIER PRINCIPAL</span>}</button>{!primary && <button onClick={() => toggleSecondary(job)} aria-label={`Métier secondaire ${job}`} style={{ minWidth: 34, height: 34, padding: '0 9px', borderRadius: 10, border: secondary ? 0 : `1px solid ${OK.line}`, background: secondary ? OK.green : OK.bg2, color: secondary ? '#fff' : OK.green, fontFamily: FX, fontWeight: 800, cursor: 'pointer' }}>{secondary ? '✓' : '+'}</button>}</div>; })}{searchedJobs.length === 0 && <div style={{ padding: 12, background: '#fff', borderRadius: 13, border: `1px solid ${OK.line}` }}><label style={PUB_LABEL}>Mon métier n’est pas dans la liste</label><div style={{ display: 'flex', gap: 8 }}><input value={customJob} onChange={event => setCustomJob(event.target.value)} placeholder="Saisissez votre métier" style={PUB_FIELD}/><button onClick={() => customJob.trim() && chooseMain(customJob.trim())} style={{ width: 86, border: 0, borderRadius: 12, background: OK.green, color: '#fff', fontWeight: 800 }}>Ajouter</button></div></div>}</div></div>}</div>}
 
-        {step === 1 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Votre profil" icon="user"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Nom ou atelier</label><input value={name} onChange={event => setName(event.target.value)} placeholder="Ex : Junior Plomberie" style={PUB_FIELD}/></div><div><label style={PUB_LABEL}>Années d’expérience</label><input value={experience} onChange={event => setExperience(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Ex : 5" style={PUB_FIELD}/></div><div><label style={PUB_LABEL}>Présentation courte</label><textarea value={bio} onChange={event => setBio(event.target.value)} rows={4} placeholder="Présentez votre savoir-faire et les travaux que vous réalisez…" style={{ ...PUB_FIELD, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.5 }}/></div><div><label style={PUB_LABEL}>Langue de service</label><div style={{ height: 46, padding: '0 14px', borderRadius: 12, border: `1px solid ${OK.line}`, background: OK.bg2, display: 'flex', alignItems: 'center', gap: 9, fontFamily: FX, fontSize: 13, fontWeight: 700, color: OK.ink2 }}><LIcon name="message" size={16} color={OK.green}/> Français</div></div></div></PubCard><PubCard title="Contact" icon="phone"><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Téléphone</label><input value={phone} onChange={event => setPhone(event.target.value)} placeholder="+241…" inputMode="tel" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>WhatsApp</label><input value={whatsapp} onChange={event => setWhatsapp(event.target.value)} placeholder="+241…" inputMode="tel" style={PUB_FIELD}/></div></div></PubCard></div>}
+        {step === 1 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Votre profil" icon="user"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Nom ou atelier</label><input value={name} onChange={event => setName(event.target.value)} placeholder="Ex : Junior Plomberie" style={PUB_FIELD}/></div><div><label style={PUB_LABEL}>Années d’expérience</label><input value={experience} onChange={event => setExperience(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Ex : 5" style={PUB_FIELD}/></div><div><label style={PUB_LABEL}>Présentation courte</label><textarea value={bio} onChange={event => setBio(event.target.value)} rows={4} placeholder="Présentez votre savoir-faire et les travaux que vous réalisez…" style={{ ...PUB_FIELD, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.5 }}/></div><div><label style={PUB_LABEL}>Langue de service</label><div style={{ height: 46, padding: '0 14px', borderRadius: 12, border: `1px solid ${OK.line}`, background: OK.bg2, display: 'flex', alignItems: 'center', gap: 9, fontFamily: FX, fontSize: 13, fontWeight: 700, color: OK.ink2 }}><Icon name="message" size={16} color={OK.green}/> Français</div></div></div></PubCard><PubCard title="Contact" icon="phone"><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Téléphone</label><input value={phone} onChange={event => setPhone(event.target.value)} placeholder="+241…" inputMode="tel" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>WhatsApp</label><input value={whatsapp} onChange={event => setWhatsapp(event.target.value)} placeholder="+241…" inputMode="tel" style={PUB_FIELD}/></div></div></PubCard></div>}
 
         {step === 2 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Zone d’intervention" icon="pin"><div style={{ display: 'grid', gap: 13 }}><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Ville</label><input value={city} onChange={event => setCity(event.target.value)} style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Quartier de départ</label><input value={quarter} onChange={event => setQuarter(event.target.value)} placeholder="Ex : Nkembo" style={PUB_FIELD}/></div></div><div><label style={PUB_LABEL}>Rayon de déplacement</label><ChipRow opts={['5 km', '10 km', '25 km', 'Toute la ville', 'Hors ville']} value={radius} onPick={setRadius}/></div></div></PubCard><PubCard title="Disponibilité" icon="clock"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Jours</label><MultiChipRow opts={['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']} values={days} onChange={setDays}/></div><div><label style={PUB_LABEL}>Créneaux</label><input value={hours} onChange={event => setHours(event.target.value)} placeholder="Ex : 08:00 – 18:00" style={PUB_FIELD}/></div><button onClick={() => setEmergency(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderRadius: 13, border: `1.5px solid ${emergency ? '#C8302E' : OK.line}`, background: emergency ? 'rgba(200,48,46,.06)' : '#fff', textAlign: 'left' }}><Toggle on={emergency}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Urgences 24/7</strong><span style={{ fontFamily: FX, fontSize: 11, color: OK.ink3 }}>À activer seulement si vous intervenez réellement à toute heure.</span></div></button></div></PubCard></div>}
 
         {step === 3 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Mode de tarification" icon="wallet"><ChipRow opts={['Sur devis', 'À l’heure', 'À la journée', 'Au m²', 'Forfait']} value={priceMode} onPick={setPriceMode}/>{priceMode !== 'Sur devis' && <div style={{ display: 'flex', gap: 10, marginTop: 14 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix minimum</label><input value={priceMin} onChange={event => setPriceMin(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="0" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix maximum</label><input value={priceMax} onChange={event => setPriceMax(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Facultatif" style={PUB_FIELD}/></div></div>}<div style={{ marginTop: 13, padding: 12, borderRadius: 12, background: 'rgba(11,124,57,.07)', fontFamily: FX, fontSize: 12, lineHeight: 1.45, color: OK.ink2 }}>Tarif affiché : <strong style={{ color: OK.green }}>{priceLabel}</strong></div></PubCard><button onClick={() => setFreeTravel(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14, borderRadius: 15, border: `1px solid ${OK.line}`, background: '#fff', textAlign: 'left' }}><Toggle on={freeTravel}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13.5, color: OK.ink }}>Déplacement gratuit</strong><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>Dans la zone indiquée</span></div></button></div>}
 
-        {step === 4 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Photos de réalisations" icon="camera"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, lineHeight: 1.5, color: OK.ink2 }}>Le portfolio est essentiel pour montrer la qualité de votre travail.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>{Array.from({ length: photos }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/>{photos > 1 && <button onClick={() => setPhotos(value => value - 1)} style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, border: 0, borderRadius: 999, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="close" size={11} color="#fff"/></button>}</div>)}{photos < 6 && <button onClick={() => setPhotos(value => value + 1)} style={{ aspectRatio: '1', borderRadius: 11, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.05)', color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800 }}>+ Photo</button>}</div></PubCard><PubCard title="Confiance" icon="verified"><button onClick={() => setIdentity(value => !value)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, padding: 12, borderRadius: 13, border: `1.5px solid ${identity ? OK.green : OK.line}`, background: identity ? 'rgba(11,124,57,.06)' : '#fff', textAlign: 'left' }}><Toggle on={identity}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Ajouter ma pièce d’identité</strong><span style={{ fontFamily: FX, fontSize: 11, lineHeight: 1.4, color: OK.ink3 }}>Facultatif · débloque le badge « Identité vérifiée » après contrôle.</span></div></button><div style={{ marginTop: 13 }}><label style={PUB_LABEL}>Référence ou recommandation</label><textarea value={references} onChange={event => setReferences(event.target.value)} rows={3} placeholder="Ex : contact d’un ancien client, chantier réalisé…" style={{ ...PUB_FIELD, height: 'auto', padding: '11px 13px', resize: 'none' }}/></div></PubCard></div>}
+        {step === 4 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Photos de réalisations" icon="camera"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, lineHeight: 1.5, color: OK.ink2 }}>Le portfolio est essentiel pour montrer la qualité de votre travail.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>{Array.from({ length: photos }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/>{photos > 1 && <button onClick={() => setPhotos(value => value - 1)} style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, border: 0, borderRadius: 999, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={11} color="#fff"/></button>}</div>)}{photos < 6 && <button onClick={() => setPhotos(value => value + 1)} style={{ aspectRatio: '1', borderRadius: 11, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.05)', color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800 }}>+ Photo</button>}</div></PubCard><PubCard title="Confiance" icon="verified"><button onClick={() => setIdentity(value => !value)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 11, padding: 12, borderRadius: 13, border: `1.5px solid ${identity ? OK.green : OK.line}`, background: identity ? 'rgba(11,124,57,.06)' : '#fff', textAlign: 'left' }}><Toggle on={identity}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Ajouter ma pièce d’identité</strong><span style={{ fontFamily: FX, fontSize: 11, lineHeight: 1.4, color: OK.ink3 }}>Facultatif · débloque le badge « Identité vérifiée » après contrôle.</span></div></button><div style={{ marginTop: 13 }}><label style={PUB_LABEL}>Référence ou recommandation</label><textarea value={references} onChange={event => setReferences(event.target.value)} rows={3} placeholder="Ex : contact d’un ancien client, chantier réalisé…" style={{ ...PUB_FIELD, height: 'auto', padding: '11px 13px', resize: 'none' }}/></div></PubCard></div>}
         <div style={{ height: 22 }}/>
       </div>
     </Screen>
@@ -8178,7 +8166,7 @@ function ProposerServiceScreen() {
     setSubmittedId(id);
   };
 
-  if (submittedId) return <Screen bg={OK.bg2} statusDark><div data-screen-label="Service créé" style={{ position: 'absolute', inset: 0, padding: '0 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}><div style={{ width: 92, height: 92, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,.3)' }}><LIcon name="check" size={46} color="#fff" strokeWidth={3}/></div><h1 style={{ margin: '22px 0 0', fontFamily: FX, fontSize: 24, color: OK.ink }}>Service créé</h1><p style={{ margin: '10px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Votre service lié au profil <strong style={{ color: OK.ink }}>{linked.name}</strong> apparaît maintenant dans les Services de proximité.</p><div style={{ width: '100%', display: 'grid', gap: 10, marginTop: 24 }}><button onClick={() => navigate('proximity-profile', { id: submittedId })} style={{ height: 52, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir ma vitrine</button><button onClick={() => navigate('proximity-services')} style={{ height: 52, border: `1.5px solid ${OK.line}`, borderRadius: 14, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir les services de proximité</button></div></div></Screen>;
+  if (submittedId) return <Screen bg={OK.bg2} statusDark><div data-screen-label="Service créé" style={{ position: 'absolute', inset: 0, padding: '0 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}><div style={{ width: 92, height: 92, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,.3)' }}><Icon name="check" size={46} color="#fff" strokeWidth={3}/></div><h1 style={{ margin: '22px 0 0', fontFamily: FX, fontSize: 24, color: OK.ink }}>Service créé</h1><p style={{ margin: '10px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Votre service lié au profil <strong style={{ color: OK.ink }}>{linked.name}</strong> apparaît maintenant dans les Services de proximité.</p><div style={{ width: '100%', display: 'grid', gap: 10, marginTop: 24 }}><button onClick={() => navigate('proximity-profile', { id: submittedId })} style={{ height: 52, border: 0, borderRadius: 14, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir ma vitrine</button><button onClick={() => navigate('proximity-services')} style={{ height: 52, border: `1.5px solid ${OK.line}`, borderRadius: 14, background: '#fff', color: OK.ink, fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Voir les services de proximité</button></div></div></Screen>;
 
   if (preview) return <Screen bg={OK.bg2} statusDark footerPad={92} footer={<div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, display: 'flex', gap: 10, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff' }}><button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontFamily: FX, fontWeight: 800 }}>Modifier</button><button onClick={() => { setPreview(false); setOffer(true); }} style={{ flex: 1.35, height: 52, borderRadius: 14, border: 0, background: OK.green, color: '#fff', fontFamily: FX, fontWeight: 800 }}>Choisir mon forfait</button></div>}><div data-screen-label="Aperçu de la vitrine"><GreenHeader title="Aperçu de la vitrine" onBack={() => setPreview(false)}/><ProximityVitrine provider={draftProvider} preview/></div></Screen>;
 
@@ -8187,12 +8175,12 @@ function ProposerServiceScreen() {
   const footer = <PubBar label={step === 2 ? 'Voir l’aperçu' : 'Continuer'} disabled={!valid} onClick={() => valid && (step === 2 ? setPreview(true) : setStep(current => current + 1))}/>;
   return <Screen bg={OK.bg2} statusDark footerPad={92} footer={footer}><div data-screen-label="Proposer un service"><GreenHeader title="Proposer un service" onBack={goBack}/><EtabProgress steps={steps} step={step}/>
     {step === 0 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}>
-      <div style={{ padding: '13px 14px', display: 'flex', alignItems: 'center', gap: 11, borderRadius: 16, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ width: 48, height: 48, borderRadius: 14, overflow: 'hidden', flexShrink: 0 }}><Img src={linked.cover} style={{ width: '100%', height: '100%' }}/></div><div style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>Profil lié</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>{linked.name}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 11.5, color: OK.green }}>{linked.jobs.join(' · ')}</div></div><LIcon name="verified" size={17} color={OK.green}/></div>
+      <div style={{ padding: '13px 14px', display: 'flex', alignItems: 'center', gap: 11, borderRadius: 16, background: '#fff', border: `1px solid ${OK.line}` }}><div style={{ width: 48, height: 48, borderRadius: 14, overflow: 'hidden', flexShrink: 0 }}><Img src={linked.cover} style={{ width: '100%', height: '100%' }}/></div><div style={{ flex: 1, minWidth: 0 }}><div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.ink3, textTransform: 'uppercase' }}>Profil lié</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>{linked.name}</div><div style={{ marginTop: 2, fontFamily: FX, fontSize: 11.5, color: OK.green }}>{linked.jobs.join(' · ')}</div></div><Icon name="verified" size={17} color={OK.green}/></div>
       <PubCard title="Zone d’intervention" icon="pin"><div style={{ display: 'grid', gap: 13 }}><div style={{ display: 'flex', gap: 10 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Ville</label><div style={{ ...PUB_FIELD, display: 'flex', alignItems: 'center', color: OK.ink2 }}>{city}</div></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Quartier de départ</label><input value={quarter} onChange={event => setQuarter(event.target.value)} placeholder="Ex : Nkembo" style={PUB_FIELD}/></div></div><div><label style={PUB_LABEL}>Rayon de déplacement</label><ChipRow opts={['5 km', '10 km', '25 km', 'Toute la ville', 'Hors ville']} value={radius} onPick={setRadius}/></div></div></PubCard>
       <PubCard title="Disponibilité" icon="clock"><div style={{ display: 'grid', gap: 13 }}><div><label style={PUB_LABEL}>Jours</label><MultiChipRow opts={['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim']} values={days} onChange={setDays}/></div><div><label style={PUB_LABEL}>Créneaux</label><input value={hours} onChange={event => setHours(event.target.value)} placeholder="Ex : 08:00 – 18:00" style={PUB_FIELD}/></div><button onClick={() => setEmergency(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderRadius: 13, border: `1.5px solid ${emergency ? '#C8302E' : OK.line}`, background: emergency ? 'rgba(200,48,46,.06)' : '#fff', textAlign: 'left' }}><Toggle on={emergency}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13, color: OK.ink }}>Urgences 24/7</strong><span style={{ fontFamily: FX, fontSize: 11, color: OK.ink3 }}>À activer seulement si vous intervenez réellement à toute heure.</span></div></button></div></PubCard>
     </div>}
     {step === 1 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Mode de tarification" icon="wallet"><ChipRow opts={['Sur devis', 'À l’heure', 'À la journée', 'Au m²', 'Forfait']} value={priceMode} onPick={setPriceMode}/>{priceMode !== 'Sur devis' && <div style={{ display: 'flex', gap: 10, marginTop: 14 }}><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix minimum</label><input value={priceMin} onChange={event => setPriceMin(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="0" style={PUB_FIELD}/></div><div style={{ flex: 1 }}><label style={PUB_LABEL}>Prix maximum</label><input value={priceMax} onChange={event => setPriceMax(event.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder="Facultatif" style={PUB_FIELD}/></div></div>}<div style={{ marginTop: 13, padding: 12, borderRadius: 12, background: 'rgba(11,124,57,.07)', fontFamily: FX, fontSize: 12, lineHeight: 1.45, color: OK.ink2 }}>Tarif affiché : <strong style={{ color: OK.green }}>{priceLabel}</strong></div></PubCard><button onClick={() => setFreeTravel(value => !value)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14, borderRadius: 15, border: `1px solid ${OK.line}`, background: '#fff', textAlign: 'left' }}><Toggle on={freeTravel}/><div><strong style={{ display: 'block', fontFamily: FX, fontSize: 13.5, color: OK.ink }}>Déplacement gratuit</strong><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>Dans la zone indiquée</span></div></button></div>}
-    {step === 2 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Photos de réalisations" icon="camera"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, lineHeight: 1.5, color: OK.ink2 }}>Le portfolio du profil est conservé et vous pouvez ajouter les réalisations de ce service.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>{Array.from({ length: photos }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/>{photos > 1 && <button onClick={() => setPhotos(value => value - 1)} aria-label="Supprimer la photo" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, border: 0, borderRadius: 999, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="close" size={11} color="#fff"/></button>}</div>)}{photos < 6 && <button onClick={() => setPhotos(value => value + 1)} style={{ aspectRatio: '1', borderRadius: 11, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.05)', color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800 }}>+ Photo</button>}</div></PubCard><PubCard title="Référence ou recommandation" icon="verified"><textarea value={references} onChange={event => setReferences(event.target.value)} rows={3} placeholder="Ex : contact d’un ancien client, chantier réalisé…" style={{ ...PUB_FIELD, height: 'auto', padding: '11px 13px', resize: 'none' }}/></PubCard></div>}
+    {step === 2 && <div style={{ padding: '12px 16px', display: 'grid', gap: 12 }}><PubCard title="Photos de réalisations" icon="camera"><p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12, lineHeight: 1.5, color: OK.ink2 }}>Le portfolio du profil est conservé et vous pouvez ajouter les réalisations de ce service.</p><div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>{Array.from({ length: photos }).map((_, index) => <div key={index} style={{ position: 'relative', aspectRatio: '1', borderRadius: 11, overflow: 'hidden' }}><Img src={cover} style={{ position: 'absolute', inset: 0 }}/>{photos > 1 && <button onClick={() => setPhotos(value => value - 1)} aria-label="Supprimer la photo" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, border: 0, borderRadius: 999, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={11} color="#fff"/></button>}</div>)}{photos < 6 && <button onClick={() => setPhotos(value => value + 1)} style={{ aspectRatio: '1', borderRadius: 11, border: `1.5px dashed ${OK.green}`, background: 'rgba(11,124,57,.05)', color: OK.green, fontFamily: FX, fontSize: 11, fontWeight: 800 }}>+ Photo</button>}</div></PubCard><PubCard title="Référence ou recommandation" icon="verified"><textarea value={references} onChange={event => setReferences(event.target.value)} rows={3} placeholder="Ex : contact d’un ancien client, chantier réalisé…" style={{ ...PUB_FIELD, height: 'auto', padding: '11px 13px', resize: 'none' }}/></PubCard></div>}
     <div style={{ height: 22 }}/>
   </div></Screen>;
 }
@@ -8301,13 +8289,13 @@ function PublierScreen() {
       <Screen bg={OK.bg} statusDark={true} footerPad={92} footer={
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, padding: `12px 16px ${APP_DETAIL_BOTTOM_PADDING}`, borderTop: `1px solid ${OK.line}`, background: '#fff', display: 'flex', gap: 10, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
           <button onClick={() => setPreview(false)} style={{ flex: 1, height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, cursor: 'pointer', fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>Modifier</button>
-          <button onClick={() => { setPreview(false); setStep(iOffer); }} style={{ flex: 1.4, height: 52, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FX, fontSize: 14.5, fontWeight: 800, boxShadow: '0 8px 20px rgba(11,124,57,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer <LIcon name="arrow-r" size={18} color="#fff" strokeWidth={2.4}/></button>
+          <button onClick={() => { setPreview(false); setStep(iOffer); }} style={{ flex: 1.4, height: 52, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FX, fontSize: 14.5, fontWeight: 800, boxShadow: '0 8px 20px rgba(11,124,57,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>Continuer <Icon name="arrow-r" size={18} color="#fff" strokeWidth={2.4}/></button>
         </div>
       }>
         <div data-screen-label="Aperçu de l'annonce">
           <div style={{ position: 'relative', height: 300 }}>
             <Img src={coverImg} style={{ position: 'absolute', inset: 0 }}/>
-            <button onClick={() => setPreview(false)} style={{ position: 'absolute', top: APP_HEADER_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.92)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
+            <button onClick={() => setPreview(false)} style={{ position: 'absolute', top: APP_HEADER_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.92)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/></button>
             <span style={{ position: 'absolute', top: APP_HEADER_TOP_PLUS_4, right: 14, fontFamily: FX, fontWeight: 800, fontSize: 11.5, color: '#fff', background: 'rgba(0,0,0,0.4)', padding: '5px 11px', borderRadius: 999 }}>Aperçu</span>
             {media.length > 1 && <span style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.6)', color: '#fff', fontFamily: FX, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 999 }}>1 / {media.length}</span>}
           </div>
@@ -8318,7 +8306,7 @@ function PublierScreen() {
             </div>
             <h1 style={{ margin: '8px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 20, color: OK.ink, lineHeight: 1.25 }}>{title || 'Titre de votre annonce'}</h1>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>
-              <LIcon name="pin" size={14} color={OK.ink3} strokeWidth={2}/> {needsLoc && loc ? loc : 'Libreville'} · à l’instant
+              <Icon name="pin" size={14} color={OK.ink3} strokeWidth={2}/> {needsLoc && loc ? loc : 'Libreville'} · à l’instant
             </div>
             {Object.keys(form).length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
@@ -8347,7 +8335,7 @@ function PublierScreen() {
       <Screen bg={OK.bg2} statusDark={true}>
         <div data-screen-label="Annonce publiée" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 30px', textAlign: 'center' }}>
           <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}>
-            <LIcon name="check" size={48} color="#fff" strokeWidth={3}/>
+            <Icon name="check" size={48} color="#fff" strokeWidth={3}/>
           </div>
           <h1 style={{ margin: '24px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 26, color: OK.ink, letterSpacing: -0.4 }}>Annonce publiée ! 🎉</h1>
           <p style={{ margin: '12px 0 0', fontFamily: FX, fontSize: 14, color: OK.ink2, lineHeight: 1.55, maxWidth: 280 }}>
@@ -8404,7 +8392,7 @@ function PublierScreen() {
                   display: 'flex', flexDirection: 'column' }}>
                   <div style={{ position: 'relative', height: 92 }}>
                     <Img src={csrc} style={{ position: 'absolute', inset: 0, backgroundPosition: cpos }} overlay={sel === c.id ? 'linear-gradient(180deg, rgba(11,124,57,0.1), rgba(11,124,57,0.32))' : 'linear-gradient(180deg, rgba(0,0,0,0.05), rgba(0,0,0,0.28))'}/>
-                    {sel === c.id && <div style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }}><LIcon name="check" size={14} color="#fff" strokeWidth={3}/></div>}
+                    {sel === c.id && <div style={{ position: 'absolute', top: 8, right: 8, width: 24, height: 24, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.25)' }}><Icon name="check" size={14} color="#fff" strokeWidth={3}/></div>}
                   </div>
                   <span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, padding: '11px 14px' }}>{c.label}</span>
                 </button>
@@ -8484,7 +8472,7 @@ function PublierScreen() {
                   </div>
                   <button onClick={() => setNego(v => !v)} style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 11, width: '100%', background: nego ? 'rgba(11,124,57,0.06)' : '#fff', border: `1.5px solid ${nego ? OK.green : OK.line}`, borderRadius: 13, padding: '12px 13px', cursor: 'pointer', textAlign: 'left', transition: 'all .12s ease' }}>
                     <span style={{ width: 22, height: 22, borderRadius: 7, flexShrink: 0, background: nego ? OK.green : '#fff', border: nego ? 'none' : `1.5px solid ${OK.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {nego && <LIcon name="check" size={14} color="#fff" strokeWidth={3}/>}
+                      {nego && <Icon name="check" size={14} color="#fff" strokeWidth={3}/>}
                     </span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>Prix à débattre</div>
@@ -8494,7 +8482,7 @@ function PublierScreen() {
                 </div>
               ) : (
                 <div style={{ background: 'rgba(11,124,57,0.06)', border: `1px dashed ${OK.green}`, borderRadius: 13, padding: '14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <LIcon name="message" size={18} color={OK.green} strokeWidth={2}/>
+                  <Icon name="message" size={18} color={OK.green} strokeWidth={2}/>
                   <span style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink2, lineHeight: 1.45 }}>{priceMode === 'Gratuit' ? 'Article proposé gratuitement.' : 'Le prix sera discuté directement avec les acheteurs intéressés.'}</span>
                 </div>
               )}
@@ -8511,10 +8499,10 @@ function PublierScreen() {
             <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
               <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={onFiles}/>
               <button onClick={() => fileRef.current && fileRef.current.click()} style={{ flex: 1, height: 46, borderRadius: 12, border: `1.5px solid ${OK.green}`, background: 'rgba(11,124,57,0.06)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.green }}>
-                <LIcon name="camera" size={18} color={OK.green} strokeWidth={2}/> Photo
+                <Icon name="camera" size={18} color={OK.green} strokeWidth={2}/> Photo
               </button>
               <button onClick={() => setMedia(m => [...m, { type: 'video' }])} style={{ flex: 1, height: 46, borderRadius: 12, border: `1.5px solid ${OK.red}`, background: 'rgba(224,36,27,0.05)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.red }}>
-                <LIcon name="video" size={18} color={OK.red} strokeWidth={2}/> Vidéo
+                <Icon name="video" size={18} color={OK.red} strokeWidth={2}/> Vidéo
               </button>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 14 }}>
@@ -8527,12 +8515,12 @@ function PublierScreen() {
                   ][i % 3]} style={{ position: 'absolute', inset: 0 }}/>
                   {m.type === 'video' && (
                     <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.28)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ width: 34, height: 34, borderRadius: 999, background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="video" size={17} color={OK.red} strokeWidth={2}/></div>
+                      <div style={{ width: 34, height: 34, borderRadius: 999, background: 'rgba(255,255,255,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="video" size={17} color={OK.red} strokeWidth={2}/></div>
                     </div>
                   )}
                   {i === 0 && <span style={{ position: 'absolute', bottom: 5, left: 5, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 8.5, fontWeight: 800, padding: '2px 6px', borderRadius: 6 }}>Couverture</span>}
                   <button onClick={() => setMedia(p => p.filter((_, j) => j !== i))} style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 'none', background: 'rgba(0,0,0,0.6)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <LIcon name="close" size={12} color="#fff" strokeWidth={2.4}/>
+                    <Icon name="close" size={12} color="#fff" strokeWidth={2.4}/>
                   </button>
                 </div>
               ))}
@@ -8547,12 +8535,12 @@ function PublierScreen() {
               {cfg.locReq ? 'Cette annonce est liée à un lieu précis — indiquez-le pour aider les intéressés à le situer.' : 'Facultatif — précisez une zone si c’est utile pour ce service.'}
             </p>
             <div style={{ ...PUB_FIELD, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <LIcon name="pin" size={16} color={OK.green} strokeWidth={2}/>
+              <Icon name="pin" size={16} color={OK.green} strokeWidth={2}/>
               <input value={loc} onChange={e => setLoc(e.target.value)} placeholder="Ex : Quartier Louis · Libreville" style={{ flex: 1, border: 'none', outline: 'none', background: 'transparent', fontFamily: FX, fontSize: 14, color: OK.ink }}/>
             </div>
             <div style={{ height: 150, borderRadius: 14, overflow: 'hidden', position: 'relative', border: `1px solid ${OK.line}` }}>
               <Img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=600&q=80&auto=format&fit=crop" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(11,124,57,0.05), rgba(11,124,57,0.18))"/>
-              <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-100%)' }}><LIcon name="pin" size={34} color={OK.green} strokeWidth={2.2}/></div>
+              <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-100%)' }}><Icon name="pin" size={34} color={OK.green} strokeWidth={2.2}/></div>
             </div>
           </div>
         )}
@@ -8581,14 +8569,14 @@ function PublierScreen() {
                         {p.per && <span style={{ fontFamily: FX, fontSize: 11, fontWeight: 600, color: OK.ink3 }}>{p.per}</span>}
                       </div>
                       <span style={{ width: 22, height: 22, borderRadius: 999, flexShrink: 0, border: on ? 'none' : `2px solid ${OK.line}`, background: on ? p.tone : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {on && <LIcon name="check" size={13} color="#fff" strokeWidth={3}/>}
+                        {on && <Icon name="check" size={13} color="#fff" strokeWidth={3}/>}
                       </span>
                     </div>
                     {on && (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12, paddingTop: 12, borderTop: `1px solid ${OK.line}` }}>
                         {p.perks.map(perk => (
                           <div key={perk} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
-                            <span style={{ flexShrink: 0, marginTop: 1 }}><LIcon name="check" size={14} color={p.tone} strokeWidth={2.8}/></span>
+                            <span style={{ flexShrink: 0, marginTop: 1 }}><Icon name="check" size={14} color={p.tone} strokeWidth={2.8}/></span>
                             <span style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, lineHeight: 1.35 }}>{perk}</span>
                           </div>
                         ))}
@@ -8631,7 +8619,7 @@ function NotificationsScreen() {
               background: n.unread && !readAll ? 'rgba(11,124,57,0.05)' : 'transparent', position: 'relative' }}>
               <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, background: n.tone + '1a',
                 display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <LIcon name={n.icon} size={20} color={n.tone} strokeWidth={2}/>
+                <Icon name={n.icon} size={20} color={n.tone} strokeWidth={2}/>
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink, lineHeight: 1.25 }}>{n.title}</div>
@@ -8668,7 +8656,7 @@ function MessagesScreen() {
               background: 'transparent', cursor: 'pointer', borderBottom: `1px solid ${OK.line}` }}>
               <div style={{ position: 'relative' }}>
                 <Avatar src={t.shop.avatar} size={52} radius={15}/>
-                {t.shop.verified && <span style={{ position: 'absolute', bottom: -2, right: -2, width: 18, height: 18, borderRadius: 999, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><LIcon name="verified" size={16} color={OK.green} strokeWidth={2}/></span>}
+                {t.shop.verified && <span style={{ position: 'absolute', bottom: -2, right: -2, width: 18, height: 18, borderRadius: 999, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="verified" size={16} color={OK.green} strokeWidth={2}/></span>}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -8714,18 +8702,18 @@ function ChatScreen({ params }) {
         {/* Header vert */}
         <div style={{ padding: `${APP_HEADER_TOP} 14px 12px`, display: 'flex', alignItems: 'center', gap: 10, background: OK.green, boxShadow: '0 2px 10px rgba(0,0,0,0.12)' }}>
           <button onClick={back} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="back" size={18} color="#fff" strokeWidth={2.2}/>
+            <Icon name="back" size={18} color="#fff" strokeWidth={2.2}/>
           </button>
           <Avatar src={shop.avatar} size={40} radius={12}/>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
               <span style={{ fontFamily: FX, fontSize: 14.5, fontWeight: 800, color: '#fff' }}>{shop.name}</span>
-              {shop.verified && <LIcon name="verified" size={13} color={OK.gold} strokeWidth={2}/>}
+              {shop.verified && <Icon name="verified" size={13} color={OK.gold} strokeWidth={2}/>}
             </div>
             <div style={{ fontFamily: FX, fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>● En ligne</div>
           </div>
           <button onClick={() => notifyDemo(`Appel de ${shop.name}`)} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="phone" size={17} color="#fff" strokeWidth={2}/>
+            <Icon name="phone" size={17} color="#fff" strokeWidth={2}/>
           </button>
         </div>
         {/* Messages */}
@@ -8745,12 +8733,12 @@ function ChatScreen({ params }) {
         {/* Composer */}
         <div style={{ padding: '10px 14px 28px', borderTop: `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', gap: 10 }}>
           <button onClick={() => notifyDemo('Pièces jointes ouvertes')} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', background: OK.bg2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <LIcon name="plus" size={20} color={OK.ink2} strokeWidth={2.2}/>
+            <Icon name="plus" size={20} color={OK.ink2} strokeWidth={2.2}/>
           </button>
           <input value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && sendMessage()}
             aria-label="Votre message" placeholder="Votre message…" style={{ flex: 1, minWidth: 0, height: 44, background: OK.bg2, borderRadius: 999, border: `1px solid ${OK.line}`, padding: '0 16px', outline: 'none', fontFamily: FX, fontSize: 13.5, color: OK.ink }}/>
           <button onClick={sendMessage} disabled={!draft.trim()} style={{ width: 44, height: 44, borderRadius: 999, border: 'none', background: draft.trim() ? OK.green : '#A9B9AF', cursor: draft.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: draft.trim() ? '0 4px 12px rgba(11,124,57,0.3)' : 'none' }}>
-            <LIcon name="send" size={19} color="#fff" strokeWidth={2.2}/>
+            <Icon name="send" size={19} color="#fff" strokeWidth={2.2}/>
           </button>
         </div>
       </div>
@@ -8853,7 +8841,7 @@ function AccountSwitcherSheet({ open, onClose, profiles, activeId, onPick, onAdd
             <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink3, marginTop: 2 }}>Publiez et échangez au nom du compte choisi</div>
           </div>
           <button onClick={onClose} aria-label="Fermer" style={{ width: 34, height: 34, borderRadius: 999, border: 'none', background: OK.bg2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="close" size={16} color={OK.ink} strokeWidth={2.4}/>
+            <Icon name="close" size={16} color={OK.ink} strokeWidth={2.4}/>
           </button>
         </div>
         {[['personal', 'Compte personnel'], ['company', 'Mes entreprises']].map(([type, title]) => {
@@ -8872,13 +8860,13 @@ function AccountSwitcherSheet({ open, onClose, profiles, activeId, onPick, onAdd
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                         <span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</span>
-                        {p.verified && <LIcon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
+                        {p.verified && <Icon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
                       </div>
                       <div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{profileSubtitle(p)}</div>
                     </div>
                     <span style={{ width: 22, height: 22, borderRadius: 999, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
                       border: on ? 'none' : `2px solid ${OK.line}`, background: on ? OK.green : 'transparent' }}>
-                      {on && <LIcon name="check" size={13} color="#fff" strokeWidth={3}/>}
+                      {on && <Icon name="check" size={13} color="#fff" strokeWidth={3}/>}
                     </span>
                   </button>
                 );
@@ -8889,10 +8877,10 @@ function AccountSwitcherSheet({ open, onClose, profiles, activeId, onPick, onAdd
         <button onClick={onAdd} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 10px', marginTop: 4, borderRadius: 14,
           border: `1.5px dashed ${OK.line}`, background: '#fff', cursor: 'pointer', textAlign: 'left' }}>
           <span style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <LIcon name="plus" size={19} color={OK.green} strokeWidth={2.4}/>
+            <Icon name="plus" size={19} color={OK.green} strokeWidth={2.4}/>
           </span>
           <span style={{ flex: 1, fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.green }}>Ajouter une entreprise</span>
-          <LIcon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
+          <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
         </button>
       </div>
     </div>
@@ -8944,17 +8932,17 @@ function CompteScreen() {
               <ProfileAvatar profile={active} size={68}/>
               <button onClick={() => navigate('profil')} aria-label="Modifier la photo" style={{ position: 'absolute', right: -4, bottom: -4, width: 26, height: 26, borderRadius: 999,
                 border: '2px solid #fff', background: OK.green, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <LIcon name="camera" size={12} color="#fff" strokeWidth={2.2}/>
+                <Icon name="camera" size={12} color="#fff" strokeWidth={2.2}/>
               </button>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 9 }}>
               <span style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.ink, letterSpacing: -0.3 }}>{active.name}</span>
-              {active.verified && <LIcon name="verified" size={16} color={OK.green} strokeWidth={2}/>}
+              {active.verified && <Icon name="verified" size={16} color={OK.green} strokeWidth={2}/>}
             </div>
             <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, marginTop: 3 }}>{profileSubtitle(active)}</div>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 7, padding: '3px 9px', borderRadius: 999, fontFamily: FX, fontSize: 11, fontWeight: 800,
               background: company ? 'rgba(245,184,0,0.18)' : 'rgba(11,124,57,0.08)', color: company ? '#8A6B00' : OK.green }}>
-              <LIcon name={company ? 'briefcase' : 'user'} size={12} color={company ? '#8A6B00' : OK.green} strokeWidth={2.2}/>
+              <Icon name={company ? 'briefcase' : 'user'} size={12} color={company ? '#8A6B00' : OK.green} strokeWidth={2.2}/>
               {company ? 'Compte entreprise' : 'Compte personnel'}
             </span>
             {/* Indicateurs de confiance (modèle Airbnb / Vinted) */}
@@ -8969,10 +8957,10 @@ function CompteScreen() {
             {/* Deux actions explicites, libellées, à portée de pouce */}
             <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
               <button onClick={() => navigate('profil')} style={actionBtn(true)}>
-                <LIcon name="edit" size={15} color="#fff" strokeWidth={2.2}/> Modifier le profil
+                <Icon name="edit" size={15} color="#fff" strokeWidth={2.2}/> Modifier le profil
               </button>
               <button onClick={() => setSwitcher(true)} style={actionBtn(false)} aria-haspopup="dialog">
-                <LIcon name="swap" size={15} color={OK.green} strokeWidth={2.2}/> Changer de compte
+                <Icon name="swap" size={15} color={OK.green} strokeWidth={2.2}/> Changer de compte
               </button>
             </div>
           </div>
@@ -8987,11 +8975,11 @@ function CompteScreen() {
                   <button key={r.l} onClick={r.go} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 13, padding: '13px 15px', border: 'none',
                     borderTop: i ? `1px solid ${OK.line}` : 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
                     <div style={{ width: 36, height: 36, borderRadius: 11, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <LIcon name={r.ic} size={17} color={OK.green} strokeWidth={2}/>
+                      <Icon name={r.ic} size={17} color={OK.green} strokeWidth={2}/>
                     </div>
                     <span style={{ flex: 1, fontFamily: FX, fontSize: 14, fontWeight: 700, color: OK.ink }}>{r.l}</span>
                     {r.badge && <span style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: r.badge === 'Nouveau' ? '#8A6B00' : OK.ink3, background: r.badge === 'Nouveau' ? 'rgba(245,184,0,0.22)' : OK.bg2, padding: '3px 9px', borderRadius: 999 }}>{r.badge}</span>}
-                    <LIcon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
+                    <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
                   </button>
                 ))}
               </div>
@@ -9000,7 +8988,7 @@ function CompteScreen() {
           <button onClick={() => { clearOkabaDemoSession(); reset('welcome'); }} style={{ width: '100%', marginTop: 18, height: 50, borderRadius: 13, border: `1.5px solid ${OK.line}`,
             background: '#fff', color: OK.red, cursor: 'pointer', fontFamily: FX, fontSize: 14, fontWeight: 800,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-            <LIcon name="logout" size={17} color={OK.red} strokeWidth={2}/> Se déconnecter
+            <Icon name="logout" size={17} color={OK.red} strokeWidth={2}/> Se déconnecter
           </button>
           {/* Version de l'application */}
           <div style={{ marginTop: 16, textAlign: 'center', fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink3, letterSpacing: 0.2 }}>
@@ -9047,14 +9035,14 @@ function ProfilInfosScreen() {
           <button onClick={() => notifyDemo('Choisir une nouvelle photo')} aria-label="Changer la photo" style={{ position: 'relative', border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
             <ProfileAvatar profile={active} size={92}/>
             <span style={{ position: 'absolute', right: -4, bottom: -4, width: 32, height: 32, borderRadius: 999, border: '2.5px solid #fff', background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <LIcon name="camera" size={15} color="#fff" strokeWidth={2.2}/>
+              <Icon name="camera" size={15} color="#fff" strokeWidth={2.2}/>
             </span>
           </button>
           <button onClick={() => notifyDemo('Choisir une nouvelle photo')} style={{ marginTop: 10, border: 'none', background: 'none', cursor: 'pointer', fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.green }}>
             Changer la photo
           </button>
           <span style={{ marginTop: 6, display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 999, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink2 }}>
-            <LIcon name={company ? 'briefcase' : 'user'} size={12} color={OK.ink2} strokeWidth={2.2}/>
+            <Icon name={company ? 'briefcase' : 'user'} size={12} color={OK.ink2} strokeWidth={2.2}/>
             {company ? 'Compte entreprise' : 'Compte personnel'}
           </span>
         </div>
