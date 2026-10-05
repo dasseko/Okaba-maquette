@@ -2536,7 +2536,7 @@ const HERO_SLIDES = [
 const HOME_CATS = [
   { id: 'resto',  label: 'Restaurants', icon: 'restaurant', color: '#0A6A2F', tint: '#E7F2EB', target: 'annuaire', param: 'restaurants' },
   { id: 'shop',   label: 'Shopping',    icon: 'shop',       color: '#15924B', tint: '#E8F5ED', target: 'market',   param: 'all' },
-  { id: 'hotel',  label: 'Hôtels',      icon: 'hotel',      color: '#C98A00', tint: '#FBF1D9', target: 'annuaire', param: 'hotel' },
+  { id: 'hotel',  label: 'Hôtels',      icon: 'hotel',      color: '#3E6AA5', tint: '#E7EDF6', target: 'annuaire', param: 'hotel' },
   { id: 'tour',   label: 'Tourisme',    icon: 'travel',     color: '#0E8C86', tint: '#DEF1F0', target: 'tourisme' },
   { id: 'mkt',    label: 'Marketplace', icon: 'tag',        color: '#B5531E', tint: '#F7E8DF', target: 'market',   param: 'all' },
   { id: 'event',  label: 'Événements',  icon: 'calendar',   color: '#2D6FB3', tint: '#E4EEF8', target: 'events' },
@@ -2592,58 +2592,59 @@ function HomeScreen() {
       <div data-screen-label="Accueil" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div data-home-scroll style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 132 }}>
 
-          {/* ═══ HEADER (marque + recherche) ═══ */}
-          <div style={{ background: `linear-gradient(165deg, ${OK.greenMid} 0%, ${OK.green} 54%, ${OK.greenDeep} 100%)`, padding: `${APP_SAFE_TOP} 16px 22px` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <Wordmark size={24}/>
-                <div style={{ fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 600, color: 'rgba(255,255,255,0.88)', marginTop: 2, letterSpacing: 0.3 }}>Le Gabon dans vos mains</div>
-              </div>
-              <button aria-label="Changer de ville" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.28)', borderRadius: 999, padding: '6px 11px', cursor: 'pointer' }}>
-                <Icon name="pin" size={12} color={OK.gold} strokeWidth={2.4}/>
-                <span style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 12, color: '#fff' }}>Libreville</span>
-                <Icon name="chev-d" size={11} color="rgba(255,255,255,0.8)" strokeWidth={2.6}/>
-              </button>
-              <button aria-label="Notifications" onClick={() => navigate('notifications')} style={{ position: 'relative', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.28)', borderRadius: 999, width: 37, height: 37, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <Icon name="bell" size={17} color="#fff" strokeWidth={2}/>
-                <span style={{ position: 'absolute', top: -4, right: -4, minWidth: 16, height: 16, padding: '0 3px', borderRadius: 999, background: OK.red, color: '#fff', fontSize: 9, fontWeight: 800, fontFamily: FONT_UI, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(255,255,255,0.9)' }}>3</span>
-              </button>
-              <button aria-label="Profil" onClick={() => navigate('compte')} style={{ width: 37, height: 37, borderRadius: 999, border: '2px solid rgba(255,255,255,0.8)', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
-                <Icon name="user" size={18} color="#fff" strokeWidth={2.1}/>
-              </button>
-            </div>
-            <button onClick={() => go('market', 'all')} style={{ marginTop: 14, width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 15, padding: '13px 14px', boxShadow: '0 6px 16px rgba(0,0,0,0.20)', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
-              <Icon name="search" size={18} color={OK.green} strokeWidth={2.4}/>
-              <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>Rechercher un établissement, un produit, un service…</span>
-              <span style={{ width: 32, height: 32, borderRadius: 10, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="qr" size={16} color="#fff" strokeWidth={2}/></span>
-            </button>
-          </div>
-
-          {/* ═══ CARD-SLIDER « À LA UNE » (arrondi, chevauche le header) ═══ */}
-          <div style={{ padding: '0 16px', marginTop: -14 }}>
-            <div style={{ position: 'relative', height: 196, borderRadius: 22, overflow: 'hidden', boxShadow: PSH }}>
-              {HERO_SLIDES.map((s, i) => (
-                <div key={s.id} aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: `url('${s.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === slide ? 1 : 0, transition: 'opacity .8s ease' }}/>
-              ))}
-              <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(4,34,18,0.9) 0%, rgba(4,34,18,0.55) 44%, rgba(4,34,18,0.1) 80%)' }}/>
-              <div style={{ position: 'absolute', left: 17, right: 17, top: 16, bottom: 16, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <span style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 5, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 9, letterSpacing: 0.6, padding: '4px 9px', borderRadius: 999 }}>
-                  <span style={{ width: 4.5, height: 4.5, borderRadius: 5, background: OK.red }}/>{hero.badge}
-                </span>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 25, color: '#fff', lineHeight: 1.04, marginTop: 9, letterSpacing: -0.6, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{hero.title}</div>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 12, color: 'rgba(255,255,255,0.9)', marginTop: 5, maxWidth: 215, lineHeight: 1.3, textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>{hero.subtitle}</div>
-                <button onClick={() => navigate(hero.target)} style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 13, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '9px 15px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(245,184,0,0.45)' }}>
-                  {hero.cta}<Icon name="arrow-r" size={14} color="#3a2c00" strokeWidth={2.6}/>
+          {/* ═══ HERO (image de fond + recherche + à la une) ═══ */}
+          <div style={{ position: 'relative', minHeight: 404 }}>
+            {HERO_SLIDES.map((s, i) => (
+              <div key={s.id} aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: `url('${s.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === slide ? 1 : 0, transition: 'opacity .9s ease' }}/>
+            ))}
+            <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,26,14,0.64) 0%, rgba(3,26,14,0.26) 28%, rgba(3,26,14,0.24) 50%, rgba(3,26,14,0.88) 100%)' }}/>
+            <div style={{ position: 'relative', padding: `${APP_SAFE_TOP} 16px 0`, minHeight: 404, display: 'flex', flexDirection: 'column' }}>
+              {/* ligne 1 : logo + cloche + profil */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ flex: 1, minWidth: 0 }}><Wordmark size={24}/></div>
+                <button aria-label="Notifications" onClick={() => navigate('notifications')} style={{ position: 'relative', background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 999, width: 38, height: 38, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <Icon name="bell" size={18} color="#fff" strokeWidth={2}/>
+                  <span style={{ position: 'absolute', top: -4, right: -4, minWidth: 16, height: 16, padding: '0 3px', borderRadius: 999, background: OK.red, color: '#fff', fontSize: 9, fontWeight: 800, fontFamily: FONT_UI, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(255,255,255,0.9)' }}>3</span>
+                </button>
+                <button aria-label="Profil" onClick={() => navigate('compte')} style={{ width: 38, height: 38, borderRadius: 999, border: '2px solid rgba(255,255,255,0.8)', background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
+                  <Icon name="user" size={18} color="#fff" strokeWidth={2.1}/>
                 </button>
               </div>
-              <div style={{ position: 'absolute', right: 14, bottom: 13, display: 'flex', gap: 5 }}>
-                {HERO_SLIDES.map((s, i) => <button key={s.id} onClick={() => setSlide(i)} aria-label={`Diapo ${i + 1}`} style={{ width: i === slide ? 18 : 6, height: 6, borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer', background: i === slide ? OK.gold : 'rgba(255,255,255,0.6)', transition: 'width .35s ease' }}/>)}
+              {/* ligne 2 : localisation */}
+              <button aria-label="Changer de ville" style={{ marginTop: 9, alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 5, background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
+                <Icon name="pin" size={13} color="#fff" strokeWidth={2.2}/>
+                <span style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 12.5, color: '#fff' }}>Libreville</span>
+                <Icon name="chev-d" size={12} color="rgba(255,255,255,0.85)" strokeWidth={2.6}/>
+              </button>
+              {/* recherche */}
+              <button onClick={() => go('market', 'all')} style={{ marginTop: 11, width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 15, padding: '13px 14px', boxShadow: '0 8px 22px rgba(0,0,0,0.26)', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
+                <Icon name="search" size={18} color={OK.green} strokeWidth={2.4}/>
+                <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>Rechercher un établissement, un produit, un service…</span>
+                <span style={{ width: 32, height: 32, borderRadius: 10, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="qr" size={16} color="#fff" strokeWidth={2}/></span>
+              </button>
+              {/* à la une */}
+              <div style={{ flex: 1 }}/>
+              <div style={{ paddingBottom: 38 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                  <span style={{ width: 24, height: 2.5, background: '#fff', borderRadius: 3 }}/>
+                  <span style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 10, letterSpacing: 1.6, color: '#fff' }}>{hero.badge}</span>
+                </div>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 30, color: '#fff', lineHeight: 1.05, marginTop: 10, letterSpacing: -0.7, textShadow: '0 2px 14px rgba(0,0,0,0.5)' }}>{hero.title}</div>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 13, color: 'rgba(255,255,255,0.9)', marginTop: 6, maxWidth: 264, lineHeight: 1.35, textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>{hero.subtitle}</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 15 }}>
+                  <button onClick={() => navigate(hero.target)} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 13, padding: '11px 18px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 6px 16px rgba(0,0,0,0.25)' }}>
+                    {hero.cta}<Icon name="arrow-r" size={15} color={OK.green} strokeWidth={2.6}/>
+                  </button>
+                  <div style={{ display: 'flex', gap: 5 }}>
+                    {HERO_SLIDES.map((s, i) => <button key={s.id} onClick={() => setSlide(i)} aria-label={`Diapo ${i + 1}`} style={{ width: i === slide ? 22 : 7, height: 7, borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer', background: i === slide ? '#fff' : 'rgba(255,255,255,0.45)', transition: 'width .35s ease' }}/>)}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* ═══ CONTENU ═══ */}
-          <div style={{ paddingTop: 4 }}>
+          {/* ═══ CONTENU (feuille arrondie) ═══ */}
+          <div style={{ position: 'relative', marginTop: -24, background: OK.bg2, borderRadius: '26px 26px 0 0', paddingTop: 24, boxShadow: '0 -12px 28px rgba(3,26,14,0.2)' }}>
 
             {/* CATÉGORIES — grandes tuiles aérées */}
             <div style={{ display: 'flex', gap: 15, overflowX: 'auto', padding: '14px 18px 4px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
@@ -2675,7 +2676,7 @@ function HomeScreen() {
                     {['Restaurants', 'Hôtels', 'Loisirs'].map(ch => (
                       <span key={ch} style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.28)', padding: '5px 10px', borderRadius: 999 }}>{ch}</span>
                     ))}
-                    <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '10px 15px', borderRadius: 999 }}>Explorer<Icon name="arrow-r" size={14} color="#3a2c00" strokeWidth={2.6}/></span>
+                    <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '10px 15px', borderRadius: 999 }}>Explorer<Icon name="arrow-r" size={14} color={OK.green} strokeWidth={2.6}/></span>
                   </div>
                 </div>
               </button>
