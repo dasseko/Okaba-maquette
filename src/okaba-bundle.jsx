@@ -167,6 +167,7 @@ const Icon = ({ name, size = 22, color = '#0E6B34', strokeWidth = 1.8, fill = 'n
     case 'gift':       return <svg {...p}><rect x="4" y="9" width="16" height="11" rx="1"/><path d="M4 13h16M12 9v11M12 9S9 9 9 6.5 12 9 12 9zM12 9s3 0 3-2.5S12 9 12 9z"/></svg>;
     case 'ticket':     return <svg {...p}><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2 2 2 0 0 0 0 4 2 2 0 0 1-2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2 2 2 0 0 0 0-4 2 2 0 0 1 0-4z"/><path d="M9 6v12" strokeDasharray="2 2"/></svg>;
     case 'edit':       return <svg {...p}><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>;
+    case 'swap':       return <svg {...p}><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg>;
     case 'key':        return <svg {...p}><circle cx="8" cy="8" r="4.5"/><path d="M11 11l9 9M17 17l2-2M14 14l2-2"/></svg>;
     case 'help':       return <svg {...p}><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 .9-1 1.7M12 17h0"/></svg>;
     case 'history':    return <svg {...p}><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 4v4h4M12 8v4l3 2"/></svg>;
@@ -1732,9 +1733,9 @@ function TabBar() {
 // transparente. Le haut de l'écran (couleur d'en-tête OU image) se prolonge donc
 // naturellement sous la barre de statut. Les en-têtes intègrent la zone sûre via
 // APP_HEADER_TOP. `lightStatus` = le haut est clair → icônes de statut sombres.
-function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, noScroll = false, scrollRef, footer, footerPad = 0, edgeTop = false, lightStatus = false }) {
+function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, noScroll = false, scrollRef, footer, footerPad = 0, edgeTop = false, lightStatus = false, className }) {
   return (
-    <div style={{
+    <div className={className} style={{
       position: 'absolute', inset: 0, background: bg,
       fontFamily: FONT_UI, color: OKABA.ink, WebkitFontSmoothing: 'antialiased',
       overflow: 'hidden', overscrollBehavior: 'none', contain: 'layout paint',
@@ -2365,17 +2366,17 @@ const EmptyState = ({ icon = 'search', title, body, ctaLabel, onCta }) => (
 );
 
 // En-tête vert standard (titre + retour) — pour les écrans internes
-const GreenHeader = ({ title, onBack, right }) => (
-  <div style={{ position: 'sticky', top: 0, zIndex: 30, background: OK.green,
+const GreenHeader = ({ title, onBack, right, light = false, flat = false }) => (
+  <div className={light ? 'green-header-light' : undefined} style={{ position: 'sticky', top: 0, zIndex: 30, background: light ? '#fff' : OK.green,
     padding: `${APP_HEADER_TOP} 14px 12px`, display: 'flex', alignItems: 'center', gap: 10,
-    boxShadow: '0 2px 10px rgba(0,0,0,0.12)' }}>
+    boxShadow: flat ? 'none' : light ? '0 1px 0 rgba(20,50,30,.08)' : '0 2px 10px rgba(0,0,0,0.12)' }}>
     {onBack && (
       <button onClick={onBack} style={{ width: 38, height: 38, borderRadius: 999, border: 'none', cursor: 'pointer', flexShrink: 0,
-        background: 'rgba(255,255,255,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name="back" size={19} color="#fff" strokeWidth={2.4}/>
+        background: light ? '#F1F5F1' : 'rgba(255,255,255,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon name="back" size={19} color={light ? OK.green : '#fff'} strokeWidth={2.4}/>
       </button>
     )}
-    <div style={{ flex: 1, fontFamily: F, fontWeight: 800, fontSize: 19, color: '#fff', letterSpacing: -0.2,
+    <div style={{ flex: 1, fontFamily: F, fontWeight: 800, fontSize: 19, color: light ? OK.ink : '#fff', letterSpacing: -0.2,
       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</div>
     {right}
   </div>
@@ -2383,13 +2384,13 @@ const GreenHeader = ({ title, onBack, right }) => (
 
 // Navigation fixe des écrans à grande couverture. Elle reste transparente au
 // départ puis protège le contenu avec un fond vert dès que la page défile.
-const DetailOverlayHeader = ({ solid, title, onBack, onAction, actionIcon = 'share', actionLabel = 'Partager' }) => (
+const DetailOverlayHeader = ({ solid, title, onBack, onAction, actionIcon = 'share', actionLabel = 'Partager', light = false }) => (
   <>
     <div aria-hidden style={{ position: 'absolute', zIndex: 40, top: 0, left: 0, right: 0,
       height: `calc(${APP_DETAIL_HEADER_HEIGHT} + ${APP_SAFE_TOP})`, pointerEvents: 'none',
-      background: solid ? OK.green : 'transparent',
-      borderBottom: solid ? '1px solid rgba(255,255,255,0.16)' : '1px solid transparent',
-      boxShadow: solid ? '0 5px 18px rgba(0,0,0,0.14)' : 'none',
+      background: solid ? (light ? '#fff' : OK.green) : 'transparent',
+      borderBottom: solid ? (light ? '1px solid rgba(15,60,30,0.08)' : '1px solid rgba(255,255,255,0.16)') : '1px solid transparent',
+      boxShadow: solid ? (light ? '0 3px 14px rgba(15,50,25,0.08)' : '0 5px 18px rgba(0,0,0,0.14)') : 'none',
       transition: 'background .12s ease, box-shadow .12s ease' }}/>
     <div style={{ position: 'absolute', zIndex: 50, top: APP_EDGE_TOP, left: 14, right: 14,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
@@ -2399,11 +2400,11 @@ const DetailOverlayHeader = ({ solid, title, onBack, onAction, actionIcon = 'sha
         <Icon name="back" size={19} color={OK.ink} strokeWidth={2.2}/>
       </button>
       <div style={{ flex: 1, minWidth: 0, textAlign: 'center', opacity: solid ? 1 : 0, transition: 'opacity .15s ease',
-        fontFamily: F, fontSize: 14, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</div>
+        fontFamily: F, fontSize: 14, fontWeight: 800, color: light && solid ? OK.ink : '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{title}</div>
       <button onClick={onAction} aria-label={actionLabel} style={{ width: 40, height: 40, borderRadius: 999, border: 'none', cursor: 'pointer',
-        background: solid ? '#fff' : 'rgba(4,25,12,0.62)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
+        background: light ? (solid ? '#F1F5F1' : 'rgba(255,255,255,0.94)') : solid ? '#fff' : 'rgba(4,25,12,0.62)', boxShadow: '0 2px 10px rgba(0,0,0,0.18)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        <Icon name={actionIcon} size={17} color={solid ? OK.green : '#fff'} strokeWidth={2}/>
+        <Icon name={actionIcon} size={17} color={solid || light ? OK.green : '#fff'} strokeWidth={2}/>
       </button>
     </div>
   </>
@@ -2568,7 +2569,6 @@ function HomeScreen() {
               style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: bannerSlide === index ? 'block' : 'none', animation: bannerSlide === index ? 'okabaCarouselIn .28s ease-out' : 'none', background: '#fff' }}/>) }
           </button>
         </div>
-
         <div style={{ padding: '8px 18px 0', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           <button onClick={() => navigate('services')} style={{ padding: '4px 0', border: 'none', background: 'transparent', color: OK.green, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 800, cursor: 'pointer' }}>Voir plus</button>
         </div>
@@ -4505,7 +4505,7 @@ function BaieHub({ params }) {
   const shown = grp === 'Tout' ? tenants : tenants.filter(t => t.group === grp);
   const events = BAIE_EVENTS.map(ev => ({ ...ev, when: `${ev.date} · ${ev.time}`, img: ev.poster }));
   const card = (t) => (
-    <button key={t.id} onClick={() => navigate('tenant', { id: t.id })} style={{ textAlign: 'left', background: '#fff', borderRadius: 16, overflow: 'hidden', border: `1px solid ${OK.line}`, cursor: 'pointer', padding: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
+    <button key={t.id} className="baie-tenant-card" onClick={() => navigate('tenant', { id: t.id })} style={{ textAlign: 'left', background: '#fff', borderRadius: 16, overflow: 'hidden', border: `1px solid ${OK.line}`, cursor: 'pointer', padding: 0, boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
       <div style={{ position: 'relative', aspectRatio: '4 / 3' }}>
         <Img src={t.img} style={{ position: 'absolute', inset: 0, backgroundSize: t.imgFit || 'cover', backgroundPosition: t.imgPosition || 'center', backgroundColor: t.imgFit === 'contain' ? '#fff' : OK.bg2 }}/>
         {Number.isFinite(t.rating) ? (
@@ -4522,9 +4522,9 @@ function BaieHub({ params }) {
   );
 
   return (
-    <Screen bg={OK.bg2} statusDark={true} tabBar noScroll edgeTop>
-      <div data-screen-label="La Baie des Rois" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        <DetailOverlayHeader solid={headerSolid} title={e.name} onBack={back} onAction={() => notifyDemo('La Baie des Rois prête à être partagée')}/>
+    <Screen className="baie-light-screen" bg={OK.bg2} statusDark={true} tabBar noScroll edgeTop>
+      <div data-screen-label="La Baie des Rois" className="baie-entity-page" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <DetailOverlayHeader light solid={headerSolid} title={e.name} onBack={back} onAction={() => notifyDemo('La Baie des Rois prête à être partagée')}/>
         <div data-screen-scroll="entity-baie" onScroll={event => setHeaderSolid(event.currentTarget.scrollTop > 80)} style={{ position: 'absolute', inset: '0 0 92px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 24 }}>
         {/* Cover */}
         <div style={{ position: 'relative', height: 170 }}>
@@ -4702,33 +4702,33 @@ const BAIE_PLACES = {
   },
   loisirs: {
     title: 'Loisirs & divertissement',
-    cover: bImg('1507525428034-b723cf961d3e', 900),
+    cover: 'assets/baie/c21-promenade-01.webp',
     places: [
-      { id: 'promenade-nord', name: 'Promenade Nord', subtitle: '1,2 km au rythme de l’océan', image: bImg('1507525428034-b723cf961d3e', 900),
+      { id: 'promenade-nord', name: 'Promenade Nord', subtitle: '1,2 km au rythme de l’océan', image: 'assets/baie/c21-promenade-01.webp',
         description: 'Un grand ruban piéton relie les expériences du front de mer et offre à Libreville un espace privilégié pour marcher, courir, respirer et se retrouver.',
         vision: 'Devenir la promenade emblématique de la capitale et la colonne vertébrale des activités de la Baie des Rois.',
         highlights: ['1,2 km', 'Mobilité douce', 'Front de mer'], gallery: ['assets/baie/c21-cover.webp', 'assets/baie/c21-aerial-03.webp'] },
-      { id: 'aires-familles', name: 'Jardins des familles', subtitle: 'Jeux, fraîcheur & découvertes', image: bImg('1519331379826-f10be5486c6f', 900),
+      { id: 'aires-familles', name: 'Jardins des familles', subtitle: 'Jeux, fraîcheur & découvertes', image: 'assets/baie/c21-aerial-04.webp',
         description: 'Des aires de jeux sécurisées et des jardins généreux composent un territoire d’exploration pour les enfants et un lieu de détente pour toutes les générations.',
         vision: 'Faire du front de mer la sortie familiale de référence, inclusive, sûre et active toute l’année.',
         highlights: ['Aires de jeux', 'Jardins', 'Intergénérationnel'], gallery: ['assets/baie/c21-aerial-04.webp', 'assets/baie/c21-cover.webp'] },
-      { id: 'sport-glisse', name: 'Parc sports & glisse', subtitle: 'Bouger face à l’océan', image: bImg('1520045892732-304bc3ac5d8e', 900),
+      { id: 'sport-glisse', name: 'Parc sports & glisse', subtitle: 'Bouger face à l’océan', image: 'assets/baie/acces-mobilite.jpg',
         description: 'Vélo, jogging, fitness et glisse urbaine se rencontrent dans un paysage continu, pensé pour le mouvement et les nouvelles pratiques sportives.',
         vision: 'Créer un équipement urbain fédérateur et une scène sportive visible au cœur de Libreville.',
         highlights: ['Vélo', 'Skate-park', 'Fitness'], gallery: ['assets/baie/c21-aerial-01.webp', 'assets/baie/c21-aerial-04.webp'] },
-      { id: 'marche-producteurs', name: 'Marché des Producteurs', subtitle: 'Le Gabon en circuit court', image: bImg('1488459716781-31db52582fe9', 900),
+      { id: 'marche-producteurs', name: 'Marché des Producteurs', subtitle: 'Le Gabon en circuit court', image: 'assets/baie/c21-building-01.webp',
         description: 'Producteurs, artisans et visiteurs se rencontrent autour des saveurs locales et de produits issus des territoires gabonais.',
         vision: 'Offrir une vitrine régulière aux filières locales et transformer le marché en rendez-vous signature de la destination.',
         highlights: ['Circuits courts', 'Produits locaux', 'Savoir-faire'], gallery: ['assets/baie/c21-building-01.webp', 'assets/baie/c21-cover.webp'] },
-      { id: 'black-friday', name: 'Black Friday', subtitle: 'Shopping & animations sur la baie', image: bImg('1483985988355-763728e1935b', 900),
+      { id: 'black-friday', name: 'Black Friday', subtitle: 'Shopping & animations sur la baie', image: 'assets/baie/c21-event-01.webp',
         description: 'Une journée événementielle mêle offres commerciales, musique et animations pour créer un temps fort populaire sur la promenade.',
         vision: 'Fédérer les enseignes autour d’un rendez-vous à forte fréquentation et amplifier le rayonnement commercial du quartier.',
         highlights: ['Shopping', 'Animations', 'Temps fort mensuel'], gallery: ['assets/baie/c21-cover.webp', 'assets/baie/c21-event-01.webp'] },
-      { id: 'particulier-particulier', name: 'Particulier à Particulier', subtitle: 'Le rendez-vous automobile du samedi', image: bImg('1567818735868-e71b99932e29', 900),
+      { id: 'particulier-particulier', name: 'Particulier à Particulier', subtitle: 'Le rendez-vous automobile du samedi', image: 'assets/baie/c21-site-01.webp',
         description: 'Un espace de rencontre dédié à l’achat, la vente et la découverte de véhicules d’occasion dans un cadre organisé et accessible.',
         vision: 'Structurer un marché visible, rassurant et capable d’attirer chaque semaine une communauté d’acheteurs et de passionnés.',
         highlights: ['Automobile', 'Chaque samedi', 'Mise en relation'], gallery: ['assets/baie/economie-02.jpg', 'assets/baie/c21-cover.webp'] },
-      { id: 'marina', name: 'Marina Baie des Rois', subtitle: 'Libreville tournée vers le large', image: bImg('1569263979104-865ab7cd8d13', 900),
+      { id: 'marina', name: 'Marina Baie des Rois', subtitle: 'Libreville tournée vers le large', image: 'assets/baie/c21-aerial-03.webp',
         description: 'Une marina contemporaine accueille plaisance, services nautiques et expériences sur l’eau dans le prolongement naturel de la promenade.',
         vision: 'Ouvrir une nouvelle économie maritime, connecter la destination aux itinéraires nautiques et enrichir l’offre touristique de Libreville.',
         highlights: ['Plaisance', 'Activités nautiques', 'Économie bleue'], gallery: ['assets/baie/c21-aerial-03.webp', 'assets/baie/c21-cover.webp'] },
@@ -4810,9 +4810,9 @@ function TourismeSpotsScreen({ params }) {
   const cat = TOURISM_CATS.find(item => item.id === category);
   const spots = category === 'all' ? TOURISM_SPOTS : TOURISM_SPOTS.filter(spot => spot.catId === category);
   return (
-    <Screen bg="#F7F7F2" statusDark={true} tabBar>
+    <Screen className="baie-light-screen" bg="#F7F7F2" statusDark={true} tabBar>
       <div data-screen-label={`Tourisme — ${cat?.label || 'Toutes les destinations'}`}>
-        <GreenHeader title={cat?.label || 'Destinations'} onBack={back}/>
+        <GreenHeader light title={cat?.label || 'Destinations'} onBack={back}/>
         {cat && <div style={{ margin: '15px 16px 0', height: 150, position: 'relative', overflow: 'hidden', borderRadius: 19, boxShadow: '0 6px 18px rgba(17,55,30,.14)' }}><Img src={cat.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(4,34,17,.05) 20%, rgba(4,34,17,.72) 100%)"/><div style={{ position: 'absolute', left: 15, right: 15, bottom: 13, fontFamily: FT, fontSize: 20, fontWeight: 900, color: '#fff' }}>{cat.label}</div></div>}
         <div style={{ padding: '16px 16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {spots.map(spot => (
@@ -4849,9 +4849,9 @@ function EventsScreen() {
   // fidèle. Cela évite les visuels génériques ou incohérents hors connexion.
   const allEvents = [...BAIE_EVENTS, EVENTS[0]];
   return (
-    <Screen bg={OK.bg2} statusDark={true} tabBar>
+    <Screen className="baie-light-screen" bg={OK.bg2} statusDark={true} tabBar>
       <div data-screen-label="Événements et sorties">
-        <GreenHeader title="Événements et sorties" onBack={back}/>
+        <GreenHeader light title="Événements et sorties" onBack={back}/>
         <div style={{ padding: '16px 16px 0', display: 'flex', flexDirection: 'column', gap: 13 }}>
           {allEvents.map(event => (
             <button key={event.id} onClick={() => navigate('event', { event })} style={{ width: '100%', height: 190, position: 'relative', overflow: 'hidden', borderRadius: 18, border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', boxShadow: '0 6px 18px rgba(14,48,27,.13)' }}>
@@ -4884,12 +4884,12 @@ function BaieScreen() {
   // SmartCityScreen reste en place, on affiche seulement les 2 modules retenus
   // qui en sont issus (Infos Pratiques, Accès & Mobilité).
   const explore = [
-    { label: 'Établissements', sub: 'Restaurants, boutiques, hôtels, services…', icon: 'shop', tone: OK.green, img: BAIE_PLACES.restaurants.cover, go: () => navigate('entity', { id: 'baie-des-rois' }) },
-    { label: 'Événements', sub: 'Concerts, expositions, activités culturelles…', icon: 'calendar', tone: OK.red, img: (baieEvents[0] || {}).poster || BAIE_PLACES.hotels.cover, go: () => navigate('events') },
-    { label: 'Activités & Loisirs', sub: 'Détente, sport, plage, visites…', icon: 'loisir', tone: OK.blue, img: BAIE_PLACES.loisirs.cover, go: () => navigate('baie-spots', { cat: 'loisirs' }) },
-    { label: 'Infos Pratiques', sub: 'Accès, horaires, plan, services, contacts…', icon: 'info', tone: '#6B3FA0', img: 'assets/smartcity-information.jpg', go: () => navigate('baie-information') },
-    { label: 'Accès & Mobilité', sub: 'Parking, transport, plan d’accès…', icon: 'transport', tone: OK.gold, img: 'assets/baie/acces-mobilite.jpg', go: () => navigate('parking') },
-    { label: 'Partenariats & Opportunités', sub: 'Investir, devenir partenaire, appels à projets…', icon: 'handshake', tone: OK.blue, img: 'assets/baie/partenariats.jpg', go: () => navigate('form-partenariat') },
+    { label: 'Établissements', sub: 'Restaurants · boutiques · hôtels', icon: 'shop', tone: OK.green, img: BAIE_PLACES.restaurants.cover, go: () => navigate('entity', { id: 'baie-des-rois' }) },
+    { label: 'Événements', sub: 'Concerts · culture · sorties', icon: 'calendar', tone: OK.red, img: (baieEvents[0] || {}).poster || BAIE_PLACES.hotels.cover, go: () => navigate('events') },
+    { label: 'Activités & Loisirs', sub: 'Promenade · sport · plage', icon: 'loisir', tone: OK.blue, img: BAIE_PLACES.loisirs.cover, go: () => navigate('baie-spots', { cat: 'loisirs' }) },
+    { label: 'Infos Pratiques', sub: 'Horaires · accès · services', icon: 'info', tone: '#6B3FA0', img: 'assets/smartcity-information.jpg', go: () => navigate('baie-information') },
+    { label: 'Accès & Mobilité', sub: 'Parking · transport · itinéraires', icon: 'transport', tone: OK.gold, img: 'assets/baie/acces-mobilite.jpg', go: () => navigate('parking') },
+    { label: 'Partenariats & Opportunités', sub: 'Projets · investissements', icon: 'handshake', tone: OK.blue, img: 'assets/baie/partenariats.jpg', go: () => navigate('form-partenariat') },
     // { label: 'Smart City', smart: true },
   ];
   const groupImg = g => (tenants.find(t => t.group === g) || {}).img;
@@ -4905,45 +4905,44 @@ function BaieScreen() {
   const featuredSpot = feat[spotSlide] || feat[0];
   return (
     <Screen bg={OK.bg} statusDark={true} noScroll edgeTop>
-      <div data-screen-label="La Baie des Rois" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-        <DetailOverlayHeader solid={headerSolid} title="La Baie des Rois" onBack={back} onAction={() => notifyDemo('La Baie des Rois prête à être partagée')}/>
+      <div data-screen-label="La Baie des Rois" className="baie-home" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <DetailOverlayHeader light solid={headerSolid} title="La Baie des Rois" onBack={back} onAction={() => notifyDemo('La Baie des Rois prête à être partagée')}/>
         <div data-screen-scroll="baie" onScroll={event => setHeaderSolid(event.currentTarget.scrollTop > 100)} style={{ position: 'absolute', inset: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 24 }}>
         {/* Hero */}
-        <div style={{ position: 'relative', height: 300 }}>
+        <div className="baie-home-hero" style={{ position: 'relative', height: 356, background: '#fff' }}>
           <Img src={e.cover || 'assets/baie-cover.png'}
-            style={{ position: 'absolute', inset: 0 }}
-            overlay="linear-gradient(180deg, rgba(4,20,10,0.5) 0%, rgba(4,20,10,0.05) 30%, rgba(4,20,10,0.35) 58%, rgba(4,20,10,0.9) 100%)"/>
-          <div style={{ position: 'absolute', left: 22, right: 22, bottom: 22 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 9 }}>
-              <span style={{ width: 22, height: 2, background: OK.gold, borderRadius: 2 }}/>
-              <span style={{ fontFamily: FT, fontWeight: 800, fontSize: 10.5, letterSpacing: 2.2, color: OK.gold, textTransform: 'uppercase' }}>Projet urbain · Bord de mer</span>
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 238, backgroundPosition: 'center 48%' }}/>
+          <div style={{ position: 'absolute', left: 14, right: 14, bottom: 0, padding: '17px 17px 16px', borderRadius: 22, background: '#fff', boxShadow: '0 8px 26px rgba(16,50,28,.13)', border: '1px solid rgba(16,50,28,.07)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontFamily: FT, fontWeight: 750, fontSize: 10, letterSpacing: 1.1, color: OK.green, textTransform: 'uppercase' }}>Libreville · Front de mer</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, borderRadius: 999, padding: '6px 9px', background: '#EAF6EE', color: '#176B39', fontFamily: FT, fontWeight: 800, fontSize: 10 }}><span style={{ width: 7, height: 7, borderRadius: 7, background: '#2BA65A' }}/>Ouvert</span>
             </div>
-            <h1 style={{ margin: 0, fontFamily: FT, fontWeight: 800, fontSize: 33, lineHeight: 1.03, color: '#fff', letterSpacing: -0.6, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>
-              La Baie des Rois
-            </h1>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 12, fontFamily: FT, color: '#fff' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 700 }}>
-                <span style={{ width: 7, height: 7, borderRadius: 7, background: '#3BD37E' }}/> Ouvert
-              </span>
-              <span style={{ fontSize: 12.5, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>· {tenants.length} établissements</span>
-            </div>
+            <h1 style={{ margin: '8px 0 0', fontFamily: FT, fontWeight: 900, fontSize: 27, lineHeight: 1.05, color: OK.ink, letterSpacing: -0.8 }}>La Baie des Rois</h1>
+            <div style={{ marginTop: 5, fontFamily: FT, fontSize: 12, fontWeight: 650, color: OK.ink3 }}>{tenants.length} adresses pour profiter du front de mer</div>
           </div>
         </div>
 
         {/* Explorer */}
-        <div style={{ padding: '16px 16px 0' }}>
-          <div style={{ fontFamily: FT, fontWeight: 800, fontSize: 20, color: OK.ink, letterSpacing: -0.3, marginBottom: 12 }}>Explorer</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <div className="baie-explore" style={{ padding: '21px 16px 0' }}>
+          <div style={{ marginBottom: 13 }}>
+            <div style={{ fontFamily: FT, fontWeight: 850, fontSize: 21, color: OK.ink, letterSpacing: -0.45 }}>Explorer la Baie</div>
+            <div style={{ marginTop: 4, fontFamily: FT, fontSize: 12, fontWeight: 600, color: OK.ink3 }}>Tout ce qu’il faut pour profiter du front de mer</div>
+          </div>
+          <div className="baie-explore-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 11 }}>
             {explore.map(c => c.go ? (
               <button key={c.label} onClick={c.go} style={{
-                position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
-                <Img src={c.img} style={{ position: 'absolute', inset: 0 }}
-                  overlay="linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.62) 100%)"/>
-                <span style={{ position: 'absolute', left: 12, right: 12, bottom: 10, fontFamily: FT, fontWeight: 800, fontSize: 14, color: '#fff', lineHeight: 1.15, textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}>{c.label}</span>
+                position: 'relative', height: 154, borderRadius: 18, overflow: 'hidden', border: `1px solid ${OK.line}`, cursor: 'pointer', padding: 0, textAlign: 'left', background: '#fff', boxShadow: '0 5px 16px rgba(4,35,18,.08)' }}>
+                <Img src={c.img} style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 76, backgroundPosition: 'center 46%', borderRadius: '17px 17px 0 0' }}/>
+                <span style={{ position: 'absolute', top: 10, left: 10, width: 30, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 999, background: 'rgba(255,255,255,.94)', boxShadow: '0 2px 8px rgba(0,0,0,.14)' }}><Icon name={c.icon} size={16} color={c.tone} strokeWidth={2}/></span>
+                <span style={{ position: 'absolute', top: 13, right: 12, color: '#fff', fontSize: 15, lineHeight: 1, textShadow: '0 1px 5px rgba(0,0,0,.45)' }}>↗</span>
+                <span style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '9px 10px 10px', background: '#fff' }}>
+                  <span style={{ display: 'block', fontFamily: FT, fontWeight: 850, fontSize: 12.5, color: OK.ink, lineHeight: 1.17 }}>{c.label}</span>
+                  <span style={{ display: 'block', marginTop: 4, fontFamily: FT, fontWeight: 600, fontSize: 9.5, lineHeight: 1.2, color: OK.ink3 }}>{c.sub}</span>
+                </span>
               </button>
             ) : c.smart ? (
               <button key={c.label} onClick={() => navigate('smartcity')} style={{
-                position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
+                position: 'relative', height: 126, borderRadius: 18, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
                 <Img src={bImg('1477959858617-67f85cf4f1df', 500)} style={{ position: 'absolute', inset: 0 }}
                   overlay="linear-gradient(180deg, rgba(6,42,24,0.32) 20%, rgba(6,42,24,0.8) 100%)"/>
                 <span style={{ position: 'absolute', top: 10, left: 12, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
@@ -4954,7 +4953,7 @@ function BaieScreen() {
               </button>
             ) : (
               <button key={c.label} onClick={() => navigate('baie-spots', { cat: c.guide })} style={{
-                position: 'relative', height: 108, borderRadius: 16, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
+                position: 'relative', height: 126, borderRadius: 18, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left' }}>
                 <Img src={c.img || groupImg(c.group)} style={{ position: 'absolute', inset: 0 }}
                   overlay="linear-gradient(180deg, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.62) 100%)"/>
                 <span style={{ position: 'absolute', left: 12, right: 12, bottom: 10, fontFamily: FT, fontWeight: 800, fontSize: 14, color: '#fff', lineHeight: 1.15, textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}>{c.label}</span>
@@ -4965,13 +4964,20 @@ function BaieScreen() {
 
         {/* Événements */}
         <div style={{ padding: '10px 0 0' }}>
-          <div style={{ padding: '0 16px', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-            <span style={{ fontFamily: FT, fontWeight: 800, fontSize: 18, color: OK.green }}>Événements</span>
-            <button onClick={() => navigate('entity', { id: 'baie-des-rois' })} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FT, fontWeight: 700, fontSize: 13, color: OK.green }}>Voir tout</button>
+          <div style={{ padding: '0 16px', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontFamily: FT, fontWeight: 850, fontSize: 19, color: OK.ink }}>À l’affiche</span>
+            <button onClick={() => navigate('events')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FT, fontWeight: 700, fontSize: 13, color: OK.green }}>Voir tout</button>
           </div>
-          <div style={{ position: 'relative', padding: '12px 14px 10px' }}>
-              <button data-auto-carousel="baie-events" className="okaba-auto-card" key={featuredBaieEvent.id} onClick={() => navigate('event', { event: { ...featuredBaieEvent, place: 'La Baie des Rois · Libreville' } })} style={{ width: '100%', border: 'none', cursor: 'pointer', padding: 0, borderRadius: 16, overflow: 'hidden', position: 'relative', height: 200, textAlign: 'left', boxShadow: '0 4px 14px rgba(0,0,0,0.12)', background: '#0b1a10', display: 'block', animation: 'okabaCarouselIn .28s ease-out' }}>
-                <img src={featuredBaieEvent.poster} alt={featuredBaieEvent.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}/>
+          <div style={{ position: 'relative', padding: '5px 14px 10px' }}>
+              <button data-auto-carousel="baie-events" className="okaba-auto-card baie-event-card" key={featuredBaieEvent.id} onClick={() => navigate('event', { event: { ...featuredBaieEvent, place: 'La Baie des Rois · Libreville' } })} style={{ width: '100%', border: '1px solid rgba(16,50,28,.08)', cursor: 'pointer', padding: 0, borderRadius: 20, overflow: 'hidden', position: 'relative', height: 148, textAlign: 'left', boxShadow: '0 5px 18px rgba(5,35,18,.09)', background: '#fff', display: 'flex', animation: 'okabaCarouselIn .28s ease-out' }}>
+                <img src={featuredBaieEvent.poster} alt={featuredBaieEvent.title} style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '36%', height: '100%', objectFit: 'cover', objectPosition: 'center 28%' }}/>
+                <span style={{ position: 'absolute', left: '36%', right: 0, top: 0, bottom: 0, background: '#fff' }}/>
+                <span style={{ position: 'absolute', left: 'calc(36% + 13px)', right: 12, top: 15, bottom: 13 }}>
+                  <span style={{ display: 'inline-block', padding: '4px 8px', borderRadius: 999, background: '#FFF3CF', color: '#805C00', fontFamily: FT, fontSize: 8.5, fontWeight: 900, letterSpacing: .4 }}>À VENIR</span>
+                  <span style={{ display: 'block', marginTop: 8, fontFamily: FT, fontSize: 15, lineHeight: 1.16, fontWeight: 850, color: OK.ink }}>{featuredBaieEvent.title}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 7, fontFamily: FT, fontSize: 10, fontWeight: 750, color: OK.green }}><Icon name="calendar" size={12} color={OK.green}/>{featuredBaieEvent.date}</span>
+                  <span style={{ display: 'block', marginTop: 4, fontFamily: FT, fontSize: 9.5, fontWeight: 650, color: OK.ink3 }}>{featuredBaieEvent.time} · La Baie des Rois</span>
+                </span>
               </button>
               <div style={{ position: 'absolute', right: 27, bottom: 20, display: 'flex', gap: 5, zIndex: 4 }}>
                 {baieEvents.map((event, index) => <button key={event.id} onClick={() => setBaieEventSlide(index)} aria-label={`Afficher ${event.title}`} style={{ width: index === baieEventSlide ? 16 : 6, height: 6, borderRadius: 999, padding: 0, border: 'none', cursor: 'pointer', background: index === baieEventSlide ? OK.gold : 'rgba(255,255,255,.7)', boxShadow: '0 1px 3px rgba(0,0,0,.25)', transition: 'width .25s ease' }}/>) }
@@ -4981,23 +4987,23 @@ function BaieScreen() {
 
         {/* Incontournables */}
         <div style={{ padding: '20px 0 0' }}>
-          <div style={{ padding: '0 16px', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-            <span style={{ fontFamily: FT, fontWeight: 800, fontSize: 18, color: OK.green }}>Incontournables</span>
+          <div style={{ padding: '0 16px', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontFamily: FT, fontWeight: 850, fontSize: 19, color: OK.ink }}>Les adresses à découvrir</span>
             <button onClick={() => navigate('entity', { id: 'baie-des-rois' })} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FT, fontWeight: 700, fontSize: 13, color: OK.green }}>Voir tout</button>
           </div>
-          <div style={{ position: 'relative', padding: '12px 14px 10px' }}>
-            {featuredSpot && <button data-auto-carousel="baie-spots" className="okaba-auto-card" key={featuredSpot.id} onClick={() => navigate('tenant', { id: featuredSpot.id })} style={{ width: '100%', border: 'none', cursor: 'pointer', padding: 0, borderRadius: 16, overflow: 'hidden', position: 'relative', height: 176, textAlign: 'left', boxShadow: '0 4px 14px rgba(0,0,0,0.12)', display: 'block', animation: 'okabaCarouselIn .28s ease-out' }}>
-                <Img src={featuredSpot.img} style={{ position: 'absolute', inset: 0, backgroundPosition: 'center 30%' }} overlay="linear-gradient(90deg, rgba(7,40,20,0.86) 0%, rgba(7,40,20,0.55) 45%, rgba(7,40,20,0.15) 100%)"/>
-                <div style={{ position: 'absolute', top: 12, right: 12, background: OK.gold, color: '#3a2c00', padding: '5px 11px', borderRadius: 999, fontFamily: FT, fontWeight: 800, fontSize: 11 }}>{featuredSpot.group}</div>
-                <div style={{ position: 'absolute', left: 16, right: 14, bottom: 14 }}>
-                  <div style={{ fontFamily: FT, fontWeight: 800, fontSize: 20, color: '#fff', lineHeight: 1.12, textShadow: '0 1px 6px rgba(0,0,0,0.4)', maxWidth: 240 }}>{featuredSpot.name}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 9 }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontWeight: 700, fontSize: 11.5, color: '#fff' }}><Icon name="star" size={13} color={OK.gold}/>{featuredSpot.rating.toString().replace('.', ',')}</span>
-                    <span style={{ fontFamily: FT, fontWeight: 600, fontSize: 11.5, color: 'rgba(255,255,255,0.9)' }}>{featuredSpot.cat}</span>
+          <div style={{ position: 'relative', padding: '5px 14px 10px' }}>
+            {featuredSpot && <button data-auto-carousel="baie-spots" className="okaba-auto-card baie-featured-place" key={featuredSpot.id} onClick={() => navigate('tenant', { id: featuredSpot.id })} style={{ width: '100%', border: '1px solid rgba(16,50,28,.08)', cursor: 'pointer', padding: 0, borderRadius: 18, overflow: 'hidden', position: 'relative', height: 132, textAlign: 'left', boxShadow: '0 5px 18px rgba(5,35,18,.08)', background: '#fff', display: 'flex', animation: 'okabaCarouselIn .28s ease-out' }}>
+                <Img src={featuredSpot.img} style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '38%', backgroundPosition: 'center 30%' }}/>
+                <div style={{ position: 'absolute', left: '38%', top: 0, right: 0, bottom: 0, padding: '16px 14px', background: '#fff' }}>
+                  <div style={{ display: 'inline-block', background: '#EAF6EE', color: OK.green, padding: '4px 8px', borderRadius: 999, fontFamily: FT, fontWeight: 800, fontSize: 9.5 }}>{featuredSpot.group}</div>
+                  <div style={{ marginTop: 8, fontFamily: FT, fontWeight: 850, fontSize: 16, color: OK.ink, lineHeight: 1.12 }}>{featuredSpot.name}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 7 }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FT, fontWeight: 800, fontSize: 10.5, color: OK.ink }}><Icon name="star" size={12} color={OK.gold}/>{featuredSpot.rating.toString().replace('.', ',')}</span>
+                    <span style={{ fontFamily: FT, fontWeight: 650, fontSize: 10, color: OK.ink3 }}>{featuredSpot.cat}</span>
                   </div>
                 </div>
               </button>}
-            <div style={{ position: 'absolute', right: 27, bottom: 20, display: 'flex', gap: 5, zIndex: 4 }}>
+              <div style={{ position: 'absolute', right: 27, bottom: 20, display: 'flex', gap: 5, zIndex: 4 }}>
               {feat.map((spot, index) => <button key={spot.id} onClick={() => setSpotSlide(index)} aria-label={`Afficher ${spot.name}`} style={{ width: index === spotSlide ? 16 : 6, height: 6, borderRadius: 999, padding: 0, border: 'none', cursor: 'pointer', background: index === spotSlide ? OK.gold : 'rgba(255,255,255,.7)', boxShadow: '0 1px 3px rgba(0,0,0,.25)', transition: 'width .25s ease' }}/>) }
             </div>
           </div>
@@ -5013,7 +5019,7 @@ function BaieScreen() {
             <div style={{ padding: '0 16px 12px', fontFamily: FT, fontSize: 12, fontWeight: 600, color: OK.ink3 }}>Loisirs, sport, marché & marina au bord de l’eau</div>
             <div style={{ display: 'flex', gap: 12, overflowX: 'auto', padding: '2px 16px 8px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
               {funPlaces.map(p => (
-                <button key={p.id} onClick={() => navigate('baie-place', { cat: 'loisirs', id: p.id })} style={{ flexShrink: 0, width: 174, height: 234, borderRadius: 20, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', position: 'relative', boxShadow: '0 8px 22px rgba(5,45,21,0.16)' }}>
+                <button key={p.id} className="baie-leisure-card" onClick={() => navigate('baie-place', { cat: 'loisirs', id: p.id })} style={{ flexShrink: 0, width: 174, height: 234, borderRadius: 20, overflow: 'hidden', border: 'none', cursor: 'pointer', padding: 0, textAlign: 'left', position: 'relative', boxShadow: '0 8px 22px rgba(5,45,21,0.16)' }}>
                   <Img src={p.image} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(3,25,12,0.02) 24%, rgba(3,25,12,0.55) 62%, rgba(3,25,12,0.92) 100%)"/>
                   {p.highlights?.[0] && (
                     <span style={{ position: 'absolute', top: 11, left: 11, padding: '4px 9px', borderRadius: 999, background: 'rgba(4,25,12,0.5)', fontFamily: FT, fontWeight: 850, fontSize: 8.5, letterSpacing: 0.5, color: OK.gold, textTransform: 'uppercase' }}>{p.highlights[0]}</span>
@@ -5042,9 +5048,9 @@ function BaieSpotsScreen({ params }) {
   const categoryId = BAIE_PLACES[params?.cat] ? params.cat : 'restaurants';
   const category = BAIE_PLACES[categoryId];
   return (
-    <Screen bg="#F7F7F2" statusDark={true} tabBar>
-      <div data-screen-label={`Baie — ${category.title}`}>
-        <GreenHeader title={category.title} onBack={back}/>
+    <Screen className="baie-light-screen" bg="#F7F7F2" statusDark={true} tabBar>
+      <div data-screen-label={`Baie — ${category.title}`} className="baie-spots-page">
+        <GreenHeader light title={category.title} onBack={back}/>
 
         <div style={{ padding: '18px 16px 4px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ fontFamily: FT, fontSize: 12, fontWeight: 750, color: OK.ink3 }}>{category.places.length} lieux et projets à découvrir</div>
@@ -5052,8 +5058,8 @@ function BaieSpotsScreen({ params }) {
         </div>
 
         <div style={{ padding: '12px 16px 0', display: 'flex', flexDirection: 'column', gap: 13 }}>
-          {category.places.map((place) => (
-            <button key={place.id} onClick={() => navigate('baie-place', { cat: categoryId, id: place.id })} style={{
+            {category.places.map((place) => (
+            <button key={place.id} className="baie-place-card" onClick={() => navigate('baie-place', { cat: categoryId, id: place.id })} style={{
               width: '100%', border: `1px solid ${OK.line}`, borderRadius: 18, overflow: 'hidden', padding: 0,
               cursor: 'pointer', textAlign: 'left', background: '#fff', boxShadow: '0 6px 18px rgba(5,45,21,0.08)' }}>
               <div style={{ position: 'relative', width: '100%', height: 174, overflow: 'hidden', background: place.imageFit === 'contain' ? '#fff' : OK.bg2 }}>
@@ -5128,7 +5134,7 @@ function BaieServiceHero({ place, label, back }) {
 }
 
 function BaieTabs({ tabs, active, onChange }) {
-  return <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '16px 17px 2px' }}>{tabs.map(([id, label]) => <button key={id} onClick={() => onChange(id)} style={{ flexShrink: 0, height: 34, padding: '0 15px', borderRadius: 999, cursor: 'pointer', border: active === id ? 'none' : `1px solid ${OK.line}`, background: active === id ? OK.green : '#fff', color: active === id ? '#fff' : OK.ink2, fontFamily: FT, fontSize: 12, fontWeight: 750 }}>{label}</button>)}</div>;
+  return <div className="baie-tabs" role="tablist" style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '16px 17px 2px' }}>{tabs.map(([id, label]) => <button key={id} role="tab" aria-selected={active === id} onClick={() => onChange(id)} style={{ flexShrink: 0, height: 34, padding: '0 15px', borderRadius: 999, cursor: 'pointer', border: active === id ? 'none' : `1px solid ${OK.line}`, background: active === id ? OK.green : '#fff', color: active === id ? '#fff' : OK.ink2, fontFamily: FT, fontSize: 12, fontWeight: 750 }}>{label}</button>)}</div>;
 }
 
 function BaiePhotos({ place }) {
@@ -5137,7 +5143,7 @@ function BaiePhotos({ place }) {
 }
 
 function BaieBottomAction({ label, place }) {
-  return <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, padding: `11px 16px ${APP_DETAIL_BOTTOM_PADDING}`, background: '#fff', borderTop: `1px solid ${OK.line}`, boxShadow: '0 -6px 20px rgba(0,0,0,0.07)' }}><button onClick={() => notifyDemo(`${label} · ${place.name}`)} style={{ width: '100%', height: 51, border: 'none', borderRadius: 13, cursor: 'pointer', background: OK.green, color: '#fff', fontFamily: FT, fontWeight: 850, fontSize: 14.5, boxShadow: '0 8px 20px rgba(11,124,57,0.26)' }}>{label}</button></div>;
+  return <div className="baie-bottom-action" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, zIndex: 50, padding: `11px 16px ${APP_DETAIL_BOTTOM_PADDING}`, background: '#fff', borderTop: `1px solid ${OK.line}`, boxShadow: '0 -6px 20px rgba(0,0,0,0.07)' }}><button onClick={() => notifyDemo(`${label} · ${place.name}`)} style={{ width: '100%', height: 51, border: 'none', borderRadius: 13, cursor: 'pointer', background: OK.green, color: '#fff', fontFamily: FT, fontWeight: 850, fontSize: 14.5, boxShadow: '0 8px 20px rgba(11,124,57,0.26)' }}>{label}</button></div>;
 }
 
 function BaieRestaurantScreen({ place }) {
@@ -5154,7 +5160,7 @@ function BaieRestaurantScreen({ place }) {
   };
   const menu = d.menu || BAIE_DEFAULT_MENU;
   const reviews = tenant?.reviewList || [['Mélissa A.', 5, 'Il y a 3 jours', 'Très beau cadre et service attentionné. La vue sur la baie fait vraiment la différence.'], ['Joël M.', 4, 'Il y a 1 semaine', 'Une belle adresse pour sortir à Libreville, avec une ambiance soignée.']];
-  return <Screen bg={OK.bg} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Restaurant — ${place.name}`}>
+  return <Screen bg={OK.bg2} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Restaurant — ${place.name}`} className="baie-service-page">
     <BaieServiceHero place={place} label="Restaurant & bar" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, fontFamily: FT, fontSize: 12.5, fontWeight: 750, color: OK.ink }}><Icon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>{d.hours}</span></div>
@@ -5176,7 +5182,7 @@ function BaieHotelScreen({ place }) {
   const d = BAIE_HOTEL_DETAILS[place.id] || { rating: 4.7, reviews: 58, cta: 'Voir les disponibilités' };
   const rooms = d.rooms || BAIE_DEFAULT_ROOMS;
   const amenities = d.amenities || BAIE_DEFAULT_AMENITIES;
-  return <Screen bg={OK.bg} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Hôtel — ${place.name}`}>
+  return <Screen bg={OK.bg2} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Hôtel — ${place.name}`} className="baie-service-page">
     <BaieServiceHero place={place} label="Hôtel" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontFamily: FT, fontSize: 12.5, fontWeight: 750 }}><Icon name="star" size={14} color={OK.star}/>{d.rating.toString().replace('.', ',')} <span style={{ color: OK.ink3, fontWeight: 600 }}>({d.reviews} avis)</span><span>·</span><span style={{ color: OK.green }}>Bord de mer</span></div>
@@ -5197,7 +5203,7 @@ function BaieLeisureScreen({ place }) {
   const { back } = useNav();
   const [tab, setTab] = useState('billets');
   const d = BAIE_LEISURE_DETAILS[place.id] || { date: 'Selon programmation', time: '10:00 – 20:00', cta: 'Réserver une place', tickets: [['Accès standard', 'Une personne', 5000]] };
-  return <Screen bg={OK.bg} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Loisirs — ${place.name}`}>
+  return <Screen bg={OK.bg2} statusDark={false} footerPad={92} edgeTop footer={<BaieBottomAction label={d.cta} place={place}/>}><div data-screen-label={`Loisirs — ${place.name}`} className="baie-service-page">
     <BaieServiceHero place={place} label="Loisirs & événements" back={back}/>
     <div style={{ padding: '14px 17px 0' }}>
       <p style={{ margin: 0, fontFamily: FT, fontSize: 13.5, lineHeight: 1.62, color: OK.ink2 }}>{place.description}</p>
@@ -5497,7 +5503,7 @@ function BaieInformationScreen() {
   const featured = BAIE_NEWS[0];
   const articles = tab === 'favorites' ? BAIE_NEWS.filter(article => favorites.includes(article.id)) : BAIE_NEWS.slice(1);
   return <Screen bg="#fff" statusDark={true} lightStatus>
-    <div data-screen-label="Informations — Baie des Rois">
+    <div data-screen-label="Informations — Baie des Rois" className="baie-news-page">
       <div style={{ position: 'sticky', top: 0, zIndex: 30, padding: `${APP_HEADER_TOP_PLUS_2} 16px 10px`, display: 'flex', alignItems: 'center', gap: 11, background: '#fff', borderBottom: `1px solid ${OK.line}` }}>
         <button onClick={back} aria-label="Retour" style={{ width: 38, height: 38, borderRadius: 999, border: `1px solid ${OK.line}`, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color={OK.ink} strokeWidth={2.2}/></button>
         <div style={{ flex: 1 }}><div style={{ fontFamily: FX, fontSize: 20, fontWeight: 850, color: OK.ink }}>Informations</div><div style={{ marginTop: 1, fontFamily: FT, fontSize: 10.5, color: OK.ink3 }}>La Baie des Rois • Presse gabonaise</div></div>
@@ -5546,7 +5552,7 @@ function BaieArticleScreen({ params }) {
     } catch {}
   };
   return <Screen bg="#fff" statusDark={false} edgeTop>
-    <article data-screen-label={`Article — ${article.title}`}>
+    <article data-screen-label={`Article — ${article.title}`} className="baie-article-page">
       <div style={{ height: 260, position: 'relative', overflow: 'hidden' }}>
         <Img src={article.image} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(2,20,9,0.42) 0%, rgba(2,20,9,0.02) 48%, rgba(2,20,9,0.36) 100%)"/>
         <button onClick={back} aria-label="Retour" style={{ position: 'absolute', top: APP_EDGE_TOP, left: 14, width: 40, height: 40, borderRadius: 999, border: '1px solid rgba(255,255,255,0.28)', background: 'rgba(4,25,12,0.58)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="back" size={18} color="#fff" strokeWidth={2.2}/></button>
@@ -6830,6 +6836,633 @@ function EtabProgress({ steps, step }) {
   );
 }
 
+// ── Référencer mon établissement : parcours guidé en 5 étapes ──────────────
+// Coordonnées → Catégories → Localisation & horaires → Présentation → Offre.
+const EW_STEPS = ['Coordonnées', 'Catégories', 'Localisation', 'Présentation', 'Offre'];
+const EW_TIPS = [
+  'Indique la <b>forme juridique</b> de ta structure, son <b>nom</b> et un <b>téléphone</b> joignable. Le RCCM et le NIF sont facultatifs mais accélèrent la vérification.',
+  'Coche <b>toutes</b> les catégories qui collent à ton activité. Plus elles sont précises, plus les clients te trouvent dans les recherches. <b>Au moins une</b> est obligatoire.',
+  'Choisis d’abord ta <b>ville</b>, puis ton <b>quartier</b>. Si tu es sur place, touche <b>« Me géolocaliser »</b> : on enregistre ta position. Renseigne tes <b>horaires</b> pour rassurer les clients.',
+  'Soigne ta <b>description</b>, ajoute un <b>logo</b> carré et une belle <b>couverture</b>. Quelques photos et le <b>PDF de ton menu</b> ou de ta brochure rendent la fiche bien plus attirante.',
+  'Choisis l’<b>offre</b> adaptée à ta forme juridique et ajoute des <b>options</b> : le devis se calcule tout seul. Valide sans payer (on te rappelle) ou <b>paie en ligne</b> pour publier plus vite.',
+];
+const EW_FORMS = [
+  { id: 'societe', label: 'Société', sub: 'SARL, SA, SAS…', icon: 'briefcase', tag: 'SOCIÉTÉ' },
+  { id: 'ei', label: 'Entreprise individuelle', sub: 'Commerçant, artisan, indépendant', icon: 'user', tag: 'ENTREPRISE IND.' },
+  { id: 'asso', label: 'Association / ONG', sub: 'Association, fondation, coopérative', icon: 'ong', tag: 'ASSOCIATION' },
+];
+const EW_TIERS = [
+  { id: 'standard', name: 'Standard', perks: ['Fiche complète dans l’annuaire', '5 photos', 'Horaires & contacts'] },
+  { id: 'business', name: 'Business', popular: true, perks: ['Galerie illimitée', 'Statistiques de visites', 'Documents joints'] },
+  { id: 'premium', name: 'Premium', perks: ['Mise en avant dans la rubrique', 'Vidéos', 'Support prioritaire'] },
+  { id: 'leader', name: 'Leader', badgeIncluded: true, perks: ['Badge Certifié inclus', 'Plusieurs gestionnaires', 'Accompagnement dédié'] },
+];
+// Prix annuels HT par forme juridique (Standard, Business, Premium, Leader).
+const EW_PRICES = { societe: [270000, 560000, 1350000, 2800000], ei: [90000, 180000, 450000, 900000], asso: [60000, 120000, 300000, 600000] };
+const EW_FEATURED = [{ id: 'none', label: 'Aucun' }, { id: 'top10', label: 'TOP 10', base: 60000 }, { id: 'top5', label: 'TOP 5', base: 95000 }, { id: 'top3', label: 'TOP 3', base: 130000 }];
+const EW_FEATURED_FACTOR = [0.6, 1, 1.6, 2.4];
+const EW_BADGE = 45000;
+const EW_TAX = 0.19; // TVA 18 % + CSS 1 %
+const ewMoney = (n) => fcfa(Math.round(n)).replace(/ F$/, ' FCFA');
+const ewFeaturedPrice = (rank, tierIndex) => {
+  const item = EW_FEATURED.find(entry => entry.id === rank);
+  return item?.base ? Math.round(item.base * EW_FEATURED_FACTOR[tierIndex] / 5000) * 5000 : 0;
+};
+const EW_DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+const EW_CITIES = {
+  Libreville: ['Louis', 'Glass', 'Nkembo', 'Nombakélé', 'Batterie IV', 'Okala', 'Angondjé', 'Akébé', 'Lalala', 'Montagne Sainte', 'Charbonnages', 'Sablière', 'Plein Ciel', 'PK8'],
+  Owendo: ['Centre', 'Alénakiri', 'Akournam', 'SNI'],
+  Akanda: ['Angondjé', 'Cap Estérias', 'Malibé', 'Avorbam'],
+  'Port-Gentil': ['Centre-ville', 'Grand Village', 'Balise', 'Matanda'],
+  Franceville: ['Potos', 'Ombélé', 'Mangoungou'],
+  Oyem: ['Centre', 'Akoakam', 'Ngouéma'],
+  Lambaréné: ['Isaac', 'Adouma', 'Château'],
+  Moanda: ['Centre', 'Leyima'],
+};
+const EW_CATEGORIES = [
+  { id: 'food', label: 'Alimentation & Restauration', icon: 'restaurant', items: ['Restaurants gastronomiques', 'Restaurants africains', 'Restaurants asiatiques', 'Restaurants européens', 'Fast-food', 'Snack-bars & Maquis', 'Traiteurs & Catering', 'Boulangeries & Pâtisseries', 'Bars & Lounges', 'Clubs & Discothèques', 'Grossistes alimentaires', 'Poissonneries & Boucheries', 'Épicerie fine'] },
+  { id: 'auto', label: 'Automobile & Mobilité', icon: 'car', items: ['Concessionnaires', 'Garages & Mécanique', 'Pièces détachées', 'Location de véhicules', 'Auto-écoles', 'Lavage auto', 'Taxis & VTC', 'Stations-service'] },
+  { id: 'btp', label: 'BTP & Construction', icon: 'btp', items: ['Entreprises générales', 'Architectes', 'Matériaux', 'Plomberie', 'Électricité', 'Menuiserie', 'Peinture & Finitions'] },
+  { id: 'sante', label: 'Santé & Bien-être', icon: 'sante', items: ['Cliniques', 'Pharmacies', 'Laboratoires', 'Dentistes', 'Opticiens', 'Spas & Massages', 'Salles de sport'] },
+  { id: 'immo', label: 'Immobilier', icon: 'immo', items: ['Agences immobilières', 'Promoteurs', 'Gestion locative', 'Syndics', 'Expertise'] },
+  { id: 'commerce', label: 'Commerce & Distribution', icon: 'shop', items: ['Supermarchés', 'Boutiques de mode', 'Électroménager', 'Quincailleries', 'Librairies', 'Grossistes'] },
+  { id: 'b2b', label: 'Services aux Entreprises', icon: 'briefcase', items: ['Comptabilité', 'Juridique', 'Conseil', 'Recrutement', 'Nettoyage', 'Sécurité privée', 'Imprimerie'] },
+  { id: 'tech', label: 'Technologies & Numérique', icon: 'laptop', items: ['Développement web', 'Informatique & maintenance', 'Télécoms', 'Formation digitale', 'Cybersécurité'] },
+  { id: 'edu', label: 'Éducation & Formation', icon: 'edu', items: ['Écoles', 'Universités', 'Centres de formation', 'Soutien scolaire', 'Langues'] },
+  { id: 'perso', label: 'Services à la Personne', icon: 'people', items: ['Coiffure & Beauté', 'Pressing', 'Garde d’enfants', 'Aide à domicile', 'Couture'] },
+  { id: 'media', label: 'Médias & Communication', icon: 'media', items: ['Agences de communication', 'Radio & TV', 'Presse', 'Photographes & Vidéastes'] },
+  { id: 'hotel', label: 'Hôtellerie & Tourisme', icon: 'hotel', items: ['Hôtels', 'Auberges & Lodges', 'Agences de voyage', 'Guides touristiques'] },
+  { id: 'loisir', label: 'Événementiel & Loisirs', icon: 'loisir', items: ['Salles de fêtes', 'Organisation d’événements', 'Sonorisation', 'Parcs & Jeux', 'Cinémas'] },
+  { id: 'culture', label: 'Art, Culture & Artisanat', icon: 'culture', items: ['Galeries', 'Artisanat d’art', 'Musées', 'Ateliers'] },
+  { id: 'oil', label: 'Pétrole, Mines & Énergie', icon: 'oil', items: ['Services pétroliers', 'Mines', 'Énergie solaire', 'Distribution de gaz'] },
+  { id: 'agri', label: 'Industrie & Agriculture', icon: 'factory', items: ['Agro-industrie', 'Exploitations agricoles', 'Élevage', 'Pêche', 'Transformation du bois'] },
+  { id: 'finance', label: 'Finance', icon: 'bank', items: ['Banques', 'Microfinance', 'Assurances', 'Transfert d’argent'] },
+];
+
+function ewQuote({ form, tier, certified, featured, pack, sites }) {
+  const tierIndex = EW_TIERS.findIndex(item => item.id === tier);
+  if (tierIndex < 0) return null;
+  const offer = EW_TIERS[tierIndex];
+  const base = EW_PRICES[form || 'societe'][tierIndex];
+  const lines = [{ icon: 'shop', label: `Offre ${offer.name}`, amount: base }];
+  if (sites > 1) {
+    let extra = 0;
+    for (let site = 2; site <= sites; site++) extra += base * (site <= 3 ? 0.8 : 0.7);
+    lines.push({ icon: 'grid', label: `${sites} sites (remise multisite)`, amount: extra });
+  }
+  if (pack !== 'none') {
+    const rank = EW_FEATURED.find(item => item.id === pack);
+    lines.push({ icon: 'gift', label: `Pack Badge + Featured ${rank.label}`, amount: ((offer.badgeIncluded ? 0 : EW_BADGE) + ewFeaturedPrice(pack, tierIndex)) * 0.8 });
+  } else {
+    if (certified && !offer.badgeIncluded) lines.push({ icon: 'verified', label: 'Badge Certifié', amount: EW_BADGE });
+    if (featured !== 'none') lines.push({ icon: 'star', label: `Featured ${EW_FEATURED.find(item => item.id === featured).label}`, amount: ewFeaturedPrice(featured, tierIndex) });
+  }
+  const subtotal = lines.reduce((sum, line) => sum + line.amount, 0);
+  const tax = Math.round(subtotal * EW_TAX);
+  return { offer, tierIndex, lines, subtotal, tax, total: subtotal + tax };
+}
+
+function EwStepper({ step, onJump }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', padding: '16px 12px 4px' }}>
+      {EW_STEPS.map((label, index) => {
+        const done = index < step, current = index === step;
+        return (
+          <React.Fragment key={label}>
+            <button onClick={() => done && onJump(index)} disabled={!done} aria-label={`Étape ${index + 1} : ${label}`} style={{ width: 58, flexShrink: 0, padding: 0, border: 0, background: 'transparent', cursor: done ? 'pointer' : 'default', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+              <span style={{ width: 30, height: 30, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FX, fontSize: 13, fontWeight: 800,
+                background: done ? OK.green : current ? OK.gold : '#fff', color: done ? '#fff' : current ? '#3D2F00' : OK.ink3,
+                border: done || current ? 'none' : `1.5px solid ${OK.line}`, boxShadow: current ? '0 0 0 4px rgba(245,184,0,0.22)' : 'none' }}>
+                {done ? <Icon name="check" size={15} color="#fff" strokeWidth={3}/> : index + 1}
+              </span>
+              <span style={{ fontFamily: FX, fontSize: 9.5, fontWeight: current ? 800 : 650, color: current ? OK.ink : OK.ink3, whiteSpace: 'nowrap' }}>{label}</span>
+            </button>
+            {index < EW_STEPS.length - 1 && <span style={{ flex: 1, height: 2, marginTop: 14, borderRadius: 2, background: index < step ? OK.green : OK.line }}/>}
+          </React.Fragment>
+        );
+      })}
+    </div>
+  );
+}
+
+function EwHelper({ step, open, onToggle }) {
+  return (
+    <div style={{ margin: '8px 16px 0' }}>
+      <button onClick={onToggle} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, height: 36, padding: '0 12px 0 4px', borderRadius: 999, border: 0, cursor: 'pointer', background: OK.gold, color: '#3D2F00', fontFamily: FX, fontSize: 12.5, fontWeight: 800, boxShadow: '0 4px 12px rgba(245,184,0,0.3)' }}>
+        <span style={{ width: 28, height: 28, borderRadius: 999, background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src="assets/okaba-mark-green.png" alt="" style={{ width: 20, height: 20, objectFit: 'contain' }}/></span>
+        {open ? 'Masquer l’aide' : 'Appuie et je te dis quoi faire'}
+        <Icon name={open ? 'chev-u' : 'chev-d'} size={15} color="#3D2F00" strokeWidth={2.4}/>
+      </button>
+      {open && (
+        <div style={{ marginTop: 10, display: 'flex', gap: 10, padding: '12px 13px', background: '#fff', border: `1.5px solid ${OK.green}`, borderRadius: 16, boxShadow: '0 4px 14px rgba(11,124,57,0.08)' }}>
+          <span style={{ width: 34, height: 34, flexShrink: 0, borderRadius: 999, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src="assets/okaba-mark-green.png" alt="" style={{ width: 24, height: 24, objectFit: 'contain' }}/></span>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.green, letterSpacing: 0.4, textTransform: 'uppercase' }}>Étape {step + 1} · {EW_STEPS[step]}</div>
+            <p style={{ margin: '4px 0 0', fontFamily: FX, fontSize: 12.5, lineHeight: 1.5, color: OK.ink2 }} dangerouslySetInnerHTML={{ __html: EW_TIPS[step] }}/>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EwSection({ index, title, icon, children }) {
+  return (
+    <div style={{ margin: '14px 16px 0', background: '#fff', borderRadius: 18, overflow: 'hidden', border: `1px solid ${OK.line}`, boxShadow: '0 2px 10px rgba(0,0,0,0.04)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '12px 15px', background: OK.green, color: '#fff' }}>
+        <Icon name={icon} size={17} color="#fff"/>
+        <span style={{ fontFamily: FX, fontSize: 14.5, fontWeight: 800 }}>{index ? `${index}. ` : ''}{title}</span>
+      </div>
+      <div style={{ padding: '15px 15px 16px' }}>{children}</div>
+    </div>
+  );
+}
+
+const EW_HINT = { margin: '6px 2px 0', fontFamily: FX, fontSize: 11, color: OK.ink3, lineHeight: 1.45 };
+const EW_ERROR = { margin: '6px 2px 0', fontFamily: FX, fontSize: 11.5, fontWeight: 700, color: OK.red };
+const ewOptional = <span style={{ textTransform: 'none', fontWeight: 600, letterSpacing: 0 }}>(facultatif)</span>;
+
+function EwField({ label, required, optional, error, hint, children }) {
+  return (
+    <div>
+      <label style={PUB_LABEL}>{label}{required && <span style={{ color: OK.red }}> *</span>} {optional && ewOptional}</label>
+      {children}
+      {error ? <p style={EW_ERROR}>{error}</p> : hint ? <p style={EW_HINT}>{hint}</p> : null}
+    </div>
+  );
+}
+
+function EwSwitch({ on, onChange, label }) {
+  return (
+    <button onClick={() => onChange(!on)} role="switch" aria-checked={on} aria-label={label} style={{ width: 40, height: 23, flexShrink: 0, borderRadius: 999, border: 0, padding: 2, cursor: 'pointer', background: on ? OK.green : '#D5DAD6', transition: 'background .15s ease' }}>
+      <span style={{ display: 'block', width: 19, height: 19, borderRadius: 999, background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.2)', transform: `translateX(${on ? 17 : 0}px)`, transition: 'transform .15s ease' }}/>
+    </button>
+  );
+}
+
+function EwCheck({ on, onClick, children, note, small }) {
+  return (
+    <button onClick={onClick} style={{ width: '100%', display: 'flex', gap: 9, alignItems: 'flex-start', padding: small ? '6px 0' : '8px 0', border: 0, background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
+      <span style={{ width: 19, height: 19, marginTop: 1, borderRadius: 6, flexShrink: 0, border: on ? 'none' : `1.5px solid #C9CFCB`, background: on ? OK.green : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{on && <Icon name="check" size={12} color="#fff" strokeWidth={3}/>}</span>
+      <span style={{ fontFamily: FX, fontSize: small ? 12.5 : 13, fontWeight: small ? 650 : 800, color: OK.ink, lineHeight: 1.35 }}>{children}{note && <span style={{ display: 'block', marginTop: 2, fontSize: 11.5, fontWeight: 600, color: OK.ink3 }}>{note}</span>}</span>
+    </button>
+  );
+}
+
+function EwAccordion({ open, onToggle, icon, iconColor = OK.green, title, count, children }) {
+  return (
+    <div style={{ borderTop: `1px solid ${OK.line}` }}>
+      <button onClick={onToggle} aria-expanded={open} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 4px 12px 10px', border: 0, cursor: 'pointer', textAlign: 'left', background: open ? 'rgba(11,124,57,0.07)' : 'transparent', borderRadius: open ? 10 : 0 }}>
+        <Icon name={icon} size={17} color={iconColor}/>
+        <span style={{ flex: 1, minWidth: 0, fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{title}</span>
+        {count != null && <span style={{ minWidth: 22, height: 20, padding: '0 6px', borderRadius: 999, background: OK.green, color: '#fff', fontFamily: FX, fontSize: 10.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{count}</span>}
+        <Icon name={open ? 'chev-u' : 'chev-d'} size={17} color={OK.ink3} strokeWidth={2.2}/>
+      </button>
+      {open && <div style={{ padding: '6px 6px 12px 10px' }}>{children}</div>}
+    </div>
+  );
+}
+
+function EwFilePick({ accept, onPick, children, style }) {
+  return (
+    <label style={{ cursor: 'pointer', ...style }}>
+      <input type="file" accept={accept} style={{ display: 'none' }} onChange={event => { const file = event.target.files?.[0]; if (file) onPick(file); event.target.value = ''; }}/>
+      {children}
+    </label>
+  );
+}
+
+function EtabWizard({ onExit }) {
+  const { navigate } = useNav();
+  const [step, setStep] = useState(0);
+  const [helpOpen, setHelpOpen] = useState(true);
+  const [tried, setTried] = useState(false);
+  const [phase, setPhase] = useState('form'); // form | pay | done
+  const [paid, setPaid] = useState(false);
+  // 1. Coordonnées
+  const [form, setForm] = useState('');
+  const [name, setName] = useState('');
+  const [tel, setTel] = useState('');
+  const [wa, setWa] = useState('');
+  const [email, setEmail] = useState('');
+  const [site, setSite] = useState('');
+  const [rccm, setRccm] = useState('');
+  const [nif, setNif] = useState('');
+  // 2. Catégories
+  const [cats, setCats] = useState([]);
+  const [openCat, setOpenCat] = useState('food');
+  // 3. Localisation & horaires
+  const [city, setCity] = useState('Libreville');
+  const [district, setDistrict] = useState('');
+  const [customDistrict, setCustomDistrict] = useState(false);
+  const [address, setAddress] = useState('');
+  const [gps, setGps] = useState(null);
+  const [locating, setLocating] = useState(false);
+  const [hours, setHours] = useState(() => Object.fromEntries(EW_DAYS.map(day => [day, { open: day !== 'Dimanche', from: '08:00', to: '17:00' }])));
+  // 4. Présentation
+  const [shortDesc, setShortDesc] = useState('');
+  const [longDesc, setLongDesc] = useState('');
+  const [tags, setTags] = useState([]);
+  const [tagDraft, setTagDraft] = useState('');
+  const [logo, setLogo] = useState(null);
+  const [cover, setCover] = useState(null);
+  const [gallery, setGallery] = useState([null, null, null, null, null, null]);
+  const [docs, setDocs] = useState([{ label: '', file: '' }]);
+  const shortRef = useRef(null);
+  // 5. Offre
+  const [tier, setTier] = useState('');
+  const [certified, setCertified] = useState(false);
+  const [featured, setFeatured] = useState('none');
+  const [pack, setPack] = useState('none');
+  const [sites, setSites] = useState(1);
+  const [openOpt, setOpenOpt] = useState('');
+  // Paiement
+  const [payMethod, setPayMethod] = useState('airtel');
+  const [payPhone, setPayPhone] = useState('');
+  const [paying, setPaying] = useState(false);
+
+  const scrollTop = () => {
+    let node = document.querySelector('[data-screen-label="Référencer mon établissement"]')?.parentElement;
+    while (node && !(node.scrollHeight > node.clientHeight && /auto|scroll/.test(getComputedStyle(node).overflowY))) node = node.parentElement;
+    node?.scrollTo({ top: 0 });
+  };
+  const formInfo = EW_FORMS.find(item => item.id === form);
+  const quote = ewQuote({ form, tier, certified, featured, pack, sites });
+  const districts = EW_CITIES[city] || [];
+  const errors = [
+    { form: !form && 'Choisissez la forme juridique.', name: !name.trim() && 'Le nom est obligatoire.', tel: tel.replace(/\D/g, '').length < 8 && 'Saisissez un numéro valide.' },
+    { cats: !cats.length && 'Sélectionnez au moins une catégorie.' },
+    { district: !district.trim() && 'Choisissez ou saisissez votre quartier.' },
+    {},
+    { tier: !tier && 'Choisissez une offre pour continuer.' },
+  ];
+  const stepErrors = errors[step];
+  const stepValid = !Object.values(stepErrors).some(Boolean);
+  const err = (key) => tried ? stepErrors[key] || null : null;
+
+  const goTo = (index) => { setTried(false); setStep(index); setTimeout(scrollTop, 0); };
+  const next = () => {
+    if (!stepValid) { setTried(true); notifyDemo(Object.values(stepErrors).find(Boolean)); return; }
+    goTo(step + 1);
+  };
+  const prev = () => { if (step === 0) onExit(); else goTo(step - 1); };
+  const finish = (payNow) => {
+    if (!stepValid) { setTried(true); notifyDemo(stepErrors.tier); return; }
+    if (payNow) setPhase('pay'); else { setPaid(false); setPhase('done'); }
+  };
+
+  const toggleCat = (item) => setCats(current => current.includes(item) ? current.filter(entry => entry !== item) : [...current, item]);
+  const setDay = (day, patch) => setHours(current => ({ ...current, [day]: { ...current[day], ...patch } }));
+  const copyMonday = () => setHours(current => Object.fromEntries(EW_DAYS.map(day => [day, { ...current.Lundi }])));
+  const locate = () => {
+    setLocating(true);
+    const fallback = () => { setGps({ lat: 0.3901, lng: 9.4544, approx: true }); setLocating(false); };
+    if (!navigator.geolocation) { fallback(); return; }
+    navigator.geolocation.getCurrentPosition(pos => { setGps({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setLocating(false); }, fallback, { timeout: 6000 });
+  };
+  const addTag = () => {
+    const values = tagDraft.split(',').map(value => value.trim()).filter(Boolean);
+    if (values.length) setTags(current => [...new Set([...current, ...values])].slice(0, 15));
+    setTagDraft('');
+  };
+  const format = (kind) => {
+    const el = shortRef.current;
+    if (!el) return;
+    const { selectionStart: start, selectionEnd: end } = el;
+    const selected = shortDesc.slice(start, end);
+    let insert;
+    if (kind === 'list') insert = (start === 0 || shortDesc[start - 1] === '\n' ? '' : '\n') + '• ' + selected;
+    else if (kind === 'olist') insert = (start === 0 || shortDesc[start - 1] === '\n' ? '' : '\n') + '1. ' + selected;
+    else { const mark = kind === 'b' ? '**' : kind === 'i' ? '_' : '__'; insert = mark + (selected || 'texte') + mark; }
+    const value = (shortDesc.slice(0, start) + insert + shortDesc.slice(end)).slice(0, 300);
+    setShortDesc(value);
+    setTimeout(() => { el.focus(); el.selectionStart = el.selectionEnd = Math.min(start + insert.length, value.length); }, 0);
+  };
+  const pay = () => {
+    if (payMethod !== 'card' && payPhone.replace(/\D/g, '').length < 8) { notifyDemo('Saisissez le numéro Mobile Money à débiter.'); return; }
+    setPaying(true);
+    setTimeout(() => { setPaying(false); setPaid(true); setPhase('done'); }, 1600);
+  };
+
+  if (phase === 'done') {
+    return (
+      <Screen bg={OK.bg2} statusDark>
+        <div data-screen-label="Établissement soumis" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 28px', textAlign: 'center' }}>
+          <div style={{ width: 96, height: 96, borderRadius: 999, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(11,124,57,0.35)' }}><Icon name="check" size={48} color="#fff" strokeWidth={3}/></div>
+          <h1 style={{ margin: '24px 0 0', fontFamily: FX, fontWeight: 800, fontSize: 25, color: OK.ink }}>{paid ? 'Paiement confirmé' : 'Demande envoyée'}</h1>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: '#8A6B00', background: 'rgba(245,184,0,0.16)', border: '1px solid rgba(245,184,0,0.4)', padding: '5px 12px', borderRadius: 999 }}><span style={{ width: 7, height: 7, borderRadius: 7, background: OK.gold }}/> En attente de vérification</span>
+          <p style={{ margin: '14px 0 0', fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55, maxWidth: 300 }}>
+            <strong style={{ color: OK.ink }}>« {name || 'Votre établissement'} »</strong>{' '}
+            {paid ? <>est réglé ({ewMoney(quote?.total || 0)} TTC, démo). Dès vérification, la fiche est publiée sous <strong style={{ color: OK.ink }}>24 h</strong>.</>
+              : <>est bien enregistré. Notre équipe vous rappelle pour finaliser l’offre {quote?.offer.name} ; publication sous <strong style={{ color: OK.ink }}>24 à 48 h</strong>.</>}
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 26, width: '100%' }}>
+            <button onClick={() => navigate('annuaire')} style={{ height: 52, borderRadius: 14, border: 'none', background: OK.green, color: '#fff', cursor: 'pointer', fontFamily: FX, fontSize: 15, fontWeight: 800 }}>Voir l’annuaire</button>
+            <button onClick={() => navigate('home')} style={{ height: 52, borderRadius: 14, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, cursor: 'pointer', fontFamily: FX, fontSize: 15, fontWeight: 800 }}>Retour à l’accueil</button>
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  if (phase === 'pay') {
+    const methods = [
+      { id: 'airtel', label: 'Airtel Money', sub: 'Validation sur votre téléphone', color: '#E40000' },
+      { id: 'moov', label: 'Moov Money', sub: 'Validation sur votre téléphone', color: '#0066B3' },
+      { id: 'card', label: 'Carte bancaire', sub: 'Visa, Mastercard', color: OK.ink },
+    ];
+    return (
+      <Screen bg={OK.bg2} statusDark footerPad={92} footer={<PubBar label={paying ? 'Paiement en cours…' : `Payer ${ewMoney(quote.total)}`} icon="lock" disabled={paying} onClick={pay}/>}>
+        <div data-screen-label="Paiement référencement">
+          <GreenHeader title="Paiement sécurisé" onBack={() => !paying && setPhase('form')}/>
+          <div style={{ margin: '16px 16px 0', background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 18, padding: '15px' }}>
+            <div style={{ fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: OK.ink3, letterSpacing: 0.5, textTransform: 'uppercase' }}>Récapitulatif</div>
+            <div style={{ marginTop: 6, fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>{name || 'Votre établissement'} · Offre {quote.offer.name}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}><span>Total TTC (1 an)</span><span style={{ color: OK.green }}>{ewMoney(quote.total)}</span></div>
+          </div>
+          <div style={{ margin: '18px 18px 8px', fontFamily: FX, fontSize: 14.5, fontWeight: 800, color: OK.ink }}>Moyen de paiement</div>
+          <div style={{ margin: '0 16px', display: 'flex', flexDirection: 'column', gap: 9 }}>
+            {methods.map(method => { const on = payMethod === method.id; return (
+              <button key={method.id} onClick={() => setPayMethod(method.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 14px', borderRadius: 15, cursor: 'pointer', textAlign: 'left', background: '#fff', border: on ? `2px solid ${OK.green}` : `1px solid ${OK.line}` }}>
+                <span style={{ width: 38, height: 38, borderRadius: 11, background: method.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={method.id === 'card' ? 'wallet' : 'phone'} size={18} color="#fff"/></span>
+                <span style={{ flex: 1 }}><span style={{ display: 'block', fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>{method.label}</span><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>{method.sub}</span></span>
+                <span style={{ width: 20, height: 20, borderRadius: 999, border: on ? `6px solid ${OK.green}` : `1.5px solid ${OK.line}` }}/>
+              </button>
+            ); })}
+          </div>
+          <div style={{ margin: '16px 16px 24px' }}>
+            {payMethod === 'card'
+              ? <p style={{ margin: 0, fontFamily: FX, fontSize: 12.5, color: OK.ink2, lineHeight: 1.5 }}>Vous serez redirigé vers la page sécurisée de la banque pour saisir votre carte (démo).</p>
+              : <EwField label="Numéro à débiter" required hint="Vous recevrez une demande de confirmation avec votre code secret."><input value={payPhone} onChange={event => setPayPhone(event.target.value)} placeholder={payMethod === 'airtel' ? '+241 07 …' : '+241 06 …'} inputMode="tel" style={{ ...PUB_FIELD, background: '#fff', border: `1.5px solid ${OK.line}` }}/></EwField>}
+          </div>
+        </div>
+      </Screen>
+    );
+  }
+
+  const btnBase = { height: 52, borderRadius: 14, cursor: 'pointer', fontFamily: FX, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 };
+  const footer = (
+    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 50, background: '#fff', borderTop: `1px solid ${OK.line}`, padding: `11px 16px ${APP_DETAIL_BOTTOM_PADDING}`, boxShadow: '0 -6px 22px rgba(0,0,0,0.07)' }}>
+      {step < 4 ? (
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={prev} style={{ ...btnBase, flex: 1, border: `1.5px solid ${OK.ink}`, background: '#fff', color: OK.ink, fontSize: 14 }}><Icon name="arrow-l" size={17} color={OK.ink}/>Retour</button>
+          <button onClick={next} style={{ ...btnBase, flex: 1.5, border: 'none', background: OK.green, color: '#fff', fontSize: 15, boxShadow: '0 8px 20px rgba(11,124,57,0.28)', opacity: stepValid ? 1 : 0.55 }}>Suivant<Icon name="arrow-r" size={17} color="#fff" strokeWidth={2.4}/></button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <button onClick={() => finish(true)} style={{ ...btnBase, border: 'none', background: OK.green, color: '#fff', fontSize: 15, boxShadow: '0 8px 20px rgba(11,124,57,0.28)', opacity: stepValid ? 1 : 0.55 }}><Icon name="wallet" size={18} color="#fff"/>{quote ? `Finaliser et payer ${ewMoney(quote.total)}` : 'Finaliser et payer en ligne'}</button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button onClick={prev} style={{ ...btnBase, height: 44, flex: 1, border: `1.5px solid ${OK.line}`, background: '#fff', color: OK.ink, fontSize: 13 }}><Icon name="arrow-l" size={15} color={OK.ink}/>Retour</button>
+            <button onClick={() => finish(false)} style={{ ...btnBase, height: 44, flex: 2, border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontSize: 13 }}><Icon name="check-c" size={16} color={OK.green}/>Valider (payer plus tard)</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <Screen bg={OK.bg2} statusDark footerPad={step < 4 ? 92 : 134} footer={footer}>
+      <div data-screen-label="Référencer mon établissement" style={{ paddingBottom: 20 }}>
+        <GreenHeader title="Référencer mon établissement" onBack={prev}/>
+        <EwStepper step={step} onJump={goTo}/>
+        <EwHelper step={step} open={helpOpen} onToggle={() => setHelpOpen(value => !value)}/>
+
+        {step === 0 && <EwSection index={1} title="Coordonnées" icon="shop">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+            <EwField label="Forme juridique" required error={err('form')}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {EW_FORMS.map(item => { const on = form === item.id; return (
+                  <button key={item.id} onClick={() => setForm(item.id)} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 12px', borderRadius: 13, cursor: 'pointer', textAlign: 'left', background: on ? 'rgba(11,124,57,0.06)' : '#fff', border: on ? `1.5px solid ${OK.green}` : `1.5px solid ${OK.line}` }}>
+                    <span style={{ width: 34, height: 34, borderRadius: 10, background: on ? OK.green : OK.bg2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={item.icon} size={17} color={on ? '#fff' : OK.ink2}/></span>
+                    <span style={{ flex: 1 }}><span style={{ display: 'block', fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>{item.label}</span><span style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>{item.sub}</span></span>
+                    <span style={{ width: 19, height: 19, borderRadius: 999, border: on ? `6px solid ${OK.green}` : `1.5px solid ${OK.line}` }}/>
+                  </button>
+                ); })}
+              </div>
+            </EwField>
+            <EwField label="Nom de l’établissement" required error={err('name')}><input value={name} onChange={event => setName(event.target.value)} placeholder="Ex : Chez Mama Awa" style={PUB_FIELD}/></EwField>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ flex: 1, minWidth: 0 }}><EwField label="Téléphone" required error={err('tel')}><input value={tel} onChange={event => setTel(event.target.value)} placeholder="+241 …" inputMode="tel" style={PUB_FIELD}/></EwField></div>
+              <div style={{ flex: 1, minWidth: 0 }}><EwField label="WhatsApp"><input value={wa} onChange={event => setWa(event.target.value)} placeholder="+241 …" inputMode="tel" style={PUB_FIELD}/></EwField></div>
+            </div>
+            <EwField label="E-mail" optional><input value={email} onChange={event => setEmail(event.target.value)} placeholder="contact@exemple.ga" inputMode="email" style={PUB_FIELD}/></EwField>
+            <EwField label="Site web ou page" optional><input value={site} onChange={event => setSite(event.target.value)} placeholder="www.exemple.ga ou lien Facebook" style={PUB_FIELD}/></EwField>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ flex: 1, minWidth: 0 }}><EwField label="RCCM" optional><input value={rccm} onChange={event => setRccm(event.target.value)} placeholder="GA-LBV-…" style={PUB_FIELD}/></EwField></div>
+              <div style={{ flex: 1, minWidth: 0 }}><EwField label="NIF" optional><input value={nif} onChange={event => setNif(event.target.value)} placeholder="N° fiscal" style={PUB_FIELD}/></EwField></div>
+            </div>
+          </div>
+        </EwSection>}
+
+        {step === 1 && <EwSection index={2} title="Catégories d’activité *" icon="grid">
+          <p style={{ margin: '0 0 10px', fontFamily: FX, fontSize: 12.5, color: OK.ink2, lineHeight: 1.5 }}>Sélectionnez toutes les catégories correspondant à votre activité : plus c’est pertinent, plus vous serez visible.</p>
+          {cats.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>{cats.map(item => <button key={item} onClick={() => toggleCat(item)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, height: 28, padding: '0 10px', borderRadius: 999, border: 0, cursor: 'pointer', background: 'rgba(11,124,57,0.1)', color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>{item}<Icon name="close" size={11} color={OK.green} strokeWidth={2.6}/></button>)}</div>}
+          {err('cats') && <p style={{ ...EW_ERROR, margin: '0 0 8px' }}>{err('cats')}</p>}
+          <div style={{ borderBottom: `1px solid ${OK.line}` }}>
+            {EW_CATEGORIES.map(group => {
+              const picked = group.items.filter(item => cats.includes(item)).length;
+              return (
+                <EwAccordion key={group.id} open={openCat === group.id} onToggle={() => setOpenCat(openCat === group.id ? '' : group.id)} icon={group.icon} title={group.label} count={picked ? `${picked}/${group.items.length}` : group.items.length}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 8 }}>
+                    {group.items.map(item => <EwCheck key={item} small on={cats.includes(item)} onClick={() => toggleCat(item)}>{item}</EwCheck>)}
+                  </div>
+                </EwAccordion>
+              );
+            })}
+          </div>
+        </EwSection>}
+
+        {step === 2 && <EwSection index={3} title="Localisation & horaires" icon="pin">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <div style={{ flex: 1, minWidth: 0 }}><EwField label="Ville" required>
+                <select value={city} onChange={event => { setCity(event.target.value); setDistrict(''); setCustomDistrict(false); }} style={{ ...PUB_FIELD, appearance: 'auto' }}>{Object.keys(EW_CITIES).map(item => <option key={item}>{item}</option>)}</select>
+              </EwField></div>
+              <div style={{ flex: 1, minWidth: 0 }}><EwField label="Quartier" required error={err('district')}>
+                {customDistrict
+                  ? <input value={district} onChange={event => setDistrict(event.target.value)} placeholder="Votre quartier" style={PUB_FIELD} autoFocus/>
+                  : <select value={district} onChange={event => setDistrict(event.target.value)} style={{ ...PUB_FIELD, appearance: 'auto', color: district ? OK.ink : OK.ink3 }}><option value="">Sélectionner</option>{districts.map(item => <option key={item}>{item}</option>)}</select>}
+              </EwField></div>
+            </div>
+            <button onClick={() => { setCustomDistrict(value => !value); setDistrict(''); }} style={{ alignSelf: 'flex-start', marginTop: -6, padding: 0, border: 0, background: 'transparent', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FX, fontSize: 12, fontWeight: 700, color: OK.green }}><Icon name={customDistrict ? 'list' : 'plus'} size={14} color={OK.green}/>{customDistrict ? 'Choisir dans la liste' : 'Mon quartier n’est pas listé ?'}</button>
+            <EwField label="Adresse ou repère" optional><input value={address} onChange={event => setAddress(event.target.value)} placeholder="Ex : Face à la pharmacie du Bord de mer" style={PUB_FIELD}/></EwField>
+            <div>
+              <button onClick={locate} disabled={locating} style={{ width: '100%', height: 46, borderRadius: 13, cursor: 'pointer', border: `1.5px solid ${OK.green}`, background: gps ? 'rgba(11,124,57,0.07)' : '#fff', color: OK.green, fontFamily: FX, fontSize: 13.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}>
+                <Icon name={gps ? 'check-c' : 'navigate'} size={17} color={OK.green}/>{locating ? 'Localisation…' : gps ? 'Position enregistrée' : 'Me géolocaliser ici (GPS)'}
+              </button>
+              <p style={{ ...EW_HINT, textAlign: 'center' }}>{gps ? `${gps.lat.toFixed(4)}, ${gps.lng.toFixed(4)}${gps.approx ? ' · position approximative (démo)' : ''}` : 'Touchez si vous êtes actuellement sur le lieu de la structure.'}</p>
+            </div>
+            <div style={{ height: 1, background: OK.line }}/>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 8 }}>
+                <Icon name="clock" size={16} color={OK.ink}/><span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap' }}>Horaires</span><span style={{ fontFamily: FX, fontSize: 12, color: OK.ink3 }}>(facultatif)</span>
+                <button onClick={copyMonday} style={{ marginLeft: 'auto', padding: 0, border: 0, background: 'transparent', cursor: 'pointer', fontFamily: FX, fontSize: 11.5, fontWeight: 800, color: OK.green, whiteSpace: 'nowrap' }}>Copier lundi partout</button>
+              </div>
+              {EW_DAYS.map((day, index) => { const value = hours[day]; return (
+                <div key={day} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '8px 0', borderTop: index ? `1px solid ${OK.line}` : 'none' }}>
+                  <span style={{ width: 70, fontFamily: FX, fontSize: 12.5, fontWeight: 800, color: OK.ink }}>{day}</span>
+                  <EwSwitch on={value.open} onChange={open => setDay(day, { open })} label={`${day} ouvert`}/>
+                  {value.open ? (
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}>
+                      <input type="time" value={value.from} onChange={event => setDay(day, { from: event.target.value })} aria-label={`${day} ouverture`} style={{ ...PUB_FIELD, height: 36, padding: '0 6px', fontSize: 12.5, flex: 1, minWidth: 0 }}/>
+                      <span style={{ color: OK.ink3, fontSize: 12 }}>–</span>
+                      <input type="time" value={value.to} onChange={event => setDay(day, { to: event.target.value })} aria-label={`${day} fermeture`} style={{ ...PUB_FIELD, height: 36, padding: '0 6px', fontSize: 12.5, flex: 1, minWidth: 0 }}/>
+                    </div>
+                  ) : <span style={{ flex: 1, fontFamily: FX, fontSize: 12.5, fontWeight: 700, color: OK.ink3 }}>Fermé</span>}
+                </div>
+              ); })}
+              <p style={EW_HINT}>Activez les jours d’ouverture et réglez les horaires. Les jours désactivés s’affichent « Fermé ».</p>
+            </div>
+          </div>
+        </EwSection>}
+
+        {step === 3 && <>
+          <EwSection index={4} title="Présentation" icon="doc">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+              <EwField label="Description courte" hint={`Visible sur votre fiche publique. ${shortDesc.length}/300`}>
+                <div style={{ background: OK.bg2, borderRadius: 13, overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', gap: 2, padding: '5px 6px', borderBottom: `1px solid ${OK.line}` }}>
+                    {[['b', 'B', { fontWeight: 900 }], ['i', 'I', { fontStyle: 'italic' }], ['u', 'U', { textDecoration: 'underline' }], ['list', '•', {}], ['olist', '1.', {}]].map(([kind, label, style]) => (
+                      <button key={kind} onClick={() => format(kind)} aria-label={`Format ${kind}`} style={{ width: 32, height: 28, borderRadius: 7, border: 0, cursor: 'pointer', background: 'transparent', fontFamily: FX, fontSize: 13, color: OK.ink2, ...style }}>{label}</button>
+                    ))}
+                  </div>
+                  <textarea ref={shortRef} value={shortDesc} onChange={event => setShortDesc(event.target.value.slice(0, 300))} rows={4} placeholder="Ce que vous proposez, ce qui vous distingue…" style={{ ...PUB_FIELD, height: 'auto', padding: '10px 14px', resize: 'none', lineHeight: 1.5, borderRadius: 0 }}/>
+                </div>
+              </EwField>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <div style={{ width: 104, flexShrink: 0 }}>
+                  <label style={PUB_LABEL}>Logo</label>
+                  <EwFilePick accept="image/*" onPick={file => setLogo(URL.createObjectURL(file))} style={{ display: 'flex', width: 104, height: 104, borderRadius: 16, overflow: 'hidden', border: logo ? 'none' : `1.5px dashed ${OK.green}`, background: logo ? `center/cover url(${logo})` : 'rgba(11,124,57,0.05)', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 4, color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>
+                    {!logo && <><Icon name="camera" size={20} color={OK.green}/>Choisir</>}
+                  </EwFilePick>
+                  <p style={EW_HINT}>Carré, 400×400</p>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <label style={PUB_LABEL}>Image de couverture</label>
+                  <EwFilePick accept="image/*" onPick={file => setCover(URL.createObjectURL(file))} style={{ display: 'flex', height: 104, borderRadius: 16, overflow: 'hidden', border: cover ? 'none' : `1.5px dashed ${OK.green}`, background: cover ? `center/cover url(${cover})` : 'rgba(11,124,57,0.05)', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 4, color: OK.green, fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>
+                    {!cover && <><Icon name="camera" size={20} color={OK.green}/>Choisir une bannière</>}
+                  </EwFilePick>
+                  <p style={EW_HINT}>Bannière 1200×400</p>
+                </div>
+              </div>
+              <EwField label="Description longue" optional hint="Non affichée : elle sert au moteur de recherche et à l’assistant IA d’O’KABA.">
+                <textarea value={longDesc} onChange={event => setLongDesc(event.target.value)} rows={4} placeholder="Décrivez votre activité, vos services, vos spécialités…" style={{ ...PUB_FIELD, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.5 }}/>
+              </EwField>
+              <EwField label="Mots-clés" optional hint="Appuyez sur Entrée ou une virgule après chaque mot-clé.">
+                <div style={{ ...PUB_FIELD, height: 'auto', minHeight: 50, padding: '8px 10px', display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
+                  {tags.map(tag => <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, height: 28, padding: '0 6px 0 10px', borderRadius: 999, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FX, fontSize: 12, fontWeight: 700, color: OK.ink }}>{tag}<button onClick={() => setTags(current => current.filter(item => item !== tag))} aria-label={`Retirer ${tag}`} style={{ width: 18, height: 18, border: 0, borderRadius: 999, background: OK.bg2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}><Icon name="close" size={10} color={OK.ink2}/></button></span>)}
+                  <input value={tagDraft} onChange={event => { if (event.target.value.endsWith(',')) { setTagDraft(event.target.value); setTimeout(addTag, 0); } else setTagDraft(event.target.value); }} onKeyDown={event => { if (event.key === 'Enter') { event.preventDefault(); addTag(); } }} onBlur={addTag} placeholder={tags.length ? '' : 'Ex : grillades, terrasse, livraison…'} style={{ flex: 1, minWidth: 110, border: 0, outline: 0, background: 'transparent', fontFamily: FX, fontSize: 13.5, color: OK.ink }}/>
+                </div>
+              </EwField>
+            </div>
+          </EwSection>
+          <EwSection title="Galerie & documents" icon="camera">
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+              <span style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>Galerie photos</span><span style={{ marginLeft: 6, fontFamily: FX, fontSize: 12, color: OK.ink3 }}>(facultative)</span>
+              <span style={{ marginLeft: 'auto', fontFamily: FX, fontSize: 11.5, fontWeight: 700, color: OK.ink3 }}>{gallery.filter(Boolean).length}/{gallery.length}</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 9 }}>
+              {gallery.map((photo, index) => (
+                <div key={index} style={{ position: 'relative', aspectRatio: '1' }}>
+                  <EwFilePick accept="image/*" onPick={file => setGallery(current => current.map((item, itemIndex) => itemIndex === index ? URL.createObjectURL(file) : item))} style={{ position: 'absolute', inset: 0, borderRadius: 13, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, border: photo ? 'none' : '1.5px dashed #C9CFCB', background: photo ? `center/cover url(${photo})` : '#fff', fontFamily: FX, fontSize: 11.5, fontWeight: 700, color: OK.ink3 }}>
+                    {!photo && <><Icon name="plus" size={18} color={OK.ink3}/>Choisir</>}
+                  </EwFilePick>
+                  {photo && <button onClick={() => setGallery(current => current.map((item, itemIndex) => itemIndex === index ? null : item))} aria-label="Retirer la photo" style={{ position: 'absolute', top: 5, right: 5, width: 22, height: 22, borderRadius: 999, border: 0, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Icon name="close" size={11} color="#fff"/></button>}
+                </div>
+              ))}
+            </div>
+            <p style={EW_HINT}>Touchez une case pour choisir une photo. Les cases vides sont ignorées.</p>
+            <div style={{ height: 1, background: OK.line, margin: '14px 0' }}/>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+              <span style={{ fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.ink }}>Fichiers supplémentaires</span><span style={{ marginLeft: 6, fontFamily: FX, fontSize: 12, color: OK.ink3 }}>(facultatif)</span>
+            </div>
+            <p style={{ ...EW_HINT, margin: '0 2px 10px' }}>Menu, carte des prix, RCCM, brochure… (PDF, images ou bureautique).</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {docs.map((doc, index) => (
+                <div key={index} style={{ display: 'flex', gap: 7, alignItems: 'center' }}>
+                  <input value={doc.label} onChange={event => setDocs(current => current.map((item, itemIndex) => itemIndex === index ? { ...item, label: event.target.value } : item))} placeholder="Libellé (ex : Menu)" style={{ ...PUB_FIELD, height: 44, flex: 1, minWidth: 0, fontSize: 13 }}/>
+                  <EwFilePick accept=".pdf,image/*,.doc,.docx,.xls,.xlsx" onPick={file => setDocs(current => current.map((item, itemIndex) => itemIndex === index ? { ...item, file: file.name, label: item.label || file.name.replace(/\.[^.]+$/, '') } : item))} style={{ flex: 1, minWidth: 0, height: 40, borderRadius: 13, border: `1.5px solid ${doc.file ? OK.green : OK.line}`, background: doc.file ? 'rgba(11,124,57,0.06)' : '#fff', display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px', fontFamily: FX, fontSize: 12, fontWeight: 700, color: doc.file ? OK.green : OK.ink2, overflow: 'hidden' }}>
+                    <Icon name={doc.file ? 'doc' : 'plus'} size={15} color={doc.file ? OK.green : OK.ink2}/><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{doc.file || 'Choisir un fichier'}</span>
+                  </EwFilePick>
+                  <button onClick={() => setDocs(current => current.length > 1 ? current.filter((_, itemIndex) => itemIndex !== index) : [{ label: '', file: '' }])} aria-label="Supprimer le fichier" style={{ width: 40, height: 44, flexShrink: 0, borderRadius: 12, border: `1.5px solid rgba(224,36,27,0.35)`, background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="close" size={15} color={OK.red}/></button>
+                </div>
+              ))}
+              <button onClick={() => setDocs(current => [...current, { label: '', file: '' }])} style={{ alignSelf: 'flex-start', height: 36, padding: '0 12px', borderRadius: 11, cursor: 'pointer', border: `1.5px solid ${OK.green}`, background: '#fff', color: OK.green, fontFamily: FX, fontSize: 12.5, fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: 5 }}><Icon name="plus" size={14} color={OK.green}/>Ajouter un document</button>
+            </div>
+          </EwSection>
+        </>}
+
+        {step === 4 && <EwSection index={5} title="Choisissez votre offre & vos options" icon="tag">
+          <p style={{ margin: '0 0 12px', fontFamily: FX, fontSize: 12.5, color: OK.ink2, lineHeight: 1.5 }}>Choisissez votre offre : vous pourrez ensuite <b>payer en ligne</b> pour être publié rapidement, ou <b>valider sans payer</b> (notre équipe vous recontacte).</p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
+            {EW_TIERS.map((item, index) => { const on = tier === item.id; return (
+              <button key={item.id} onClick={() => setTier(item.id)} aria-pressed={on} style={{ textAlign: 'left', cursor: 'pointer', padding: '10px 11px 11px', borderRadius: 14, background: on ? OK.green : '#fff', border: on ? `1.5px solid ${OK.green}` : `1.5px solid ${OK.line}`, boxShadow: on ? '0 8px 18px rgba(11,124,57,0.22)' : 'none' }}>
+                <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: FX, fontSize: 8.5, fontWeight: 800, letterSpacing: 0.3, color: on ? OK.green : '#fff', background: on ? '#fff' : OK.ink, padding: '2px 6px', borderRadius: 999 }}>{formInfo?.tag || 'SOCIÉTÉ'}</span>
+                  {item.popular && <span style={{ fontFamily: FX, fontSize: 8.5, fontWeight: 800, color: '#3D2F00', background: OK.gold, padding: '2px 6px', borderRadius: 999 }}>Populaire</span>}
+                </div>
+                <div style={{ marginTop: 6, fontFamily: FX, fontSize: 14.5, fontWeight: 800, color: on ? '#fff' : OK.ink }}>{item.name}</div>
+                <div style={{ marginTop: 2, fontFamily: FX, fontSize: 11, fontWeight: 700, color: on ? 'rgba(255,255,255,0.85)' : OK.ink3 }}>{ewMoney(EW_PRICES[form || 'societe'][index])}/an HT</div>
+              </button>
+            ); })}
+          </div>
+          {err('tier') && <p style={EW_ERROR}>{err('tier')}</p>}
+          {quote && <div style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap', gap: '5px 12px' }}>{quote.offer.perks.map(perk => <span key={perk} style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink2 }}>✓ {perk}</span>)}</div>}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, margin: '18px 2px 6px' }}><Icon name="sliders" size={16} color={OK.ink}/><span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>Options & extras</span></div>
+          <div style={{ borderBottom: `1px solid ${OK.line}` }}>
+            <EwAccordion open={openOpt === 'badge'} onToggle={() => setOpenOpt(openOpt === 'badge' ? '' : 'badge')} icon="verified" title="Badge Certifié">
+              {quote?.offer.badgeIncluded
+                ? <p style={{ margin: 0, fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}>Inclus dans l’offre Leader.</p>
+                : <EwCheck on={certified || pack !== 'none'} onClick={() => { setCertified(!(certified || pack !== 'none')); setPack('none'); }} note="Nécessite le RCCM (vérifié par notre équipe avant activation).">Ajouter le Badge Certifié <span style={{ marginLeft: 4, fontSize: 10.5, color: '#fff', background: OK.ink2, padding: '2px 7px', borderRadius: 999, whiteSpace: 'nowrap' }}>{ewMoney(EW_BADGE)}/an</span></EwCheck>}
+            </EwAccordion>
+            <EwAccordion open={openOpt === 'featured'} onToggle={() => setOpenOpt(openOpt === 'featured' ? '' : 'featured')} icon="star" iconColor={OK.gold} title="Référencement Featured">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+                {EW_FEATURED.map(item => { const shown = pack !== 'none' ? pack : featured; const on = shown === item.id; return <button key={item.id} onClick={() => { setFeatured(item.id); if (pack !== 'none') { setCertified(true); setPack('none'); } }} style={{ height: 36, borderRadius: 10, cursor: 'pointer', border: `1.5px solid ${on ? OK.gold : 'rgba(245,184,0,0.5)'}`, background: on ? OK.gold : '#fff', color: on ? '#3D2F00' : '#8A6B00', fontFamily: FX, fontSize: 11.5, fontWeight: 800 }}>{item.label}</button>; })}
+              </div>
+              <p style={EW_HINT}>{quote ? (featured !== 'none' && pack === 'none' ? `Tarif selon votre offre : ${ewMoney(ewFeaturedPrice(featured, quote.tierIndex))}/an` : pack !== 'none' ? 'Inclus dans votre pack.' : 'Position garantie en tête de vos catégories.') : 'Choisissez une offre pour voir le tarif.'}</p>
+            </EwAccordion>
+            <EwAccordion open={openOpt === 'sites'} onToggle={() => setOpenOpt(openOpt === 'sites' ? '' : 'sites')} icon="grid" title="Multisites">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontFamily: FX, fontSize: 12.5, fontWeight: 700, color: OK.ink2 }}>Nombre de sites</span>
+                <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', border: `1px solid ${OK.line}`, borderRadius: 12, overflow: 'hidden' }}>
+                  <button onClick={() => setSites(Math.max(1, sites - 1))} aria-label="Retirer un site" style={{ width: 38, height: 38, border: 0, background: OK.bg2, cursor: 'pointer', fontSize: 18, fontWeight: 800, color: OK.ink }}>−</button>
+                  <span style={{ width: 40, textAlign: 'center', fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>{sites}</span>
+                  <button onClick={() => setSites(Math.min(20, sites + 1))} aria-label="Ajouter un site" style={{ width: 38, height: 38, border: 0, background: OK.bg2, cursor: 'pointer', fontSize: 18, fontWeight: 800, color: OK.green }}>+</button>
+                </div>
+              </div>
+              <p style={EW_HINT}>2ᵉ et 3ᵉ site : −20 % · 4ᵉ et suivants : −30 % sur l’abonnement de base.</p>
+            </EwAccordion>
+            <EwAccordion open={openOpt === 'packs'} onToggle={() => setOpenOpt(openOpt === 'packs' ? '' : 'packs')} icon="gift" iconColor={OK.red} title="Packs & extras">
+              {EW_FEATURED.filter(item => item.base).map(item => (
+                <EwCheck key={item.id} on={pack === item.id} onClick={() => { setPack(pack === item.id ? 'none' : item.id); setCertified(false); setFeatured('none'); }} note={quote?.offer.badgeIncluded ? `Featured ${item.label} à −20 % (badge inclus dans le Leader).` : `Badge Certifié + Featured ${item.label} : économisez 20 % sur les deux options.`}>Pack Badge + Featured {item.label}</EwCheck>
+              ))}
+            </EwAccordion>
+          </div>
+
+          <div style={{ marginTop: 16, background: 'rgba(11,124,57,0.04)', border: `1.5px solid ${OK.green}`, borderRadius: 16, padding: '14px 15px' }}>
+            <div style={{ fontFamily: FX, fontSize: 11.5, fontWeight: 800, letterSpacing: 0.6, color: OK.ink2, textTransform: 'uppercase' }}>Votre devis estimé</div>
+            {!quote ? <p style={{ margin: '6px 0 0', fontFamily: FX, fontSize: 12, color: OK.ink3 }}>Sélectionnez une offre pour voir le devis.</p> : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 }}>
+                {quote.lines.map(line => <div key={line.label} style={{ display: 'flex', alignItems: 'center', gap: 8, fontFamily: FX, fontSize: 12.5, color: OK.ink2 }}><Icon name={line.icon} size={14} color={OK.green}/><span style={{ flex: 1 }}>{line.label}</span><span style={{ fontWeight: 700, color: OK.ink }}>{ewMoney(line.amount)}</span></div>)}
+              </div>
+            )}
+            <div style={{ borderTop: `1px solid ${OK.line}`, marginTop: 12, paddingTop: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.ink }}><span>Total HT</span><span style={{ color: OK.green }}>{quote ? ewMoney(quote.subtotal) : '—'}</span></div>
+              <div style={{ textAlign: 'right', fontFamily: FX, fontSize: 11, color: OK.ink3, marginTop: 3 }}>TVA 18 % + CSS 1 % : {quote ? ewMoney(quote.tax) : '—'}</div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink, marginTop: 8 }}><span>Total TTC / an</span><span>{quote ? ewMoney(quote.total) : '—'}</span></div>
+            </div>
+          </div>
+          <div style={{ marginTop: 12, display: 'flex', gap: 9, padding: '11px 12px', borderRadius: 13, background: OK.bg2 }}>
+            <span style={{ flexShrink: 0, marginTop: 1 }}><Icon name="shield" size={16} color={OK.green}/></span>
+            <p style={{ margin: 0, fontFamily: FX, fontSize: 11.5, color: OK.ink2, lineHeight: 1.5 }}>Deux options : <b>valider sans payer</b> (notre équipe vous contacte pour finaliser), ou <b>payer en ligne</b> (Airtel Money, Moov Money ou carte) pour publier votre fiche plus vite.</p>
+          </div>
+        </EwSection>}
+      </div>
+    </Screen>
+  );
+}
+
 function EtabScreen() {
   const { back, navigate, canBack } = useNav();
   const [mode, setMode] = useState(null);
@@ -6919,6 +7552,8 @@ function EtabScreen() {
       </Screen>
     );
   }
+
+  if (mode === 'mine' && started) return <EtabWizard onExit={() => setStarted(false)}/>;
 
   if (mode === 'mine' && !started) {
     return (
@@ -8040,55 +8675,223 @@ function FavorisScreen() {
 // ── COMPTE ──────────────────────────────────────────────────
 const APP_VERSION = '0.1.0';
 
-function CompteScreen() {
-  const { navigate, reset } = useNav();
-  const rows = [
-    ['user', 'Informations personnelles', null], ['tag', 'Mes annonces', '3 actives'], ['heart', 'Favoris', null], ['shop', 'Devenir vendeur Pro', 'Nouveau'],
-    ['bell', 'Notifications', null], ['shield', 'Sécurité & confidentialité', null], ['help', 'Aide & support', null],
-  ];
+// Profils de démonstration : un compte personnel + les entreprises rattachées
+// (miroir de `availableProfiles` / `switchProfileApi` de l'app Flutter).
+// Convention : avatar rond = personne, avatar carré arrondi = entreprise.
+const DEMO_PROFILES = [
+  { id: 'perso', type: 'personal', name: 'Patricia Ndong', bio: '',
+    tel: '+241 06 77 12 34', email: 'patricia.ndong@email.ga', ville: 'Libreville',
+    avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80&auto=format&fit=crop',
+    since: '2024', stats: { annonces: 3, note: '4,8', avis: 12 } },
+  { id: 'couture', type: 'company', name: 'Ndong Couture', bio: 'Créations en wax et prêt-à-porter sur mesure.',
+    tel: '+241 07 45 22 10', email: 'contact@ndongcouture.ga', ville: 'Libreville', idPublic: 'Boutique · NIF 2024-B-1123', verified: true,
+    avatar: 'assets/services/boutiques.jpg', since: '2024', stats: { annonces: 18, note: '4,9', avis: 41 } },
+  { id: 'saveurs', type: 'company', name: 'Saveurs d’Akanda', bio: 'Traiteur et plats à emporter.',
+    tel: '+241 06 11 98 30', email: 'saveurs.akanda@email.ga', ville: 'Akanda', idPublic: 'Restauration · NIF 2025-R-0457',
+    avatar: 'assets/services/manger.jpg', since: '2025', stats: { annonces: 6, note: '4,6', avis: 9 } },
+];
+const PROFILE_EVENT = 'okaba:profile';
+const PROFILE_KEY = 'okaba.demo.profiles';
+let demoProfileState = (() => {
+  const fallback = { activeId: 'perso', profiles: DEMO_PROFILES };
+  try {
+    const saved = JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
+    if (saved && Array.isArray(saved.profiles) && saved.profiles.length) return saved;
+  } catch (e) { /* stockage indisponible : on garde la démo */ }
+  return fallback;
+})();
+function setDemoProfileState(next) {
+  demoProfileState = next;
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(next)); } catch (e) { /* ignoré */ }
+  window.dispatchEvent(new CustomEvent(PROFILE_EVENT));
+}
+function useDemoProfiles() {
+  const [state, setState] = useState(demoProfileState);
+  useEffect(() => {
+    const sync = () => setState(demoProfileState);
+    window.addEventListener(PROFILE_EVENT, sync);
+    return () => window.removeEventListener(PROFILE_EVENT, sync);
+  }, []);
+  const active = state.profiles.find(p => p.id === state.activeId) || state.profiles[0];
+  return {
+    profiles: state.profiles, active,
+    switchTo: (id) => setDemoProfileState({ ...demoProfileState, activeId: id }),
+    update: (id, patch) => setDemoProfileState({ ...demoProfileState,
+      profiles: demoProfileState.profiles.map(p => p.id === id ? { ...p, ...patch } : p) }),
+  };
+}
+const profileSubtitle = (p) => p.type === 'company' ? (p.idPublic || 'Compte entreprise') : `${p.tel} · ${p.ville}`;
+function ProfileAvatar({ profile, size = 56, ring = '#fff' }) {
+  const company = profile.type === 'company';
   return (
-    <Screen bg={OK.bg2} statusDark={true} tabBar>
-      <div data-screen-label="Compte">
-        <GreenHeader title="Mon compte"/>
-        {/* Profile card — cliquable pour consulter / modifier ses infos */}
-        <div style={{ padding: '14px 16px 0' }}>
-          <button onClick={() => navigate('profil')} style={{ width: '100%', textAlign: 'left', cursor: 'pointer', border: 'none',
-            background: `linear-gradient(135deg, ${OK.green} 0%, ${OK.greenDeep} 100%)`, borderRadius: 20, padding: 18,
-            display: 'flex', alignItems: 'center', gap: 14, color: '#fff', position: 'relative', overflow: 'hidden', boxShadow: '0 10px 26px rgba(11,124,57,0.26)' }}>
-            <div aria-hidden style={{ position: 'absolute', right: -30, top: -40, width: 150, height: 150, borderRadius: 75, background: `radial-gradient(circle, ${OK.gold} 0%, transparent 70%)`, opacity: 0.45 }}/>
-            {/* Accès édition clairement identifiable */}
-            <span style={{ position: 'absolute', top: 12, right: 12, display: 'inline-flex', alignItems: 'center', gap: 5,
-              background: 'rgba(255,255,255,0.18)', border: '1px solid rgba(255,255,255,0.4)', padding: '5px 11px', borderRadius: 999,
-              fontFamily: FX, fontSize: 11, fontWeight: 800, color: '#fff' }}>
-              <Icon name="edit" size={12} color="#fff" strokeWidth={2.2}/> Modifier
-            </span>
-            <div style={{ width: 60, height: 60, borderRadius: 16, background: `url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80&auto=format&fit=crop') center/cover`, border: '2px solid rgba(255,255,255,0.5)', flexShrink: 0 }}/>
-            <div style={{ flex: 1, position: 'relative' }}>
-              <div style={{ fontFamily: FX, fontWeight: 800, fontSize: 20, lineHeight: 1 }}>Patricia Ndong</div>
-              <div style={{ fontFamily: FX, fontSize: 12, opacity: 0.85, marginTop: 4 }}>+241 06 77 12 34 · Libreville</div>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, background: 'rgba(245,184,0,0.22)', border: '1px solid rgba(245,184,0,0.5)', padding: '3px 9px', borderRadius: 999, fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: OK.gold }}>
-                <Icon name="sparkle" size={11} color={OK.gold} strokeWidth={2}/> Membre O’KABA
-              </span>
-            </div>
+    <div style={{ width: size, height: size, flexShrink: 0, borderRadius: company ? size * 0.28 : size / 2,
+      background: `${OK.bg2} url('${profile.avatar}') center/cover`, boxShadow: `0 0 0 3px ${ring}, 0 6px 16px rgba(6,40,20,0.18)` }}/>
+  );
+}
+
+// Feuille « Changer de compte » — modèle Instagram / Gmail :
+// liste des comptes, compte actif coché, ajout d'une entreprise en bas.
+function AccountSwitcherSheet({ open, onClose, profiles, activeId, onPick, onAdd }) {
+  return (
+    <div style={{ position: 'absolute', inset: 0, zIndex: 80, pointerEvents: open ? 'auto' : 'none' }} aria-hidden={!open}>
+      <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(7,30,16,0.45)', opacity: open ? 1 : 0, transition: 'opacity .22s ease' }}/>
+      <div role="dialog" aria-label="Changer de compte" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: '#fff',
+        borderRadius: '24px 24px 0 0', padding: `8px 16px calc(${typeof APP_BOTTOM_PADDING === 'number' ? APP_BOTTOM_PADDING + 'px' : APP_BOTTOM_PADDING} + 18px)`, boxShadow: '0 -12px 40px rgba(6,40,20,0.25)',
+        transform: open ? 'translateY(0)' : 'translateY(100%)', transition: 'transform .28s cubic-bezier(.2,.8,.2,1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '2px 0 10px' }}>
+          <span style={{ width: 40, height: 4, borderRadius: 999, background: '#DDDAD1' }}/>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: FX, fontSize: 17, fontWeight: 800, color: OK.ink }}>Changer de compte</div>
+            <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink3, marginTop: 2 }}>Publiez et échangez au nom du compte choisi</div>
+          </div>
+          <button onClick={onClose} aria-label="Fermer" style={{ width: 34, height: 34, borderRadius: 999, border: 'none', background: OK.bg2, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="close" size={16} color={OK.ink} strokeWidth={2.4}/>
           </button>
         </div>
-        {/* Menu */}
-        <div style={{ padding: '16px 16px 0' }}>
-          <div style={{ background: '#fff', borderRadius: 16, border: `1px solid ${OK.line}`, overflow: 'hidden' }}>
-            {rows.map(([ic, l, badge], i) => (
-              <button key={l} onClick={() => { if (l === 'Informations personnelles') navigate('profil'); else if (l === 'Favoris') navigate('favoris'); else if (l === 'Notifications') navigate('notifications'); else if (l === 'Mes annonces') navigate('market', { cat: 'all' }); else if (l === 'Devenir vendeur Pro') navigate('shops'); }}
-                style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 13, padding: '14px 15px', border: 'none',
-                  borderTop: i ? `1px solid ${OK.line}` : 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
-                <div style={{ width: 38, height: 38, borderRadius: 11, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon name={ic} size={18} color={OK.green} strokeWidth={2}/>
-                </div>
-                <span style={{ flex: 1, fontFamily: FX, fontSize: 14, fontWeight: 700, color: OK.ink }}>{l}</span>
-                {badge && <span style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: badge === 'Nouveau' ? '#8A6B00' : OK.ink3, background: badge === 'Nouveau' ? 'rgba(245,184,0,0.22)' : OK.bg2, padding: '3px 9px', borderRadius: 999 }}>{badge}</span>}
-                <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
+        {[['personal', 'Compte personnel'], ['company', 'Mes entreprises']].map(([type, title]) => {
+          const list = profiles.filter(p => p.type === type);
+          if (!list.length) return null;
+          return (
+            <div key={type} style={{ marginTop: 10 }}>
+              <div style={{ ...PUB_LABEL, margin: '0 2px 6px' }}>{title}</div>
+              {list.map(p => {
+                const on = p.id === activeId;
+                return (
+                  <button key={p.id} onClick={() => onPick(p)} aria-pressed={on} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '10px 10px', marginBottom: 6, borderRadius: 14, cursor: 'pointer', textAlign: 'left',
+                    border: `1.5px solid ${on ? OK.green : OK.line}`, background: on ? 'rgba(11,124,57,0.06)' : '#fff' }}>
+                    <ProfileAvatar profile={p} size={42} ring="#fff"/>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <span style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</span>
+                        {p.verified && <Icon name="verified" size={13} color={OK.green} strokeWidth={2}/>}
+                      </div>
+                      <div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3, marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{profileSubtitle(p)}</div>
+                    </div>
+                    <span style={{ width: 22, height: 22, borderRadius: 999, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      border: on ? 'none' : `2px solid ${OK.line}`, background: on ? OK.green : 'transparent' }}>
+                      {on && <Icon name="check" size={13} color="#fff" strokeWidth={3}/>}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
+        <button onClick={onAdd} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 10px', marginTop: 4, borderRadius: 14,
+          border: `1.5px dashed ${OK.line}`, background: '#fff', cursor: 'pointer', textAlign: 'left' }}>
+          <span style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="plus" size={19} color={OK.green} strokeWidth={2.4}/>
+          </span>
+          <span style={{ flex: 1, fontFamily: FX, fontSize: 13.5, fontWeight: 800, color: OK.green }}>Ajouter une entreprise</span>
+          <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CompteScreen() {
+  const { navigate, reset } = useNav();
+  const { profiles, active, switchTo } = useDemoProfiles();
+  const [switcher, setSwitcher] = useState(false);
+  const company = active.type === 'company';
+  const pick = (p) => {
+    setSwitcher(false);
+    if (p.id !== active.id) { switchTo(p.id); notifyDemo(`Vous utilisez maintenant « ${p.name} »`); }
+  };
+  const SECTIONS = [
+    { title: 'Mon activité', rows: [
+      { ic: 'tag', l: 'Mes annonces', badge: `${active.stats.annonces} actives`, go: () => navigate('market', { cat: 'all' }) },
+      { ic: 'heart', l: 'Favoris', go: () => navigate('favoris') },
+      company
+        ? { ic: 'shop', l: 'Ma vitrine entreprise', go: () => navigate('shops') }
+        : { ic: 'shop', l: 'Devenir vendeur Pro', badge: 'Nouveau', go: () => navigate('shops') },
+    ] },
+    { title: 'Paramètres', rows: [
+      { ic: 'user', l: company ? 'Informations de l’entreprise' : 'Informations personnelles', go: () => navigate('profil') },
+      { ic: 'bell', l: 'Notifications', go: () => navigate('notifications') },
+      { ic: 'shield', l: 'Sécurité & confidentialité', go: () => notifyDemo('Sécurité & confidentialité') },
+    ] },
+    { title: 'Assistance', rows: [
+      { ic: 'help', l: 'Aide & support', go: () => notifyDemo('Aide & support') },
+    ] },
+  ];
+  const actionBtn = (primary) => ({ flex: 1, minWidth: 0, height: 44, padding: '0 8px', borderRadius: 12, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+    whiteSpace: 'nowrap', fontFamily: FX, fontSize: 12.5, fontWeight: 800, border: primary ? 'none' : `1.5px solid ${OK.line}`,
+    background: primary ? OK.green : '#fff', color: primary ? '#fff' : OK.ink });
+  return (
+    <Screen bg={OK.bg2} statusDark={true} tabBar footer={
+      <AccountSwitcherSheet open={switcher} onClose={() => setSwitcher(false)} profiles={profiles} activeId={active.id}
+        onPick={pick} onAdd={() => { setSwitcher(false); navigate('shops'); }}/>
+    }>
+      <div data-screen-label="Compte">
+        <GreenHeader title="Mon compte" flat/>
+        {/* Bandeau vert prolongé : la carte profil vient le chevaucher */}
+        <div style={{ height: 44, background: OK.green }}/>
+        <div style={{ padding: '0 16px', marginTop: -12 }}>
+          <div style={{ background: '#fff', borderRadius: 22, border: `1px solid ${OK.line}`, boxShadow: '0 10px 28px rgba(6,40,20,0.10)', padding: '0 14px 13px', textAlign: 'center' }}>
+            {/* Avatar + raccourci photo */}
+            <div style={{ position: 'relative', width: 68, margin: '-22px auto 0' }}>
+              <ProfileAvatar profile={active} size={68}/>
+              <button onClick={() => navigate('profil')} aria-label="Modifier la photo" style={{ position: 'absolute', right: -4, bottom: -4, width: 26, height: 26, borderRadius: 999,
+                border: '2px solid #fff', background: OK.green, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon name="camera" size={12} color="#fff" strokeWidth={2.2}/>
               </button>
-            ))}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 9 }}>
+              <span style={{ fontFamily: FX, fontWeight: 800, fontSize: 18, color: OK.ink, letterSpacing: -0.3 }}>{active.name}</span>
+              {active.verified && <Icon name="verified" size={16} color={OK.green} strokeWidth={2}/>}
+            </div>
+            <div style={{ fontFamily: FX, fontSize: 12, color: OK.ink2, marginTop: 3 }}>{profileSubtitle(active)}</div>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 7, padding: '3px 9px', borderRadius: 999, fontFamily: FX, fontSize: 11, fontWeight: 800,
+              background: company ? 'rgba(245,184,0,0.18)' : 'rgba(11,124,57,0.08)', color: company ? '#8A6B00' : OK.green }}>
+              <Icon name={company ? 'briefcase' : 'user'} size={12} color={company ? '#8A6B00' : OK.green} strokeWidth={2.2}/>
+              {company ? 'Compte entreprise' : 'Compte personnel'}
+            </span>
+            {/* Indicateurs de confiance (modèle Airbnb / Vinted) */}
+            <div style={{ display: 'flex', marginTop: 11, padding: '9px 0', borderTop: `1px solid ${OK.line}`, borderBottom: `1px solid ${OK.line}` }}>
+              {[[String(active.stats.annonces), 'Annonces'], [`${active.stats.note} ★`, `${active.stats.avis} avis`], [active.since, 'Membre depuis']].map(([v, l], i) => (
+                <div key={l} style={{ flex: 1, borderLeft: i ? `1px solid ${OK.line}` : 'none' }}>
+                  <div style={{ fontFamily: FX, fontSize: 15, fontWeight: 800, color: OK.ink }}>{v}</div>
+                  <div style={{ fontFamily: FX, fontSize: 11, color: OK.ink3, marginTop: 2 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+            {/* Deux actions explicites, libellées, à portée de pouce */}
+            <div style={{ display: 'flex', gap: 10, marginTop: 14 }}>
+              <button onClick={() => navigate('profil')} style={actionBtn(true)}>
+                <Icon name="edit" size={15} color="#fff" strokeWidth={2.2}/> Modifier le profil
+              </button>
+              <button onClick={() => setSwitcher(true)} style={actionBtn(false)} aria-haspopup="dialog">
+                <Icon name="swap" size={15} color={OK.green} strokeWidth={2.2}/> Changer de compte
+              </button>
+            </div>
           </div>
-          <button onClick={() => { clearOkabaDemoSession(); reset('welcome'); }} style={{ width: '100%', marginTop: 14, height: 50, borderRadius: 13, border: `1.5px solid ${OK.line}`,
+        </div>
+        {/* Menu groupé par intention */}
+        <div style={{ padding: '4px 16px 0' }}>
+          {SECTIONS.map(sec => (
+            <div key={sec.title} style={{ marginTop: 16 }}>
+              <div style={{ ...PUB_LABEL, margin: '0 4px 7px' }}>{sec.title}</div>
+              <div style={{ background: '#fff', borderRadius: 16, border: `1px solid ${OK.line}`, overflow: 'hidden' }}>
+                {sec.rows.map((r, i) => (
+                  <button key={r.l} onClick={r.go} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 13, padding: '13px 15px', border: 'none',
+                    borderTop: i ? `1px solid ${OK.line}` : 'none', background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 11, background: 'rgba(11,124,57,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Icon name={r.ic} size={17} color={OK.green} strokeWidth={2}/>
+                    </div>
+                    <span style={{ flex: 1, fontFamily: FX, fontSize: 14, fontWeight: 700, color: OK.ink }}>{r.l}</span>
+                    {r.badge && <span style={{ fontFamily: FX, fontSize: 10.5, fontWeight: 800, color: r.badge === 'Nouveau' ? '#8A6B00' : OK.ink3, background: r.badge === 'Nouveau' ? 'rgba(245,184,0,0.22)' : OK.bg2, padding: '3px 9px', borderRadius: 999 }}>{r.badge}</span>}
+                    <Icon name="chev-r" size={17} color={OK.ink3} strokeWidth={2}/>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          <button onClick={() => { clearOkabaDemoSession(); reset('welcome'); }} style={{ width: '100%', marginTop: 18, height: 50, borderRadius: 13, border: `1.5px solid ${OK.line}`,
             background: '#fff', color: OK.red, cursor: 'pointer', fontFamily: FX, fontSize: 14, fontWeight: 800,
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             <Icon name="logout" size={17} color={OK.red} strokeWidth={2}/> Se déconnecter
@@ -8104,43 +8907,72 @@ function CompteScreen() {
   );
 }
 
-// ── INFORMATIONS PERSONNELLES — consultation / modification ──
+// ── MODIFIER LE PROFIL — compte actif (personnel ou entreprise) ──
 function ProfilInfosScreen() {
   const { back, navigate, canBack } = useNav();
   const goBack = () => { if (canBack) back(); else navigate('compte'); };
-  const [form, setForm] = useState({
-    nom: 'Patricia Ndong', tel: '+241 06 77 12 34', email: 'patricia.ndong@email.ga', ville: 'Libreville',
-  });
+  const { active, update } = useDemoProfiles();
+  const company = active.type === 'company';
+  const initial = { name: active.name, bio: active.bio || '', tel: active.tel, email: active.email, ville: active.ville };
+  const [form, setForm] = useState(initial);
   const setF = (k, v) => setForm(prev => ({ ...prev, [k]: v }));
-  const FIELDS = [
-    { k: 'nom',   label: 'Nom complet', type: 'text',  ph: 'Ex : Patricia Ndong' },
-    { k: 'tel',   label: 'Téléphone',   type: 'tel',   ph: '+241 …' },
-    { k: 'email', label: 'E-mail',      type: 'email', ph: 'nom@email.ga' },
-    { k: 'ville', label: 'Ville',       type: 'text',  ph: 'Ex : Libreville' },
+  const dirty = Object.keys(initial).some(k => form[k] !== initial[k]);
+  const valid = form.name.trim() && form.tel.trim();
+  const SECTIONS = [
+    { title: company ? 'Entreprise' : 'Identité', fields: [
+      { k: 'name', label: company ? 'Nom commercial' : 'Nom complet', type: 'text', ph: company ? 'Ex : Ndong Couture' : 'Ex : Patricia Ndong' },
+      { k: 'bio', label: company ? 'Description' : 'Présentation', type: 'textarea', ph: company ? 'Ce que propose votre entreprise…' : 'Quelques mots sur vous…', max: 160 },
+    ] },
+    { title: 'Coordonnées', fields: [
+      { k: 'tel', label: 'Téléphone', type: 'tel', ph: '+241 …' },
+      { k: 'email', label: 'E-mail', type: 'email', ph: 'nom@email.ga' },
+      { k: 'ville', label: 'Ville', type: 'text', ph: 'Ex : Libreville' },
+    ] },
   ];
+  const save = () => { update(active.id, { ...form, name: form.name.trim() }); notifyDemo('Profil enregistré'); goBack(); };
   return (
     <Screen bg={OK.bg2} statusDark={true} footerPad={92} footer={
-      <PubBar label="Enregistrer" icon="check" onClick={() => { notifyDemo('Informations personnelles enregistrées'); goBack(); }}/>
+      <PubBar label={dirty ? 'Enregistrer les modifications' : 'Aucune modification'} icon="check" disabled={!dirty || !valid} onClick={save}/>
     }>
-      <div data-screen-label="Informations personnelles">
-        <GreenHeader title="Informations personnelles" onBack={goBack}/>
-        {/* En-tête avatar */}
-        <div style={{ padding: '18px 16px 0', display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ width: 66, height: 66, borderRadius: 18, background: `url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&q=80&auto=format&fit=crop') center/cover`, border: `2px solid ${OK.line}`, flexShrink: 0 }}/>
-          <button onClick={() => notifyDemo('Changer la photo de profil')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff',
-            border: `1.5px solid ${OK.line}`, borderRadius: 12, padding: '9px 14px', cursor: 'pointer', fontFamily: FX, fontSize: 12.5, fontWeight: 800, color: OK.green }}>
-            <Icon name="edit" size={14} color={OK.green} strokeWidth={2.2}/> Changer la photo
+      <div data-screen-label="Modifier le profil">
+        <GreenHeader title="Modifier le profil" onBack={goBack}/>
+        {/* Photo centrée + compte édité */}
+        <div style={{ padding: '22px 16px 4px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <button onClick={() => notifyDemo('Choisir une nouvelle photo')} aria-label="Changer la photo" style={{ position: 'relative', border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
+            <ProfileAvatar profile={active} size={92}/>
+            <span style={{ position: 'absolute', right: -4, bottom: -4, width: 32, height: 32, borderRadius: 999, border: '2.5px solid #fff', background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="camera" size={15} color="#fff" strokeWidth={2.2}/>
+            </span>
           </button>
+          <button onClick={() => notifyDemo('Choisir une nouvelle photo')} style={{ marginTop: 10, border: 'none', background: 'none', cursor: 'pointer', fontFamily: FX, fontSize: 13, fontWeight: 800, color: OK.green }}>
+            Changer la photo
+          </button>
+          <span style={{ marginTop: 6, display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', borderRadius: 999, background: '#fff', border: `1px solid ${OK.line}`, fontFamily: FX, fontSize: 11, fontWeight: 700, color: OK.ink2 }}>
+            <Icon name={company ? 'briefcase' : 'user'} size={12} color={OK.ink2} strokeWidth={2.2}/>
+            {company ? 'Compte entreprise' : 'Compte personnel'}
+          </span>
         </div>
-        {/* Formulaire */}
-        <div style={{ padding: '18px 16px 0', display: 'flex', flexDirection: 'column', gap: 15 }}>
-          {FIELDS.map(f => (
-            <div key={f.k}>
-              <label style={PUB_LABEL}>{f.label}</label>
-              <input value={form[f.k]} onChange={e => setF(f.k, e.target.value)}
-                type={f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : 'text'}
-                inputMode={f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : undefined}
-                placeholder={f.ph} style={PUB_FIELD}/>
+        {/* Formulaire groupé */}
+        <div style={{ padding: '10px 16px 0' }}>
+          {SECTIONS.map(sec => (
+            <div key={sec.title} style={{ marginTop: 14, background: '#fff', borderRadius: 16, border: `1px solid ${OK.line}`, padding: '14px 14px 4px' }}>
+              <div style={{ fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink, marginBottom: 12 }}>{sec.title}</div>
+              {sec.fields.map(f => (
+                <div key={f.k} style={{ marginBottom: 14 }}>
+                  <label htmlFor={`pf-${f.k}`} style={PUB_LABEL}>{f.label}</label>
+                  {f.type === 'textarea' ? (
+                    <>
+                      <textarea id={`pf-${f.k}`} value={form[f.k]} maxLength={f.max} rows={3} onChange={e => setF(f.k, e.target.value)} placeholder={f.ph}
+                        style={{ ...PUB_FIELD, height: 'auto', padding: '12px 14px', resize: 'none', lineHeight: 1.45 }}/>
+                      <div style={{ textAlign: 'right', fontFamily: FX, fontSize: 10.5, color: OK.ink3, marginTop: 4 }}>{form[f.k].length}/{f.max}</div>
+                    </>
+                  ) : (
+                    <input id={`pf-${f.k}`} value={form[f.k]} onChange={e => setF(f.k, e.target.value)}
+                      type={f.type} inputMode={f.type === 'email' ? 'email' : f.type === 'tel' ? 'tel' : undefined}
+                      placeholder={f.ph} style={PUB_FIELD}/>
+                  )}
+                </div>
+              ))}
             </div>
           ))}
         </div>

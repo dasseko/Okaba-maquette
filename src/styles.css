@@ -514,3 +514,229 @@ html.okaba-native .okaba-app-shell {
   opacity: 0;
   animation: okaba-promo-word 0.55s cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
+
+/* ============================================================
+   BAIE DES ROIS — destination hub and place detail system
+   ============================================================ */
+.baie-home-hero {
+  overflow: hidden;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 10px 26px rgba(5, 39, 19, 0.18);
+}
+
+.baie-home [data-screen-scroll="baie"] {
+  background: #f4f6f3;
+  padding-bottom: max(28px, env(safe-area-inset-bottom)) !important;
+}
+
+.baie-home-hero h1 {
+  max-width: 330px;
+}
+
+.baie-explore-grid > button {
+  isolation: isolate;
+}
+
+.baie-explore-grid > button > div:first-child {
+  transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.baie-home [data-screen-scroll="baie"] > div:not(.baie-home-hero) {
+  scroll-margin-top: 68px;
+}
+
+.baie-home [data-screen-scroll="baie"] > div:nth-of-type(n + 3) > div:first-child > span:first-child {
+  letter-spacing: -0.35px;
+}
+
+.baie-explore-grid > button,
+.baie-event-card,
+.baie-home [data-auto-carousel="baie-spots"],
+.baie-leisure-card,
+.baie-place-card,
+.baie-tenant-card {
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.baie-explore-grid > button:active,
+.baie-event-card:active,
+.baie-home [data-auto-carousel="baie-spots"]:active,
+.baie-leisure-card:active,
+.baie-place-card:active,
+.baie-tenant-card:active {
+  transform: scale(0.985);
+  filter: brightness(0.97);
+}
+
+.baie-explore-grid > button:focus-visible,
+.baie-event-card:focus-visible,
+.baie-home [data-auto-carousel="baie-spots"]:focus-visible,
+.baie-leisure-card:focus-visible,
+.baie-place-card:focus-visible,
+.baie-tenant-card:focus-visible {
+  outline: 3px solid #f5b800;
+  outline-offset: 3px;
+}
+
+.baie-spots-page,
+.baie-service-page,
+.baie-news-page,
+.baie-article-page,
+.baie-entity-page {
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Barre système claire sur les écrans Baie qui affichent la navigation globale. */
+.baie-light-screen > div:last-child {
+  background: rgba(255, 255, 255, 0.97) !important;
+  border-top: 1px solid rgba(15, 60, 30, 0.09) !important;
+  box-shadow: 0 -4px 18px rgba(10, 50, 25, 0.08) !important;
+  backdrop-filter: blur(18px);
+}
+
+.baie-light-screen > div:last-child button,
+.baie-light-screen > div:last-child button span,
+.baie-light-screen > div:last-child > div > span {
+  color: #0b6631 !important;
+}
+
+.baie-light-screen > div:last-child button svg {
+  color: #0b6631 !important;
+  stroke: #0b6631 !important;
+}
+
+.baie-light-screen > div:last-child button svg[fill="#fff"] {
+  fill: #0b6631 !important;
+}
+
+.baie-spots-page > div:last-of-type {
+  padding-bottom: 24px !important;
+}
+
+.baie-place-card {
+  border-radius: 20px !important;
+  box-shadow: 0 7px 22px rgba(5, 45, 21, 0.075) !important;
+}
+
+.baie-place-card > div:first-child {
+  height: 190px !important;
+}
+
+.baie-place-card:hover > div:first-child,
+.baie-tenant-card:hover > div:first-child {
+  transform: scale(1.025);
+}
+
+.baie-tenant-card {
+  border-radius: 18px !important;
+  box-shadow: 0 5px 18px rgba(5, 45, 21, 0.08) !important;
+}
+
+.baie-service-page [data-baie-service-hero] {
+  height: 318px !important;
+  overflow: hidden;
+  border-radius: 0 0 26px 26px;
+  box-shadow: 0 8px 24px rgba(5, 39, 19, 0.13);
+}
+
+.baie-service-page [data-baie-service-hero] h1 {
+  font-size: 30px !important;
+  letter-spacing: -0.7px !important;
+}
+
+.baie-service-page [data-baie-service-hero] > div:first-of-type button {
+  width: 44px !important;
+  height: 44px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.baie-service-page > div:not([data-baie-service-hero]) {
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+.baie-tabs {
+  gap: 7px !important;
+  padding-top: 19px !important;
+  padding-bottom: 5px !important;
+  scrollbar-width: none;
+}
+
+.baie-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.baie-tabs [role="tab"] {
+  min-height: 40px;
+  padding-right: 17px !important;
+  padding-left: 17px !important;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.baie-tabs [role="tab"]:active {
+  transform: scale(0.97);
+}
+
+.baie-bottom-action {
+  padding-top: 13px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(18px);
+}
+
+.baie-bottom-action button {
+  min-height: 52px;
+  border-radius: 16px !important;
+  transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+}
+
+.baie-bottom-action button:active {
+  transform: scale(0.985);
+  filter: brightness(0.96);
+}
+
+.baie-entity-page [data-screen-scroll="entity-baie"] {
+  padding-bottom: max(30px, env(safe-area-inset-bottom)) !important;
+}
+
+.baie-entity-page .baie-tenant-card > div:last-child {
+  padding: 11px 12px 13px !important;
+}
+
+.baie-news-page [role="button"] {
+  transition: background 160ms ease;
+}
+
+.baie-news-page [role="button"]:active {
+  background: #f5f7f4 !important;
+}
+
+.baie-news-page button,
+.baie-service-page button,
+.baie-entity-page button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.baie-news-page [role="button"]:focus-visible,
+.baie-entity-page button:focus-visible,
+.baie-service-page button:focus-visible {
+  outline: 3px solid #f5b800;
+  outline-offset: 2px;
+}
+
+.baie-article-page > div:nth-child(2) {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .baie-explore-grid > button,
+  .baie-event-card,
+  .baie-home [data-auto-carousel="baie-spots"],
+  .baie-leisure-card,
+  .baie-place-card,
+  .baie-tenant-card {
+    transition: none;
+  }
+}
