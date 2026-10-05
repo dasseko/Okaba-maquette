@@ -2542,6 +2542,20 @@ const HOME_CATS = [
   { id: 'event',  label: 'Événements',  icon: 'calendar',   color: '#2D6FB3', tint: '#E4EEF8', target: 'events' },
 ];
 
+// Icônes de services — tracés Lucide (set de référence des apps modernes)
+const SVC_ICONS = {
+  resto: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  shop: '<path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/>',
+  hotel: '<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>',
+  tour: '<path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2l1-1 1 1h4"/><path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-3l-1-1-1 1h-3"/><path d="M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43l4.24-4.25.7-.7.71-.71 2.12-2.12c-1.95-1.96-5.27-1.8-7.42.35"/><path d="M11 15.5c.5 2.5-.17 4.5-1 6.5h4c2-5.5-.5-12-1-14"/>',
+  mkt: '<path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/>',
+  event: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>',
+  more: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
+};
+const SvcIcon = ({ id, size = 26, color = '#0A6A2F' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: SVC_ICONS[id] || '' }}/>
+);
+
 const DISCOVER_CARDS = [
   { id: 'gabon', title: 'Découvrir le Gabon', sub: 'Nature, culture, aventures et bien plus', cta: 'Explorer',  img: 'assets/tour-parc.jpg',       target: 'tourisme' },
   { id: 'made',  title: 'Made in Gabon',      sub: 'Nos talents, nos produits, notre fierté', cta: 'Découvrir', img: 'assets/tour-patrimoine.jpg', target: 'market', param: 'gabon' },
@@ -2649,14 +2663,14 @@ function HomeScreen() {
               {HOME_CATS.map(c => (
                 <button key={c.id} onClick={() => go(c.target, c.param)} style={{ flex: '0 0 auto', width: 68, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
                   <div style={{ width: 66, height: 66, borderRadius: 22, background: c.tint, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon name={c.icon} size={28} color={c.color} strokeWidth={2.1}/>
+                    <SvcIcon id={c.id} size={27} color={c.color}/>
                   </div>
                   <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>{c.label}</span>
                 </button>
               ))}
               <button onClick={() => navigate('services')} style={{ flex: '0 0 auto', width: 68, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
                 <div style={{ width: 66, height: 66, borderRadius: 22, background: '#fff', border: `1.5px dashed ${OK.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon name="grid" size={25} color={OK.ink2} strokeWidth={2}/>
+                  <SvcIcon id="more" size={24} color={OK.ink2}/>
                 </div>
                 <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>Voir plus</span>
               </button>
