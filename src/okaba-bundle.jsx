@@ -1673,11 +1673,11 @@ function PublishSheet({ open, onClose }) {
 
 // ── Bottom tab bar — barre VERTE pleine (cf. captures) ──────
 const TABS = [
-  { id: 'home',    label: 'Accueil',  icon: 'home',     screen: 'home' },
-  { id: 'explore', label: 'Explorer', icon: 'compass',  screen: 'services' },
-  { id: 'pub',     label: 'Publier',  icon: 'plus',     screen: 'publier', center: true },
-  { id: 'msg',     label: 'Messages', icon: 'message',  screen: 'messages', badge: 2 },
-  { id: 'me',      label: 'Profil',   icon: 'user',     screen: 'compte' },
+  { id: 'home',  label: 'Accueil',  icon: 'home',     screen: 'home' },
+  { id: 'fav',   label: 'Favoris',  icon: 'heart',    screen: 'favoris' },
+  { id: 'pub',   label: 'Publier',  icon: 'plus',     screen: 'publier', center: true },
+  { id: 'msg',   label: 'Messages', icon: 'message',  screen: 'messages' },
+  { id: 'me',    label: 'Profil',   icon: 'user',     screen: 'compte' },
 ];
 const AMBER = '#E5A01D';
 
@@ -1717,11 +1717,8 @@ function TabBar() {
             flex: 1, background: 'transparent', border: 'none', cursor: 'pointer',
             padding: '3px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
           }}>
-            <span style={{ position: 'relative', display: 'flex' }}>
-              <Icon name={on && it.icon === 'heart' ? 'heart-f' : it.icon}
-                size={23} color="#fff" strokeWidth={on ? 2.5 : 1.9}/>
-              {it.badge && <span style={{ position: 'absolute', top: -5, right: -8, minWidth: 15, height: 15, padding: '0 3px', borderRadius: 999, background: GOLD, color: '#3a2c00', fontSize: 9, fontWeight: 800, fontFamily: FONT_UI, display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1.5px solid ${G}` }}>{it.badge}</span>}
-            </span>
+            <Icon name={on && it.icon === 'heart' ? 'heart-f' : it.icon}
+              size={23} color="#fff" strokeWidth={on ? 2.5 : 1.9}/>
             <span style={{ fontSize: 10.5, fontWeight: on ? 800 : 600,
               color: '#fff', opacity: on ? 1 : 0.82, fontFamily: FONT_UI }}>{it.label}</span>
           </button>
@@ -2523,221 +2520,119 @@ const HOME_BANNERS = [
 ];
 const HOME_EVENTS = [...EVENTS, ...BAIE_EVENTS];
 
-// ── Refonte accueil : données des sections ──────────────────
-const HERO_SLIDES = [
-  { id: 'baie', img: 'assets/baie/c21-aerial-03.webp', badge: 'À LA UNE', title: 'La Baie des Rois',
-    subtitle: 'Une expérience unique au cœur de Libreville', cta: 'Découvrir', target: 'baie' },
-  { id: 'nature', img: bImg('1744710962997-b896f9131942', 1200), badge: 'TOURISME', title: 'Explorez le Gabon',
-    subtitle: 'Forêts, rivières et plages à perte de vue', cta: 'Explorer', target: 'tourisme' },
-  { id: 'wild', img: bImg('1726696513898-11473822d211', 1200), badge: 'NATURE', title: 'Le Gabon sauvage',
-    subtitle: 'Éléphants de forêt et plages de Loango', cta: 'Découvrir', target: 'tourisme' },
-];
-
-const HOME_CATS = [
-  { id: 'resto',  label: 'Restaurants', icon: 'restaurant', color: '#0A6A2F', tint: '#E7F2EB', target: 'annuaire', param: 'restaurants' },
-  { id: 'shop',   label: 'Shopping',    icon: 'shop',       color: '#15924B', tint: '#E8F5ED', target: 'market',   param: 'all' },
-  { id: 'hotel',  label: 'Hôtels',      icon: 'hotel',      color: '#3E6AA5', tint: '#E7EDF6', target: 'annuaire', param: 'hotel' },
-  { id: 'tour',   label: 'Tourisme',    icon: 'compass',    color: '#0E8C86', tint: '#DEF1F0', target: 'tourisme' },
-  { id: 'mkt',    label: 'Marketplace', icon: 'tag',        color: '#B5531E', tint: '#F7E8DF', target: 'market',   param: 'all' },
-  { id: 'event',  label: 'Événements',  icon: 'calendar',   color: '#2D6FB3', tint: '#E4EEF8', target: 'events' },
-];
-
-// Icônes de services — tracés Lucide (set de référence des apps modernes)
-const SVC_ICONS = {
-  resto: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
-  shop: '<path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/>',
-  hotel: '<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/>',
-  tour: '<path d="M13 8c0-2.76-2.46-5-5.5-5S2 5.24 2 8h2l1-1 1 1h4"/><path d="M13 7.14A5.82 5.82 0 0 1 16.5 6c3.04 0 5.5 2.24 5.5 5h-3l-1-1-1 1h-3"/><path d="M5.89 9.71c-2.15 2.15-2.3 5.47-.35 7.43l4.24-4.25.7-.7.71-.71 2.12-2.12c-1.95-1.96-5.27-1.8-7.42.35"/><path d="M11 15.5c.5 2.5-.17 4.5-1 6.5h4c2-5.5-.5-12-1-14"/>',
-  mkt: '<path d="m2.05 2.05 1.099-.028a1 1 0 0 1 1.008.815l2.69 14.347A1 1 0 0 0 7.83 18H18"/><path d="M4.563 5h16.435a1 1 0 0 1 .981 1.204l-1.026 6.226A2 2 0 0 1 18.962 14H6.25"/><circle cx="18" cy="20" r="2"/><circle cx="8" cy="20" r="2"/>',
-  event: '<path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>',
-  more: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
-};
-const SvcIcon = ({ id, size = 26, color = '#0A6A2F' }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: SVC_ICONS[id] || '' }}/>
-);
-
-const DISCOVER_CARDS = [
-  { id: 'gabon', title: 'Découvrir le Gabon', sub: 'Nature, culture, aventures et bien plus', cta: 'Explorer',  img: 'assets/tour-parc.jpg',       target: 'tourisme' },
-  { id: 'made',  title: 'Made in Gabon',      sub: 'Nos talents, nos produits, notre fierté', cta: 'Découvrir', img: 'assets/tour-patrimoine.jpg', target: 'market', param: 'gabon' },
-];
-
-const BAIE_TILES = [
-  { id: 'manger',    title: 'Manger & Shopping', sub: 'Restaurants, boutiques, loisirs', img: 'assets/baie/paul-cover.jpg',  target: 'baie' },
-  { id: 'occupants', title: 'Les occupants',     sub: 'Découvrez tous les occupants',    img: 'assets/home-baie-banner.jpg', target: 'baie' },
-  { id: 'agenda',    title: 'Événements',        sub: 'Agenda de la Baie des Rois',      img: 'assets/ev-c.jpeg',            target: 'baie' },
-  { id: 'visiter',   title: 'Visiter la Baie',   sub: 'Plan, accès, infos pratiques',    img: 'assets/baie-cover.png',       target: 'baie' },
-];
-
-const MONTHS_ABBR = { janvier: 'JAN', 'février': 'FÉV', fevrier: 'FÉV', mars: 'MARS', avril: 'AVR', mai: 'MAI', juin: 'JUIN', juillet: 'JUIL', 'août': 'AOÛT', aout: 'AOÛT', septembre: 'SEPT', octobre: 'OCT', novembre: 'NOV', 'décembre': 'DÉC', decembre: 'DÉC' };
-const eventBadge = (dateStr) => {
-  const s = (dateStr || '');
-  const day = (s.match(/\d{1,2}/) || ['•'])[0];
-  const mo = s.toLowerCase().match(/janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre/);
-  return { d: day, mo: mo ? MONTHS_ABBR[mo[0]] : '' };
-};
-
 function HomeScreen() {
   const { navigate } = useNav();
-  const events = HOME_EVENTS;
-  const [slide, setSlide] = useStateH(0);
-  const [agendaOpen, setAgendaOpen] = useStateH(true);
+  const homeEvents = HOME_EVENTS;
+  const [bannerSlide, setBannerSlide] = useStateH(0);
+  const [eventSlide, setEventSlide] = useStateH(0);
   useEffectH(() => {
-    const t = setInterval(() => setSlide(i => (i + 1) % HERO_SLIDES.length), 5200);
-    return () => clearInterval(t);
+    const timer = setInterval(() => setBannerSlide(index => (index + 1) % HOME_BANNERS.length), 4600);
+    return () => clearInterval(timer);
   }, []);
-  const hero = HERO_SLIDES[slide] || HERO_SLIDES[0];
-  const go = (t, p) => navigate(t, p ? { cat: p } : {});
-  const PSH = '0 0 0 1px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.05), 0 14px 28px rgba(0,0,0,0.09)';
-  const ROW = { display: 'flex', gap: 13, overflowX: 'auto', padding: '14px 18px 4px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' };
-  const SectionHead = ({ title, sub, onMore }) => (
-    <div style={{ padding: '22px 18px 0', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-      <div style={{ minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ width: 4, height: 17, borderRadius: 4, background: OK.gold }}/>
-          <span style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 19, color: OK.ink, letterSpacing: -0.3 }}>{title}</span>
-        </div>
-        {sub && <div style={{ fontFamily: FONT_UI, fontSize: 11.5, color: OK.ink2, marginTop: 3, marginLeft: 12 }}>{sub}</div>}
-      </div>
-      {onMore && <button onClick={onMore} style={{ flexShrink: 0, background: '#fff', border: `1px solid ${OK.line}`, borderRadius: 999, padding: '6px 12px', cursor: 'pointer', fontFamily: FONT_UI, fontWeight: 700, fontSize: 11.5, color: OK.green, display: 'inline-flex', alignItems: 'center', gap: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>Voir tout<Icon name="arrow-r" size={12} color={OK.green} strokeWidth={2.6}/></button>}
-    </div>
-  );
+  useEffectH(() => {
+    const timer = setInterval(() => setEventSlide(index => (index + 1) % homeEvents.length), 4200);
+    return () => clearInterval(timer);
+  }, [homeEvents.length]);
+  const featuredEvent = homeEvents[eventSlide] || homeEvents[0];
+  const activeBanner = HOME_BANNERS[bannerSlide] || HOME_BANNERS[0];
+  const openActiveBanner = () => {
+    if (activeBanner.event) {
+      navigate('event', { event: activeBanner.event });
+      return;
+    }
+    if (activeBanner.target) navigate(activeBanner.target);
+  };
   return (
-    <Screen bg={OK.bg2} statusDark={false} tabBar noScroll edgeTop>
+    <Screen bg={OK.bg2} statusDark={false} tabBar noScroll>
       <div data-screen-label="Accueil" style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <div data-home-scroll style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 132 }}>
+        {/* Header vert */}
+        <div data-fixed-header="home" style={{ position: 'relative', zIndex: 30, flexShrink: 0, background: OK.green,
+          padding: `${APP_HEADER_TOP} 16px 12px`, display: 'flex', alignItems: 'center', gap: 12,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.12)' }}>
+          <button aria-label="Menu" onClick={() => navigate('services')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex' }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}><Wordmark size={27}/></div>
+          <button aria-label="Notifications" onClick={() => navigate('notifications')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', position: 'relative' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            <span style={{ position: 'absolute', top: 3, right: 3, width: 8, height: 8, borderRadius: 8, background: OK.gold, border: '1.5px solid ' + OK.green }}/>
+          </button>
+        </div>
 
-          {/* ═══ HEADER (marque + recherche) ═══ */}
-          <div style={{ background: `linear-gradient(165deg, ${OK.greenMid} 0%, ${OK.green} 54%, ${OK.greenDeep} 100%)`, padding: `${APP_SAFE_TOP} 16px 22px` }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <Wordmark size={24}/>
-                <div style={{ fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 600, color: 'rgba(255,255,255,0.88)', marginTop: 2, letterSpacing: 0.3 }}>Le Gabon dans vos mains</div>
+        <div data-home-scroll style={{ flex: 1, minHeight: 0, overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch', paddingBottom: 112 }}>
+        {/* Emplacement publicitaire */}
+        <div style={{ padding: '14px 14px 0' }}>
+          <button data-auto-carousel="home-banner" aria-label={activeBanner.alt} onClick={openActiveBanner} style={{ width: '100%', border: 'none', cursor: activeBanner.target || activeBanner.event ? 'pointer' : 'default', padding: 0, borderRadius: 16, overflow: 'hidden',
+            display: 'block', position: 'relative', aspectRatio: '1672 / 941', textAlign: 'left',
+            background: '#fff', boxShadow: '0 6px 18px rgba(0,0,0,0.16)' }}>
+            {HOME_BANNERS.map((banner, index) => <img key={banner.id} src={banner.src} alt={banner.alt}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: bannerSlide === index ? 'block' : 'none', animation: bannerSlide === index ? 'okabaCarouselIn .28s ease-out' : 'none', background: '#fff' }}/>) }
+          </button>
+        </div>
+        <div style={{ padding: '8px 18px 0', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <button onClick={() => navigate('services')} style={{ padding: '4px 0', border: 'none', background: 'transparent', color: OK.green, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 800, cursor: 'pointer' }}>Voir plus</button>
+        </div>
+        {/* Services O'KABA */}
+        <div style={{ padding: '4px 16px 0', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', rowGap: 8, columnGap: 10 }}>
+          {HOME_MODULES.map(m => (
+            <button key={m.id} onClick={() => navigate(m.target, m.param ? { cat: m.param } : {})}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+              <div style={{ position: 'relative', width: 74, height: 74 }}>
+                <div style={{ width: 74, height: 74, borderRadius: 999, overflow: 'hidden', border: '2px solid #fff',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.14)' }}>
+                  <Img src={m.img} style={{ width: '100%', height: '100%' }}/>
+                </div>
+                {m.nouveau && (
+                  <span style={{ position: 'absolute', top: -7, left: '50%', transform: 'translateX(-50%)',
+                    background: OK.red, color: '#fff', fontSize: 8, fontWeight: 800, letterSpacing: 0.2,
+                    padding: '2px 7px', borderRadius: 999, boxShadow: '0 1px 4px rgba(0,0,0,0.25)',
+                    fontFamily: FONT_UI, whiteSpace: 'nowrap', zIndex: 2, lineHeight: 1.3,
+                    border: '1.5px solid #fff' }}>NOUVEAU</span>
+                )}
               </div>
-              <button aria-label="Changer de ville" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.28)', borderRadius: 999, padding: '6px 11px', cursor: 'pointer' }}>
-                <Icon name="pin" size={12} color={OK.gold} strokeWidth={2.4}/>
-                <span style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 12, color: '#fff' }}>Libreville</span>
-                <Icon name="chev-d" size={11} color="rgba(255,255,255,0.8)" strokeWidth={2.6}/>
-              </button>
-              <button aria-label="Notifications" onClick={() => navigate('notifications')} style={{ position: 'relative', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.28)', borderRadius: 999, width: 37, height: 37, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <Icon name="bell" size={17} color="#fff" strokeWidth={2}/>
-                <span style={{ position: 'absolute', top: -4, right: -4, minWidth: 16, height: 16, padding: '0 3px', borderRadius: 999, background: OK.red, color: '#fff', fontSize: 9, fontWeight: 800, fontFamily: FONT_UI, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1.5px solid rgba(255,255,255,0.9)' }}>3</span>
-              </button>
-              <button aria-label="Profil" onClick={() => navigate('compte')} style={{ width: 37, height: 37, borderRadius: 999, border: '2px solid rgba(255,255,255,0.8)', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>
-                <Icon name="user" size={18} color="#fff" strokeWidth={2.1}/>
-              </button>
-            </div>
-            <button onClick={() => go('market', 'all')} style={{ marginTop: 14, width: '100%', display: 'flex', alignItems: 'center', gap: 10, background: '#fff', borderRadius: 15, padding: '13px 14px', boxShadow: '0 6px 16px rgba(0,0,0,0.20)', border: 'none', cursor: 'pointer', textAlign: 'left' }}>
-              <Icon name="search" size={18} color={OK.green} strokeWidth={2.4}/>
-              <span style={{ flex: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>Rechercher un établissement, un produit, un service…</span>
-              <span style={{ width: 32, height: 32, borderRadius: 10, background: OK.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon name="qr" size={16} color="#fff" strokeWidth={2}/></span>
+              <span style={{ fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 700, color: OK.ink, textAlign: 'center', lineHeight: 1.1 }}>{m.label}</span>
             </button>
-          </div>
+          ))}
+        </div>
 
-          {/* ═══ CARD-SLIDER « À LA UNE » (arrondi, chevauche le header) ═══ */}
-          <div style={{ padding: '0 16px', marginTop: -14 }}>
-            <div style={{ position: 'relative', height: 196, borderRadius: 22, overflow: 'hidden', boxShadow: PSH }}>
-              {HERO_SLIDES.map((s, i) => (
-                <div key={s.id} aria-hidden style={{ position: 'absolute', inset: 0, backgroundImage: `url('${s.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === slide ? 1 : 0, transition: 'opacity .8s ease' }}/>
-              ))}
-              <div aria-hidden style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(4,34,18,0.9) 0%, rgba(4,34,18,0.55) 44%, rgba(4,34,18,0.1) 80%)' }}/>
-              <div style={{ position: 'absolute', left: 17, right: 17, top: 16, bottom: 16, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <span style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 5, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 9, letterSpacing: 0.6, padding: '4px 9px', borderRadius: 999 }}>
-                  <span style={{ width: 4.5, height: 4.5, borderRadius: 5, background: OK.red }}/>{hero.badge}
-                </span>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 25, color: '#fff', lineHeight: 1.04, marginTop: 9, letterSpacing: -0.6, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>{hero.title}</div>
-                <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 12, color: 'rgba(255,255,255,0.9)', marginTop: 5, maxWidth: 215, lineHeight: 1.3, textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>{hero.subtitle}</div>
-                <button onClick={() => navigate(hero.target)} style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 13, background: OK.gold, color: '#3a2c00', fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '9px 15px', borderRadius: 999, border: 'none', cursor: 'pointer', boxShadow: '0 4px 12px rgba(245,184,0,0.45)' }}>
-                  {hero.cta}<Icon name="arrow-r" size={14} color="#3a2c00" strokeWidth={2.6}/>
-                </button>
+        {/* Événements et sorties */}
+        <div style={{ padding: '10px 16px 0', display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+          <span style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 16, color: OK.green }}>Événements et sorties</span>
+          <button onClick={() => navigate('events')} style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: FONT_UI, fontWeight: 700, fontSize: 13, color: OK.green }}>Voir plus</button>
+        </div>
+        <div style={{ position: 'relative', padding: '12px 14px 10px' }}>
+            <button data-auto-carousel="home-events" className="okaba-auto-card" key={featuredEvent.id} onClick={() => navigate('event', { event: featuredEvent })} style={{ width: '100%', border: 'none', cursor: 'pointer', padding: 0,
+              borderRadius: 16, overflow: 'hidden', position: 'relative', height: 176, textAlign: 'left',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.12)', display: 'block', animation: 'okabaCarouselIn .28s ease-out' }}>
+              <Img src={featuredEvent.poster || featuredEvent.img} style={{ position: 'absolute', inset: 0, backgroundPosition: 'center 22%' }}
+                overlay="linear-gradient(90deg, rgba(7,40,20,0.86) 0%, rgba(7,40,20,0.55) 45%, rgba(7,40,20,0.15) 100%)"/>
+              {/* badge date */}
+              <div style={{ position: 'absolute', top: 12, right: 12, background: OK.gold, color: '#3a2c00',
+                padding: '5px 11px', borderRadius: 999, fontFamily: FONT_UI, fontWeight: 800, fontSize: 11,
+                display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span style={{ width: 6, height: 6, borderRadius: 6, background: OK.red }}/> Événement
               </div>
-              <div style={{ position: 'absolute', right: 14, bottom: 13, display: 'flex', gap: 5 }}>
-                {HERO_SLIDES.map((s, i) => <button key={s.id} onClick={() => setSlide(i)} aria-label={`Diapo ${i + 1}`} style={{ width: i === slide ? 18 : 6, height: 6, borderRadius: 999, border: 'none', padding: 0, cursor: 'pointer', background: i === slide ? OK.gold : 'rgba(255,255,255,0.6)', transition: 'width .35s ease' }}/>)}
+              {/* texte */}
+              <div style={{ position: 'absolute', left: 16, right: 14, bottom: 14 }}>
+                <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 20, color: '#fff', lineHeight: 1.12,
+                  textShadow: '0 1px 6px rgba(0,0,0,0.4)', maxWidth: 240,
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{featuredEvent.title}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 9, flexWrap: 'wrap' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontFamily: FONT_UI, fontWeight: 700, fontSize: 11.5, color: '#fff' }}>
+                    <Icon name="calendar" size={13} color={OK.gold} strokeWidth={2.2}/>{featuredEvent.date} · {featuredEvent.time}
+                  </span>
+                </div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 5, fontFamily: FONT_UI, fontWeight: 600, fontSize: 11, color: 'rgba(255,255,255,0.9)' }}>
+                  <Icon name="pin" size={12} color="rgba(255,255,255,0.9)" strokeWidth={2}/>{featuredEvent.place}
+                </div>
               </div>
+            </button>
+            <div style={{ position: 'absolute', right: 27, bottom: 20, display: 'flex', gap: 4, zIndex: 4 }}>
+              {homeEvents.map((event, index) => <button key={event.id} onClick={() => setEventSlide(index)} aria-label={`Afficher ${event.title}`} style={{ width: index === eventSlide ? 15 : 5, height: 5, borderRadius: 999, padding: 0, border: 'none', cursor: 'pointer', background: index === eventSlide ? OK.gold : 'rgba(255,255,255,.65)', transition: 'width .25s ease' }}/>) }
             </div>
-          </div>
+        </div>
 
-          {/* ═══ CONTENU ═══ */}
-          <div style={{ paddingTop: 4 }}>
-
-            {/* CATÉGORIES — grandes tuiles aérées */}
-            <div style={{ display: 'flex', gap: 15, overflowX: 'auto', padding: '14px 18px 4px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-              {HOME_CATS.map(c => (
-                <button key={c.id} onClick={() => go(c.target, c.param)} style={{ flex: '0 0 auto', width: 68, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
-                  <div style={{ width: 66, height: 66, borderRadius: 22, background: c.tint, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <SvcIcon id={c.id} size={27} color={c.color}/>
-                  </div>
-                  <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>{c.label}</span>
-                </button>
-              ))}
-              <button onClick={() => navigate('services')} style={{ flex: '0 0 auto', width: 68, background: 'transparent', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 9 }}>
-                <div style={{ width: 66, height: 66, borderRadius: 22, background: '#fff', border: `1.5px dashed ${OK.line}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <SvcIcon id="more" size={24} color={OK.ink2}/>
-                </div>
-                <span style={{ fontFamily: FONT_UI, fontSize: 11.5, fontWeight: 700, color: OK.ink2, textAlign: 'center', lineHeight: 1.1 }}>Voir plus</span>
-              </button>
-            </div>
-
-            {/* LA BAIE DES ROIS — grande carte immersive (flagship) */}
-            <div style={{ padding: '26px 18px 0' }}>
-              <button onClick={() => navigate('baie')} style={{ position: 'relative', width: '100%', height: 232, borderRadius: 26, overflow: 'hidden', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', boxShadow: PSH, display: 'block' }}>
-                <Img src="assets/baie/c21-cover.webp" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(4,34,18,0.12) 0%, rgba(4,34,18,0.32) 42%, rgba(4,34,18,0.9) 100%)"/>
-                <span style={{ position: 'absolute', top: 15, left: 15, display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontFamily: FONT_UI, fontWeight: 800, fontSize: 9.5, letterSpacing: 0.6, padding: '5px 11px', borderRadius: 999 }}>DESTINATION PHARE</span>
-                <div style={{ position: 'absolute', left: 18, right: 18, bottom: 17 }}>
-                  <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 26, color: '#fff', lineHeight: 1.04, letterSpacing: -0.6, textShadow: '0 2px 12px rgba(0,0,0,0.5)' }}>La Baie des Rois</div>
-                  <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 12.5, color: 'rgba(255,255,255,0.9)', marginTop: 5, textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}>Le rendez-vous du front de mer de Libreville</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 13 }}>
-                    {['Restaurants', 'Hôtels', 'Loisirs'].map(ch => (
-                      <span key={ch} style={{ fontFamily: FONT_UI, fontWeight: 700, fontSize: 10.5, color: '#fff', background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.28)', padding: '5px 10px', borderRadius: 999 }}>{ch}</span>
-                    ))}
-                    <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 12.5, padding: '10px 15px', borderRadius: 999 }}>Explorer<Icon name="arrow-r" size={14} color={OK.green} strokeWidth={2.6}/></span>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            {/* DÉCOUVRIR / MADE IN GABON */}
-            <div style={{ padding: '14px 18px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-              {DISCOVER_CARDS.map(card => (
-                <button key={card.id} onClick={() => go(card.target, card.param)} style={{ position: 'relative', height: 198, borderRadius: 22, overflow: 'hidden', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left', boxShadow: PSH }}>
-                  <Img src={card.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(4,30,16,0.04) 16%, rgba(4,30,16,0.88) 100%)"/>
-                  <div style={{ position: 'absolute', left: 14, right: 14, bottom: 15 }}>
-                    <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 17, color: '#fff', lineHeight: 1.08, letterSpacing: -0.3, textShadow: '0 1px 8px rgba(0,0,0,0.5)' }}>{card.title}</div>
-                    <div style={{ fontFamily: FONT_UI, fontWeight: 500, fontSize: 11, color: 'rgba(255,255,255,0.88)', marginTop: 5, lineHeight: 1.3 }}>{card.sub}</div>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 12, background: '#fff', color: OK.green, fontFamily: FONT_UI, fontWeight: 800, fontSize: 11.5, padding: '8px 13px', borderRadius: 999 }}>{card.cta}<Icon name="arrow-r" size={12} color={OK.green} strokeWidth={2.6}/></span>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            {/* ÉVÉNEMENTS — grand carrousel */}
-            <SectionHead title="Événements à venir" onMore={() => navigate('events')}/>
-            <div style={{ display: 'flex', gap: 14, overflowX: 'auto', padding: '14px 18px 4px', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
-              {events.map(ev => {
-                const b = eventBadge(ev.date);
-                return (
-                  <button key={ev.id} onClick={() => navigate('event', { event: ev })} style={{ flex: '0 0 auto', width: 300, background: '#fff', borderRadius: 22, overflow: 'hidden', padding: 0, cursor: 'pointer', textAlign: 'left', boxShadow: PSH }}>
-                    <div style={{ position: 'relative', height: 184 }}>
-                      <Img src={ev.poster || ev.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(180deg, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.32) 100%)"/>
-                      <div style={{ position: 'absolute', top: 13, left: 13, background: '#fff', borderRadius: 14, padding: '6px 12px', textAlign: 'center', boxShadow: '0 3px 10px rgba(0,0,0,0.22)' }}>
-                        <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 19, color: OK.green, lineHeight: 1 }}>{b.d}</div>
-                        <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 9, color: OK.ink2, letterSpacing: 0.5, marginTop: 1 }}>{b.mo}</div>
-                      </div>
-                      <span style={{ position: 'absolute', top: 13, right: 13, width: 34, height: 34, borderRadius: 999, background: 'rgba(255,255,255,0.94)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 6px rgba(0,0,0,0.18)' }}><Icon name="heart" size={17} color={OK.red} strokeWidth={2}/></span>
-                    </div>
-                    <div style={{ padding: '13px 15px 16px' }}>
-                      <div style={{ fontFamily: FONT_UI, fontWeight: 800, fontSize: 16, color: OK.ink, lineHeight: 1.2, letterSpacing: -0.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{ev.title}</div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8 }}>
-                        <Icon name="pin" size={13} color={OK.green} strokeWidth={2}/>
-                        <span style={{ fontFamily: FONT_UI, fontWeight: 600, fontSize: 12, color: OK.ink2, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{(ev.place || '').split('·')[0].trim()}</span>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            <div style={{ height: 20 }}/>
-          </div>
+        <div style={{ height: 16 }}/>
         </div>
       </div>
     </Screen>
