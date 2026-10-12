@@ -87,7 +87,7 @@ html.okaba-native .okaba-app-shell {
   width: 100%;
   height: 100%;
   padding: 0;
-  background: #0b7c39;
+  background: #006600;
 }
 
 .okaba-phone--native,
@@ -740,3 +740,36 @@ html.okaba-native .okaba-app-shell {
     transition: none;
   }
 }
+
+/* ── Refonte Publier : champs, pressions, apparitions ───────── */
+.pf-input { width: 100%; height: 50px; box-sizing: border-box; padding: 0 14px; border: 1.5px solid #E2E6E2; border-radius: 12px; background: #fff; color: #1A1A1A; font: 600 14.5px 'Manrope', system-ui, sans-serif; outline: none; transition: border-color .15s ease, box-shadow .15s ease; -webkit-appearance: none; appearance: none; }
+.pf-input::placeholder { color: #A3A8A3; font-weight: 500; }
+.pf-input:focus { border-color: #006600; box-shadow: 0 0 0 3px rgba(0,102,0, .12); }
+.pf-input[aria-invalid="true"] { border-color: #E0241B; }
+textarea.pf-input { height: auto; padding: 12px 14px; line-height: 1.5; resize: none; }
+select.pf-input { padding-right: 34px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%235C5C5C' stroke-width='2' stroke-linecap='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.pf-press { transition: transform .12s ease; -webkit-tap-highlight-color: transparent; }
+.pf-press:active { transform: scale(.975); }
+.pf-hscroll { scrollbar-width: none; }
+.pf-hscroll::-webkit-scrollbar { display: none; }
+.pf-step { animation: pfIn .28s cubic-bezier(.2, .8, .2, 1); }
+.pf-pop { animation: pfPop .45s cubic-bezier(.2, .8, .2, 1.2); }
+.pf-sheet { animation: pfUp .28s cubic-bezier(.2, .8, .2, 1); }
+@keyframes pfIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes pfPop { 0% { opacity: 0; transform: scale(.6); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes pfUp { from { transform: translateY(100%); } to { transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pf-step, .pf-pop, .pf-sheet { animation: none; } .pf-press:active { transform: none; } }
+.pf-row { -webkit-tap-highlight-color: transparent; transition: background-color .12s ease; }
+.pf-row:active { background-color: #F1F4F1 !important; }
+
+/* Barre de navigation basse */
+.tab-item, .tab-fab { -webkit-tap-highlight-color: transparent; }
+.tab-item:active > span:first-child { transform: scale(.92); }
+.tab-item > span:first-child { transition: transform .12s ease, background-color .2s ease; }
+.tab-fab { transition: transform .15s ease; }
+.tab-fab:active { transform: scale(.94); }
+.tab-item:focus-visible, .tab-fab:focus-visible { outline: 2px solid #006600; outline-offset: 2px; border-radius: 14px; }
+/* Les rangées défilantes avec accrochage respectent la marge de 14 px (sinon la 1re carte colle au bord). */
+.pf-hscroll { scroll-padding-inline: 14px; }
+.okaba-spin { animation: okabaSpin 0.9s linear infinite; }
+@keyframes okabaSpin { to { transform: rotate(360deg); } }

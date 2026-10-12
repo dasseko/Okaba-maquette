@@ -20,6 +20,7 @@
     "@capacitor/app": "^8.0.0",
     "@capacitor/core": "latest",
     "@capacitor/status-bar": "^8.0.3",
+    "@phosphor-icons/react": "^2.1.10",
     "lucide-react": "^1.38.0",
     "qrcode": "^1.5.4",
     "react": "latest",
