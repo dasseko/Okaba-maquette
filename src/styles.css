@@ -20,6 +20,19 @@ body,
   overflow: hidden;
 }
 
+/* Pas de débordement de la page elle-même (effet élastique, glissement latéral).
+   Ne pas étendre à tous les éléments : sur mobile, une carte arrondie (overflow
+   hidden) bloquerait alors le défilement quand le doigt démarre dessus. */
+html,
+body,
+#root {
+  overscroll-behavior: none;
+}
+/* Carrousels : un glissement horizontal ne déclenche plus le retour du navigateur. */
+.pf-hscroll {
+  overscroll-behavior-x: contain;
+}
+
 button,
 input,
 textarea,

@@ -1787,8 +1787,9 @@ function Screen({ children, bg = OKABA.bg, statusDark = false, tabBar = false, n
     }}>
       <div ref={scrollRef} style={{
         position: 'absolute', top: 0, right: 0, bottom: 0, left: 0,
-        overflowY: noScroll ? 'hidden' : 'auto',
-        overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch',
+        // Écran figé : défilement vertical seulement, sans glissement latéral ni effet élastique.
+        overflowY: noScroll ? 'hidden' : 'auto', overflowX: 'hidden',
+        overscrollBehavior: 'none', WebkitOverflowScrolling: 'touch',
         paddingBottom: tabBar ? 132 : footerPad,
       }}>
         {children}
@@ -2599,24 +2600,79 @@ const HOME_BAIE = [
 const homeGreeting = (date = new Date()) => (date.getHours() < 18 ? 'Bonjour' : 'Bonsoir');
 
 // Localisation + notifications, communs à l'Accueil et à Explorer.
-function OkabaHeaderActions({ search = null }) {
-  const { navigate } = useNav();
+// Gabarit des cartes « slider » placées sous le header : figé sur celui de l'Accueil.
+const HERO_CARD = { position: 'relative', margin: '8px 14px 0', height: 184, borderRadius: 18, overflow: 'hidden', boxShadow: '0 8px 22px rgba(0,0,0,0.12)' };
+
+// Localisation (Accueil) : une simple icône ronde ; un appui affiche la ville
+// sous le sous-titre du header.
+function HeaderLocationButton({ open, onToggle }) {
+  return (
+    <button type="button" aria-label="Ma localisation" aria-expanded={open} onClick={onToggle} style={{ ...HERO_ICON_BTN, background: open ? '#fff' : HERO_ICON_BTN.background }}>
+      <MapPinIcon size={19} weight="fill" color={open ? '#006600' : '#fff'} aria-hidden/>
+    </button>
+  );
+}
+
+function OkabaHeaderActions({ search = null, location = false, avatar = false, children = null }) {
+  const { navigate, goTab } = useNav();
   const unread = NOTIFICATIONS.filter(item => item.unread).length;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <button type="button" onClick={() => notifyDemo('Changement de ville bientôt disponible')} style={{ height: 34, padding: '0 11px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.16)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 700 }}>
-        <MapPinIcon size={15} weight="fill" aria-hidden/>Libreville<CaretDownIcon size={12} weight="bold" aria-hidden/>
-      </button>
       {search}
       <button type="button" aria-label={`Notifications, ${unread} non lues`} onClick={() => navigate('notifications')} style={{ position: 'relative', width: 38, height: 38, borderRadius: 999, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <BellIcon size={20} weight="bold" color="#fff" aria-hidden/>
         {unread > 0 && <span style={{ position: 'absolute', top: -3, right: -3, minWidth: 17, height: 17, padding: '0 4px', boxSizing: 'border-box', borderRadius: 999, background: '#E03131', border: '1.5px solid #fff', color: '#fff', fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{unread}</span>}
       </button>
+      {avatar && <button type="button" aria-label="Mon profil" onClick={() => goTab('compte', 'me')} style={{ ...HERO_ICON_BTN, overflow: 'hidden', border: '2px solid rgba(255,255,255,0.85)', background: '#fff' }}><img src={DEMO_PROFILES[0].avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/></button>}
+      {children}
+    </div>
+  );
+}
+
+// Texte du header de l'Accueil : messages courts qui tournent seuls toutes
+// les 5 s (fondu). Un appui sur la localisation masque le texte et affiche la
+// ville en bas à droite ; la rotation reprend 5 s plus tard.
+const HOME_HERO_TEXT_STYLE = {
+  title: { margin: 0, fontFamily: FONT_UI, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -0.3 },
+  sub: { margin: '5px 0 0', fontFamily: FONT_UI, fontSize: 13, lineHeight: 1.45, color: 'rgba(255,255,255,0.92)', maxWidth: 310 },
+};
+const HOME_HERO_MESSAGES = [
+  [null, 'Qu’allez-vous découvrir aujourd’hui ?'],
+  ['Comment ça va ?', 'Une envie pour aujourd’hui ?'],
+  ['Une petite faim ?', 'Les bonnes tables près de vous'],
+  ['Ce week-end', 'Les sorties à ne pas manquer'],
+  ['Made in Gabon', 'Le meilleur du local'],
+  ['Besoin d’un pro ?', 'Trouvez-le dans l’Annuaire'],
+];
+function HomeHeroText({ index, hidden, showLoc }) {
+  const [title, sub] = HOME_HERO_MESSAGES[index % HOME_HERO_MESSAGES.length];
+  return (
+    <div>
+      {!hidden && <div key={index} className="pf-step">
+        <h1 style={HOME_HERO_TEXT_STYLE.title}>{title || `${homeGreeting()} ${USER.firstName}`}</h1>
+        <p style={HOME_HERO_TEXT_STYLE.sub}>{sub}</p>
+      </div>}
+      {showLoc && <div style={{ textAlign: 'right' }}><button type="button" className="pf-step" onClick={() => notifyDemo('Changement de ville bientôt disponible')} style={{ marginTop: hidden ? 0 : 9, padding: 0, border: 0, background: 'transparent', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: FONT_UI, fontSize: 13, fontWeight: 700, color: '#fff' }}><MapPinIcon size={16} weight="fill" aria-hidden/>Libreville</button></div>}
     </div>
   );
 }
 
 function HomeScreen() {
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [showLoc, setShowLoc] = useState(false);
+  const [heroHidden, setHeroHidden] = useState(false);
+  useEffect(() => {
+    if (heroHidden) {
+      const timer = setTimeout(() => { setHeroHidden(false); setHeroIndex(i => i + 1); }, 5000);
+      return () => clearTimeout(timer);
+    }
+    const cycle = setInterval(() => setHeroIndex(i => i + 1), 5000);
+    return () => clearInterval(cycle);
+  }, [heroHidden]);
+  const toggleLoc = () => {
+    if (showLoc) { setShowLoc(false); setHeroHidden(false); }
+    else { setShowLoc(true); setHeroHidden(true); }
+  };
   const { navigate } = useNav();
   const [slide, setSlide] = useState(0);
   const [banner, closeBanner] = useContextBanner();
@@ -2633,7 +2689,7 @@ function HomeScreen() {
     return () => clearInterval(timer);
   }, [slides.length]);
   const current = slides[slide % slides.length];
-  const headerRight = search => <OkabaHeaderActions search={search}/>;
+  const headerRight = search => <OkabaHeaderActions search={search} avatar/>;
   const head = (title, go) => (
     <div style={{ display: 'flex', alignItems: 'center', margin: '24px 18px 12px' }}>
       <h2 style={{ flex: 1, margin: 0, fontFamily: FONT_UI, fontSize: 18, fontWeight: 800, color: OK.ink, letterSpacing: -0.3 }}>{title}</h2>
@@ -2644,11 +2700,12 @@ function HomeScreen() {
     <Screen bg="#fff" statusDark={true} tabBar edgeTop footer={banner ? <OkabaContextBanner onClose={closeBanner}/> : null}>
       <div data-screen-label="Accueil">
         {/* En-tête de référence : salutation, localisation, notifications, recherche globale */}
-        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title={`${homeGreeting()} ${USER.firstName}`} subtitle="Qu’allez-vous découvrir aujourd’hui à Libreville ?"
+        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" left={<HeaderLocationButton open={showLoc} onToggle={toggleLoc}/>}
+          heading={<HomeHeroText index={heroIndex} hidden={heroHidden} showLoc={showLoc}/>}
           placeholder="Rechercher un établissement, un produit, un service…" onSearch={() => navigate('services', { focus: true })} onFilter={() => navigate('services', { filters: true })} onBack={null} right={headerRight}/>
 
         {/* Bannière dynamique « À la une » */}
-        <div style={{ position: 'relative', margin: '20px 14px 0', height: 184, borderRadius: 18, overflow: 'hidden', boxShadow: '0 8px 22px rgba(0,0,0,0.12)' }}>
+        <div style={HERO_CARD}>
           {slides.map((item, index) => (
             <div key={item.id} style={{ position: 'absolute', inset: 0, opacity: index === slide % slides.length ? 1 : 0, transition: 'opacity .7s ease' }}>
               {item.poster ? (<>
@@ -2849,7 +2906,7 @@ function ServicesScreen({ params }) {
   return (
     <Screen bg="#fff" statusDark={true} tabBar edgeTop footer={banner && !q ? <OkabaContextBanner onClose={closeBanner}/> : null}>
       <div data-screen-label="Explorer">
-        <PageHero img="assets/tour-riviere.jpg" imgPos="center 45%" title="Explorer O’KABA" subtitle="Tous les services, univers et opportunités du Gabon réunis au même endroit"
+        <PageHero img="assets/tour-riviere.jpg" imgPos="center 45%" title="Explorer" subtitle="Tous les services, univers et opportunités du Gabon réunis au même endroit"
           placeholder="Rechercher un service, un univers…" query={query} onQuery={setQuery} autoFocus={Boolean(params?.focus)} right={search => <OkabaHeaderActions search={search}/>} onFilter={() => setShowFilters(value => !value)}/>
         {(showFilters || filter !== 'all') && (
           <div className="pf-hscroll" role="tablist" aria-label="Filtrer par catégorie" style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '14px 14px 0' }}>
@@ -3423,12 +3480,12 @@ function MarketHomeScreen() {
       </div>
     )}>
       <div data-screen-label="Marketplace">
-        <PageHero img="assets/africa-wax-fabric-shop-2.jpg" imgPos="center 40%" title="Marketplace O’KABA" subtitle="Produits, boutiques et bons plans de tout le Gabon"
+        <PageHero img="assets/africa-wax-fabric-shop-2.jpg" imgPos="center 40%" title="Marketplace" subtitle="Produits, boutiques et bons plans de tout le Gabon"
           placeholder="Rechercher un produit, une boutique…" onSearch={() => navigate('search')}
-          right={search => <><OkabaHeaderActions search={search}/>{cartButton}</>}/>
+          right={search => <OkabaHeaderActions search={search}>{cartButton}</OkabaHeaderActions>}/>
 
         {/* Bannière */}
-        <button type="button" className="pf-press" onClick={() => navigate('market', { cat: 'gabon' })} style={{ position: 'relative', display: 'block', width: 'calc(100% - 28px)', height: 150, margin: '20px 14px 0', padding: 0, border: 0, borderRadius: 18, overflow: 'hidden', cursor: 'pointer', textAlign: 'left' }}>
+        <button type="button" className="pf-press" onClick={() => navigate('market', { cat: 'gabon' })} style={{ ...HERO_CARD, display: 'block', width: 'calc(100% - 28px)', padding: 0, border: 0, cursor: 'pointer', textAlign: 'left' }}>
           <Img src="assets/mas-famille-cover.jpg" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(90deg, rgba(0,51,0,0.88) 0%, rgba(0,51,0,0.45) 60%, rgba(0,51,0,0.05) 100%)"/>
           <span style={{ position: 'absolute', left: 16, right: 120, top: 16, bottom: 14, display: 'flex', flexDirection: 'column' }}>
             <span style={{ fontFamily: FONT_UI, fontSize: 18, fontWeight: 700, color: '#fff', lineHeight: 1.15 }}>Le meilleur du Made in Gabon</span>
@@ -3447,17 +3504,21 @@ function MarketHomeScreen() {
           ))}
         </div>
 
-        {/* Garanties */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8, padding: '22px 14px 0' }}>
+        {/* Garanties : un seul bandeau de confiance, monochrome vert du logo. */}
+        <div style={{ margin: '22px 14px 0', padding: '14px 6px', borderRadius: 16, background: '#fff', border: '1px solid #E7ECE7', boxShadow: '0 2px 10px rgba(20,40,25,0.05)', display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))' }}>
           {[
-            { icon: TruckIcon, tone: '#E8590C', bg: '#FFF4E6', title: 'Livraison', sub: 'Partout au Gabon' },
-            { icon: DeviceMobileIcon, tone: '#006600', bg: '#EBF7EE', title: 'Paiement mobile', sub: 'Airtel · Moov Money' },
-            { icon: ShieldCheckIcon, tone: '#1C7ED6', bg: '#E8F1FC', title: 'Achat sûr', sub: 'Vendeurs vérifiés' },
-          ].map(item => (
-            <div key={item.title} style={{ minWidth: 0, padding: '11px 10px', borderRadius: 14, background: item.bg }}>
-              <item.icon size={24} weight="fill" color={item.tone} aria-hidden/>
-              <div style={{ marginTop: 6, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 800, color: OK.ink }}>{item.title}</div>
-              <div style={{ marginTop: 1, fontFamily: FONT_UI, fontSize: 10.5, color: OK.ink2, lineHeight: 1.3 }}>{item.sub}</div>
+            { icon: TruckIcon, title: 'Livraison', sub: <>Partout au Gabon</> },
+            { icon: ShieldCheckIcon, title: 'Achat protégé', sub: <>Vendeurs vérifiés</> },
+            { icon: DeviceMobileIcon, title: 'Paiement mobile', sub: (
+              <span style={{ display: 'inline-flex', gap: 4, marginTop: 2 }}>
+                {['airtel.svg', 'moov-money.png'].map(logo => <span key={logo} style={{ width: 40, height: 24, borderRadius: 6, background: '#fff', border: '1px solid #E7ECE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}><img src={`assets/payments/${logo}`} alt="" style={{ width: 34, height: 18, objectFit: 'contain' }}/></span>)}
+              </span>
+            ) },
+          ].map((item, i) => (
+            <div key={item.title} style={{ minWidth: 0, padding: '0 6px', borderLeft: i ? '1px solid #EEF1EE' : 0, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <span style={{ width: 40, height: 40, borderRadius: 999, background: 'rgba(0,102,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><item.icon size={21} weight="duotone" color="#006600" aria-hidden/></span>
+              <span style={{ marginTop: 7, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 800, color: OK.ink, lineHeight: 1.2 }}>{item.title}</span>
+              <span style={{ marginTop: 2, fontFamily: FONT_UI, fontSize: 10.5, color: OK.ink3, lineHeight: 1.3 }}>{item.sub}</span>
             </div>
           ))}
         </div>
@@ -4426,51 +4487,117 @@ function AnnuResultCard({ e, fav, onFav, onOpen }) {
 // En-tête de référence de toutes les pages adaptées : photo assombrie,
 // retour, grand titre + sous-titre, recherche blanche à cheval sur la photo.
 // Seuls la photo et les textes changent d'une page à l'autre.
-function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, onSearch, query, onQuery, autoFocus = false, onFilter, right, onBack }) {
+// Couleur moyenne d'une image de header (pour teinter le verre de la barre de
+// recherche accrochée). Calculée une fois par image, sur une miniature.
+const HERO_TINTS = {};
+function useImageTint(src) {
+  const [tint, setTint] = useState(() => HERO_TINTS[src] || null);
+  useEffect(() => {
+    if (!src || HERO_TINTS[src]) { setTint(HERO_TINTS[src] || null); return undefined; }
+    let alive = true;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const c = document.createElement('canvas'); c.width = 24; c.height = 24;
+        const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, 24, 24);
+        const d = ctx.getImageData(0, 0, 24, 24).data; let r = 0, g = 0, b = 0;
+        for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; }
+        const n = d.length / 4; HERO_TINTS[src] = [Math.round(r / n), Math.round(g / n), Math.round(b / n)];
+        if (alive) setTint(HERO_TINTS[src]);
+      } catch (_) {}
+    };
+    img.src = src;
+    return () => { alive = false; };
+  }, [src]);
+  return tint;
+}
+
+// Bouton rond translucide du header (retour, recherche, partage…), identique partout.
+const HERO_ICON_BTN = { position: 'relative', width: 38, height: 38, flexShrink: 0, borderRadius: 999, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 };
+// Rangée du haut du header (retour, logo, actions), calée juste sous la barre d'état.
+const HERO_ROW_TOP = `calc(${APP_SAFE_TOP} + 2px)`;
+function HeroIconButton({ label, onClick, icon: IconC }) {
+  return <button type="button" aria-label={label} title={label} onClick={onClick} style={HERO_ICON_BTN}><IconC size={19} weight="bold" color="#fff" aria-hidden/></button>;
+}
+
+function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, onSearch, query, onQuery, autoFocus = false, onFilter, right, onBack, left, centered = false, titleSize = 22, heading = null }) {
   const { back, canBack } = useNav();
   const goBack = onBack || (canBack ? back : null);
   const searchable = Boolean(onSearch || onQuery);
-  // La recherche est repliée en icône à côté des autres actions ; un appui
-  // déploie la barre (avec le bouton filtres) sous le titre.
-  const [searchOpen, setSearchOpen] = useState(Boolean(autoFocus || query));
+  // Pas de bouton loupe : la barre de recherche apparaît dès qu'on fait défiler
+  // la page ou qu'on tire vers le bas en haut d'écran ; une fois le header
+  // sorti de l'écran, elle reste accrochée en haut.
+  const [revealed, setRevealed] = useState(Boolean(autoFocus || query));
+  const [pinned, setPinned] = useState(false);
+  const rootRef = useRef(null);
   const inputRef = useRef(null);
-  useEffect(() => { if (searchOpen && onQuery) inputRef.current?.focus(); }, [searchOpen]);
-  const showBar = searchable && searchOpen;
-  const toggleSearch = () => { if (searchOpen && onQuery && query) onQuery(''); setSearchOpen(open => !open); };
-  const searchIcon = searchable && (
-    <button type="button" aria-label={searchOpen ? 'Fermer la recherche' : 'Rechercher'} aria-expanded={searchOpen} onClick={toggleSearch}
-      style={{ width: 38, height: 38, flexShrink: 0, borderRadius: 999, border: '1px solid rgba(255,255,255,0.4)', background: searchOpen ? '#fff' : 'rgba(255,255,255,0.16)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      {searchOpen ? <PhXIcon size={18} weight="bold" color={OK.ink} aria-hidden/> : <MagnifyingGlassIcon size={19} weight="bold" color="#fff" aria-hidden/>}
-    </button>
+  useEffect(() => { if (autoFocus && onQuery) inputRef.current?.focus(); }, []);
+  useEffect(() => {
+    if (!searchable) return undefined;
+    let el = rootRef.current?.parentElement;
+    while (el && !['auto', 'scroll'].includes(getComputedStyle(el).overflowY)) el = el.parentElement;
+    if (!el) return undefined;
+    let startY = null;
+    const onScroll = () => { if (el.scrollTop > 4) setRevealed(true); setPinned(el.scrollTop > 170); };
+    const onTouchStart = event => { startY = el.scrollTop <= 0 ? event.touches[0].clientY : null; };
+    const onTouchMove = event => { if (startY != null && event.touches[0].clientY - startY > 24) setRevealed(true); };
+    const onWheel = event => { if (event.deltaY < 0 && el.scrollTop <= 0) setRevealed(true); };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: true });
+    el.addEventListener('wheel', onWheel, { passive: true });
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('wheel', onWheel);
+    };
+  }, [searchable]);
+  const showBar = searchable && revealed;
+  const [tr, tg, tb] = useImageTint(img) || [12, 60, 34];
+  const bar = (style, focusRef) => (
+    <div className="pf-step" style={{ zIndex: 2, height: 50, borderRadius: 999, background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.16)', display: 'flex', alignItems: 'center', gap: 10, padding: `0 ${onFilter ? 8 : 14}px 0 16px`, ...style }}>
+      {onQuery ? (
+        <label style={{ flex: 1, minWidth: 0, height: '100%', display: 'flex', alignItems: 'center', gap: 10, cursor: 'text' }}>
+          <MagnifyingGlassIcon size={20} weight="bold" color={OK.ink} aria-hidden/>
+          <input ref={focusRef} value={query} onChange={event => onQuery(event.target.value)} placeholder={placeholder} aria-label={placeholder} style={{ flex: 1, minWidth: 0, border: 0, outline: 'none', background: 'transparent', fontFamily: FONT_UI, fontSize: 14, fontWeight: 600, color: OK.ink }}/>
+          {query && <button type="button" onClick={() => onQuery('')} aria-label="Effacer" style={{ border: 0, background: 'transparent', padding: 0, cursor: 'pointer', display: 'flex' }}><XCircleIcon size={20} weight="fill" color="#ADB5BD" aria-hidden/></button>}
+        </label>
+      ) : (
+        <button type="button" onClick={onSearch} style={{ flex: 1, minWidth: 0, height: '100%', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left' }}>
+          <MagnifyingGlassIcon size={20} weight="bold" color={OK.ink} aria-hidden/>
+          <span style={{ fontFamily: FONT_UI, fontSize: 14, color: OK.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{placeholder}</span>
+        </button>
+      )}
+      {onFilter && <button type="button" aria-label="Filtres" onClick={onFilter} style={{ width: 38, height: 38, borderRadius: 999, border: 0, background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><SlidersHorizontalIcon size={21} weight="bold" color={OK.ink} aria-hidden/></button>}
+    </div>
   );
   return (
-    <div style={{ paddingBottom: showBar ? 24 : 0, transition: 'padding-bottom .2s ease' }}>
-    <div style={{ position: 'relative', height: 236 }}>
+    <div ref={rootRef} style={{ paddingBottom: showBar ? 24 : 0, transition: 'padding-bottom .2s ease' }}>
+    <div style={{ position: 'relative', height: 208 }}>
       <Img src={img} style={{ position: 'absolute', inset: 0, backgroundPosition: imgPos }} overlay="linear-gradient(180deg, rgba(4,30,16,0.55) 0%, rgba(4,30,16,0.35) 45%, rgba(4,30,16,0.75) 100%)"/>
-      {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ position: 'absolute', top: APP_HEADER_TOP, left: 12, width: 40, height: 40, borderRadius: 999, border: 0, background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CaretLeftIcon size={24} weight="bold" color="#fff" aria-hidden/></button>}
-      {(right || searchIcon) && <div style={{ position: 'absolute', top: APP_HEADER_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8 }}>{typeof right === 'function' ? right(searchIcon) : <>{searchIcon}{right}</>}</div>}
-      <div style={{ position: 'absolute', left: 20, right: 20, bottom: showBar ? 52 : 26, transition: 'bottom .2s ease' }}>
-        <h1 style={{ margin: 0, fontFamily: FONT_UI, fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -0.3 }}>{title}</h1>
-        {subtitle && <p style={{ margin: '5px 0 0', fontFamily: FONT_UI, fontSize: 13, lineHeight: 1.45, color: 'rgba(255,255,255,0.92)', maxWidth: 310 }}>{subtitle}</p>}
-      </div>
-      {showBar && (
-        <div className="pf-step" style={{ position: 'absolute', left: 14, right: 14, bottom: -24, zIndex: 2, height: 50, borderRadius: 999, background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.16)', display: 'flex', alignItems: 'center', gap: 10, padding: `0 ${onFilter ? 8 : 14}px 0 16px` }}>
-          {onQuery ? (
-            <label style={{ flex: 1, minWidth: 0, height: '100%', display: 'flex', alignItems: 'center', gap: 10, cursor: 'text' }}>
-              <MagnifyingGlassIcon size={20} weight="bold" color={OK.ink} aria-hidden/>
-              <input ref={inputRef} autoFocus={autoFocus} value={query} onChange={event => onQuery(event.target.value)} placeholder={placeholder} aria-label={placeholder} style={{ flex: 1, minWidth: 0, border: 0, outline: 'none', background: 'transparent', fontFamily: FONT_UI, fontSize: 14, fontWeight: 600, color: OK.ink }}/>
-              {query && <button type="button" onClick={() => onQuery('')} aria-label="Effacer" style={{ border: 0, background: 'transparent', padding: 0, cursor: 'pointer', display: 'flex' }}><XCircleIcon size={20} weight="fill" color="#ADB5BD" aria-hidden/></button>}
-            </label>
-          ) : (
-            <button type="button" onClick={onSearch} style={{ flex: 1, minWidth: 0, height: '100%', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10, textAlign: 'left' }}>
-              <MagnifyingGlassIcon size={20} weight="bold" color={OK.ink} aria-hidden/>
-              <span style={{ fontFamily: FONT_UI, fontSize: 14, color: OK.ink3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{placeholder}</span>
-            </button>
-          )}
-          {onFilter && <button type="button" aria-label="Filtres" onClick={onFilter} style={{ width: 38, height: 38, borderRadius: 999, border: 0, background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><SlidersHorizontalIcon size={21} weight="bold" color={OK.ink} aria-hidden/></button>}
-        </div>
-      )}
+      {left && !goBack && <div style={{ position: 'absolute', top: HERO_ROW_TOP, left: 14, zIndex: 3, display: 'flex', alignItems: 'center' }}>{left}</div>}
+      {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ ...HERO_ICON_BTN, position: 'absolute', top: HERO_ROW_TOP, left: 14 }}><CaretLeftIcon size={20} weight="bold" color="#fff" aria-hidden/></button>}
+      {<div aria-hidden style={{ position: 'absolute', top: HERO_ROW_TOP, left: '50%', transform: 'translateX(-50%)', height: 38, display: 'flex', alignItems: 'center', pointerEvents: 'none' }}><img src="assets/okaba-logo-header.png" alt="" style={{ height: 23, width: 'auto', display: 'block', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }}/></div>}
+      {right && <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8 }}>{typeof right === 'function' ? right(null) : right}</div>}
+      {(title || heading) && <div style={{ position: 'absolute', left: 20, right: 20, bottom: showBar ? 46 : 20, transition: 'bottom .2s ease', textAlign: centered ? 'center' : 'left' }}>
+        {heading || <h1 style={{ margin: 0, fontFamily: FONT_UI, fontSize: titleSize, fontWeight: 700, color: '#fff', letterSpacing: -0.3 }}>{title}</h1>}
+        {!heading && subtitle && (typeof subtitle === 'string'
+          ? <p style={{ margin: '5px 0 0', fontFamily: FONT_UI, fontSize: 13, lineHeight: 1.45, color: 'rgba(255,255,255,0.92)', maxWidth: centered ? 'none' : 310 }}>{subtitle}</p>
+          : subtitle)}
+      </div>}
+      {showBar && bar({ position: 'absolute', left: 14, right: 14, bottom: -24, visibility: pinned ? 'hidden' : 'visible' }, pinned ? null : inputRef)}
     </div>
+    {showBar && pinned && (
+      <div className="pf-step" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, padding: `calc(${APP_SAFE_TOP} + 8px) 14px 12px`,
+        // Verre liquide teinté de la couleur de la photo du header
+        background: `linear-gradient(180deg, rgba(${tr},${tg},${tb},0.62), rgba(${tr},${tg},${tb},0.38))`,
+        backdropFilter: 'blur(22px) saturate(170%)', WebkitBackdropFilter: 'blur(22px) saturate(170%)',
+        borderBottom: '1px solid rgba(255,255,255,0.28)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 24px rgba(0,0,0,0.14)' }}>
+        {bar({ position: 'relative', background: 'rgba(255,255,255,0.88)', boxShadow: '0 2px 10px rgba(0,0,0,0.10)', border: '1px solid rgba(255,255,255,0.6)' }, inputRef)}
+      </div>
+    )}
     </div>
   );
 }
@@ -4498,7 +4625,7 @@ function AnnuaireScreen({ params }) {
     <Screen bg="#fff" statusDark={true} tabBar edgeTop>
       <div data-screen-label="Annuaire">
         {/* 1. En-tête de référence */}
-        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title="Annuaire O’KABA" subtitle="Trouvez tous les établissements, professionnels et services près de chez vous"
+        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title="Annuaire" subtitle="Trouvez tous les établissements, professionnels et services près de chez vous"
           placeholder="Rechercher un établissement, une activité…" onSearch={() => navigate('annuaire', { results: true, focus: true })} onFilter={() => navigate('annuaire', { results: true, filters: true })}/>
 
         {/* 2. Catégories principales */}
@@ -4569,12 +4696,12 @@ function AnnuPremiumBanner({ items, onOpen }) {
   if (!items.length) return null;
   const current = items[index % items.length];
   return (
-    <div style={{ padding: '14px 12px 0' }}>
-      <div style={{ display: 'flex', alignItems: 'center', margin: '0 4px 10px' }}>
+    <div style={{ padding: '8px 14px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', margin: '0 2px 10px' }}>
         <h2 style={{ flex: 1, margin: 0, fontFamily: FONT_UI, fontSize: 17, fontWeight: 800, color: OK.ink }}>À la une</h2>
         <div style={{ display: 'flex', gap: 5 }}>{items.map((item, i) => <button key={item.id} type="button" aria-label={`Annonceur ${i + 1}`} onClick={() => setIndex(i)} style={{ width: i === index % items.length ? 16 : 6, height: 6, borderRadius: 999, border: 0, padding: 0, cursor: 'pointer', background: i === index % items.length ? '#006600' : '#CED4CF', transition: 'width .2s' }}/>)}</div>
       </div>
-      <button type="button" className="pf-press" onClick={() => onOpen(current)} style={{ position: 'relative', display: 'block', width: '100%', height: 160, padding: 0, border: 0, borderRadius: 18, overflow: 'hidden', cursor: 'pointer', textAlign: 'left' }}>
+      <button type="button" className="pf-press" onClick={() => onOpen(current)} style={{ ...HERO_CARD, margin: 0, display: 'block', width: '100%', padding: 0, border: 0, cursor: 'pointer', textAlign: 'left' }}>
         {items.map((item, i) => <Img key={item.id} src={annuPhoto(item)} style={{ position: 'absolute', inset: 0, opacity: i === index % items.length ? 1 : 0, transition: 'opacity .7s ease' }} overlay="linear-gradient(90deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.2) 55%, rgba(0,0,0,0) 80%)"/>)}
         <span style={{ position: 'absolute', top: 12, right: 12, padding: '3px 9px', borderRadius: 999, background: 'rgba(255,255,255,0.92)', fontFamily: FONT_UI, fontSize: 10.5, fontWeight: 800, color: OK.ink, letterSpacing: 0.4 }}>PREMIUM</span>
         <span key={current.id} className="pf-step" style={{ position: 'absolute', left: 16, right: 110, top: 16, bottom: 14, display: 'flex', flexDirection: 'column' }}>
@@ -5335,7 +5462,7 @@ function MairieScreen({ entity }) {
 
         {/* Projet municipal à la une : contenu institutionnel, sans dupliquer le visuel de la mairie. */}
         {!q && (
-          <div style={{ position: 'relative', margin: '16px 14px 0', height: 166, borderRadius: 18, overflow: 'hidden' }}>
+          <div style={HERO_CARD}>
             <Img src={MAIRIE_PROJECT.img} style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(90deg, rgba(5,40,70,0.88) 0%, rgba(5,40,70,0.5) 58%, rgba(5,40,70,0.12) 100%)"/>
             <div style={{ position: 'absolute', left: 16, right: 62, top: 15, bottom: 14, display: 'flex', flexDirection: 'column' }}>
               <span style={{ fontFamily: FONT_UI, fontSize: 10.5, fontWeight: 800, color: '#D9F0DF', letterSpacing: .5, textTransform: 'uppercase' }}>{MAIRIE_PROJECT.eyebrow}</span>
@@ -6041,10 +6168,10 @@ function BaieScreen() {
       <div data-screen-label="La Baie des Rois">
         <PageHero img={BAIE_HERO[slide].img} imgPos={BAIE_HERO[slide].pos} title="La Baie des Rois" subtitle="Vivre, découvrir, investir : un lieu d’exception au cœur de Libreville"
           placeholder="Restaurants, boutiques, activités…" onSearch={() => navigate('baie-explore', { focus: true })} onFilter={() => navigate('baie-explore', { filters: true })}
-          right={<button type="button" aria-label="Partager La Baie des Rois" onClick={() => notifyDemo('Lien de La Baie des Rois copié')} style={{ width: 40, height: 40, borderRadius: 999, border: 0, background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><ShareNetworkIcon size={22} weight="bold" color="#fff" aria-hidden/></button>}/>
+          right={<HeroIconButton label="Partager La Baie des Rois" icon={ShareNetworkIcon} onClick={() => notifyDemo('Lien de La Baie des Rois copié')}/>}/>
 
         {/* Bannière promotionnelle */}
-        <button type="button" className="pf-press" onClick={() => navigate('baie-explore')} style={{ position: 'relative', display: 'block', width: 'calc(100% - 28px)', height: 108, margin: '14px 14px 0', padding: 0, border: 0, borderRadius: 16, overflow: 'hidden', cursor: 'pointer', textAlign: 'left' }}>
+        <button type="button" className="pf-press" onClick={() => navigate('baie-explore')} style={{ ...HERO_CARD, display: 'block', width: 'calc(100% - 28px)', padding: 0, border: 0, overflow: 'hidden', cursor: 'pointer', textAlign: 'left' }}>
           <Img src="assets/baie/c21-site-01.webp" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(90deg, rgba(5,20,35,0.95) 0%, rgba(5,20,35,0.75) 48%, rgba(5,20,35,0.15) 100%)"/>
           <span style={{ position: 'absolute', left: 16, top: 14, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 800, lineHeight: 1.3, letterSpacing: 0.6, color: '#F2C94C' }}>SHOPPING<br/>RESTAURANTS<br/>LOISIRS & ÉVÉNEMENTS</span>
           <span style={{ position: 'absolute', left: 16, bottom: 12, height: 26, padding: '0 12px', borderRadius: 999, background: OK.green, display: 'inline-flex', alignItems: 'center', gap: 4, fontFamily: FONT_UI, fontSize: 10.5, fontWeight: 800, color: '#fff', letterSpacing: 0.3 }}>DÉCOUVRIR MAINTENANT<CaretRightIcon size={11} weight="bold" aria-hidden/></span>
@@ -6119,7 +6246,7 @@ function BaieExploreScreen({ params }) {
       <div data-screen-label="Explorer la Baie">
         <PageHero img="assets/baie/c21-aerial-03.webp" imgPos="center 50%" title="Explorer la Baie" subtitle="Découvrez tout l’univers de la Baie des Rois"
           placeholder="Restaurants, boutiques, activités…" query={query} onQuery={setQuery} autoFocus={Boolean(params?.focus)} onFilter={() => setShowFilters(value => !value)}
-          right={<button type="button" onClick={() => navigate('annuaire-map')} style={{ height: 34, padding: '0 12px', borderRadius: 999, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.16)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 700 }}><MapPinIcon size={16} weight="fill" aria-hidden/>Sur la carte</button>}/>
+          right={<HeroIconButton label="Voir sur la carte" icon={MapTrifoldIcon} onClick={() => navigate('annuaire-map')}/>}/>
         {showFilters && (
           <div style={{ display: 'flex', gap: 8, padding: '12px 14px 0' }}>
             <button type="button" aria-pressed={openOnly} onClick={() => setOpenOnly(value => !value)} style={{ height: 34, padding: '0 13px', borderRadius: 999, cursor: 'pointer', border: openOnly ? `1.5px solid ${OK.green}` : '1px solid #DCE1DC', background: openOnly ? 'rgba(0,102,0,0.08)' : '#fff', color: openOnly ? OK.green : OK.ink, display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT_UI, fontSize: 12.5, fontWeight: 750 }}><ClockIcon size={15} weight="bold" aria-hidden/>Ouvert maintenant</button>
@@ -6256,10 +6383,10 @@ function BaiePartnersScreen() {
     <Screen bg="#fff" statusDark={true} tabBar edgeTop>
       <div data-screen-label="Partenariats Baie des Rois">
         <PageHero img="assets/baie/c21-aerial-02.webp" imgPos="center 50%" title="Partenariats & Opportunités" subtitle="Investir, s’implanter, collaborer à la Baie des Rois"
-          right={<button type="button" onClick={() => navigate('entity', { id: 'fmct' })} style={{ height: 34, padding: '0 12px', borderRadius: 999, border: 0, background: 'rgba(5,30,50,0.72)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontFamily: FONT_UI, fontSize: 12, fontWeight: 700 }}><InfoIcon size={16} weight="fill" aria-hidden/>À propos du projet</button>}/>
+          right={<HeroIconButton label="À propos du projet" icon={InfoIcon} onClick={() => navigate('entity', { id: 'fmct' })}/>}/>
 
         {/* Carte projet */}
-        <div style={{ position: 'relative', zIndex: 2, margin: '16px 14px 0', height: 158, borderRadius: 18, overflow: 'hidden', boxShadow: '0 10px 26px rgba(0,0,0,0.18)' }}>
+        <div style={{ ...HERO_CARD, zIndex: 2 }}>
           <Img src="assets/baie-2.png" style={{ position: 'absolute', inset: 0 }} overlay="linear-gradient(90deg, rgba(4,40,26,0.97) 0%, rgba(4,40,26,0.85) 46%, rgba(4,40,26,0.1) 100%)"/>
           <div style={{ position: 'absolute', left: 16, top: 16, right: '42%' }}>
             <div style={{ fontFamily: FONT_UI, fontSize: 18, fontWeight: 800, color: '#fff', lineHeight: 1.2 }}>Rejoignez un destin d’exception</div>
@@ -10219,7 +10346,7 @@ function CompteScreenV2() {
         onPick={pick} onAdd={() => { setSwitcher(false); navigate('shops'); }}/>
     }>
       <div data-screen-label="Profil">
-        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title="Mon profil" subtitle="Votre espace personnel sur O’KABA" right={heroActions}/>
+        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title="Mon profil" subtitle="Votre espace personnel" right={heroActions}/>
 
         <div style={{ position: 'relative', zIndex: 2, margin: '14px 14px 0' }}>
           <div style={{ overflow: 'visible', background: '#fff', border: '1px solid #EEF0EE', borderRadius: 20, boxShadow: '0 8px 22px rgba(20,40,25,0.10)' }}>
@@ -10935,7 +11062,7 @@ function InfosScreen() {
     <Screen bg="#fff" statusDark={true} tabBar edgeTop>
       <div data-screen-label="Infos pratiques">
         <PageHero img="assets/baie/net/miboue-101.png" imgPos="center 45%" title="Infos pratiques" subtitle="Urgences, trafic, santé et services du quotidien à Libreville"
-          placeholder="Rechercher une info, un numéro, une pharmacie…" query={query} onQuery={setQuery} right={cityChip} onFilter={() => setShowFilters(value => !value)}/>
+          placeholder="Rechercher une info, un numéro, une pharmacie…" query={query} onQuery={setQuery} onFilter={() => setShowFilters(value => !value)}/>
         {(showFilters || only !== 'all') && (
           <div className="pf-hscroll" role="tablist" aria-label="Filtrer par rubrique" style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '14px 14px 0' }}>
             {INFO_FILTERS.map(([id, label]) => <button key={id} type="button" role="tab" aria-selected={only === id} onClick={() => setOnly(id)} style={{ flexShrink: 0, height: 36, padding: '0 14px', borderRadius: 999, cursor: 'pointer', border: 0, background: only === id ? '#006600' : '#F1F3F2', color: only === id ? '#fff' : OK.ink, fontFamily: FONT_UI, fontSize: 13, fontWeight: 750 }}>{label}</button>)}
