@@ -4525,24 +4525,36 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
   const { back, canBack } = useNav();
   const goBack = onBack || (canBack ? back : null);
   const searchable = Boolean(onSearch || onQuery);
-  // Pas de bouton loupe : la barre de recherche apparaît dès qu'on fait défiler
-  // la page ou qu'on tire vers le bas en haut d'écran ; une fois le header
-  // sorti de l'écran, elle reste accrochée en haut.
+  // Pas de bouton loupe : la barre de recherche apparaît quand on tire l'écran
+  // vers le bas (en haut de page) et se range dès qu'on fait défiler, sauf si
+  // une recherche est en cours. Une fois le header sorti de l'écran, sa
+  // première ligne (retour, logo, actions) reste accrochée en haut sur du verre.
   const [revealed, setRevealed] = useState(Boolean(autoFocus || query));
   const [pinned, setPinned] = useState(false);
   const rootRef = useRef(null);
   const inputRef = useRef(null);
+  const queryRef = useRef(query);
+  queryRef.current = query;
   useEffect(() => { if (autoFocus && onQuery) inputRef.current?.focus(); }, []);
   useEffect(() => {
-    if (!searchable) return undefined;
     let el = rootRef.current?.parentElement;
     while (el && !['auto', 'scroll'].includes(getComputedStyle(el).overflowY)) el = el.parentElement;
     if (!el) return undefined;
     let startY = null;
-    const onScroll = () => { if (el.scrollTop > 4) setRevealed(true); setPinned(el.scrollTop > 170); };
+    const onScroll = () => {
+      setPinned(el.scrollTop > 170);
+      if (el.scrollTop > 4 && !queryRef.current && document.activeElement !== inputRef.current) setRevealed(false);
+    };
     const onTouchStart = event => { startY = el.scrollTop <= 0 ? event.touches[0].clientY : null; };
-    const onTouchMove = event => { if (startY != null && event.touches[0].clientY - startY > 24) setRevealed(true); };
-    const onWheel = event => { if (event.deltaY < 0 && el.scrollTop <= 0) setRevealed(true); };
+    // Il faut tirer franchement (≈ 100 px) pour ouvrir la recherche, pas un simple effleurement.
+    const PULL = 100;
+    let wheelPull = 0, wheelTimer = null;
+    const onTouchMove = event => { if (searchable && startY != null && event.touches[0].clientY - startY > PULL) setRevealed(true); };
+    const onWheel = event => {
+      if (!searchable || el.scrollTop > 0 || event.deltaY >= 0) { wheelPull = 0; return; }
+      wheelPull -= event.deltaY; clearTimeout(wheelTimer); wheelTimer = setTimeout(() => { wheelPull = 0; }, 400);
+      if (wheelPull > PULL * 2) { wheelPull = 0; setRevealed(true); }
+    };
     el.addEventListener('scroll', onScroll, { passive: true });
     el.addEventListener('touchstart', onTouchStart, { passive: true });
     el.addEventListener('touchmove', onTouchMove, { passive: true });
@@ -4587,15 +4599,18 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
           ? <p style={{ margin: '5px 0 0', fontFamily: FONT_UI, fontSize: 13, lineHeight: 1.45, color: 'rgba(255,255,255,0.92)', maxWidth: centered ? 'none' : 310 }}>{subtitle}</p>
           : subtitle)}
       </div>}
-      {showBar && bar({ position: 'absolute', left: 14, right: 14, bottom: -24, visibility: pinned ? 'hidden' : 'visible' }, pinned ? null : inputRef)}
+      {showBar && bar({ position: 'absolute', left: 14, right: 14, bottom: -24 }, inputRef)}
     </div>
-    {showBar && pinned && (
-      <div className="pf-step" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, padding: `calc(${APP_SAFE_TOP} + 8px) 14px 12px`,
+    {pinned && (
+      <div className="pf-step" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, height: `calc(${HERO_ROW_TOP} + 48px)`,
         // Verre liquide teinté de la couleur de la photo du header
-        background: `linear-gradient(180deg, rgba(${tr},${tg},${tb},0.62), rgba(${tr},${tg},${tb},0.38))`,
+        background: `linear-gradient(180deg, rgba(${tr},${tg},${tb},0.66), rgba(${tr},${tg},${tb},0.42))`,
         backdropFilter: 'blur(22px) saturate(170%)', WebkitBackdropFilter: 'blur(22px) saturate(170%)',
         borderBottom: '1px solid rgba(255,255,255,0.28)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 24px rgba(0,0,0,0.14)' }}>
-        {bar({ position: 'relative', background: 'rgba(255,255,255,0.88)', boxShadow: '0 2px 10px rgba(0,0,0,0.10)', border: '1px solid rgba(255,255,255,0.6)' }, inputRef)}
+        {left && !goBack && <div style={{ position: 'absolute', top: HERO_ROW_TOP, left: 14, display: 'flex', alignItems: 'center' }}>{left}</div>}
+        {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ ...HERO_ICON_BTN, position: 'absolute', top: HERO_ROW_TOP, left: 14 }}><CaretLeftIcon size={20} weight="bold" color="#fff" aria-hidden/></button>}
+        <div aria-hidden style={{ position: 'absolute', top: HERO_ROW_TOP, left: '50%', transform: 'translateX(-50%)', height: 38, display: 'flex', alignItems: 'center', pointerEvents: 'none' }}><img src="assets/okaba-logo-header.png" alt="" style={{ height: 23, width: 'auto', display: 'block', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }}/></div>
+        {right && <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8 }}>{typeof right === 'function' ? right(null) : right}</div>}
       </div>
     )}
     </div>
