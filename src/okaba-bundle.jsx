@@ -1762,7 +1762,9 @@ function TabBar() {
           }}>
             <span style={{ position: 'relative', width: 56, height: 30, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: on ? 'rgba(0,102,0,0.11)' : 'transparent', transition: 'background-color .2s ease' }}>
-              <Glyph size={24} color={on ? OK.green : TAB_INACTIVE} weight={on ? 'fill' : 'regular'} aria-hidden/>
+              {it.id === 'me'
+                ? <img src={DEMO_PROFILES[0].avatar} alt="" aria-hidden style={{ width: 26, height: 26, borderRadius: 999, objectFit: 'cover', display: 'block', boxSizing: 'border-box', border: `2px solid ${on ? OK.green : '#fff'}`, boxShadow: on ? '0 0 0 1px rgba(0,102,0,0.25)' : '0 0 0 1px rgba(0,0,0,0.12)' }}/>
+                : <Glyph size={24} color={on ? OK.green : TAB_INACTIVE} weight={on ? 'fill' : 'regular'} aria-hidden/>}
               {it.badge > 0 && <span aria-label={`${it.badge} non lus`} style={{ position: 'absolute', top: 1, left: 31, minWidth: 17, height: 17, padding: '0 4px', boxSizing: 'border-box', borderRadius: 999, background: OK.red, border: '2px solid #fff', color: '#fff', fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{it.badge}</span>}
             </span>
             <span style={{ fontFamily: FONT_UI, fontSize: 11, lineHeight: 1, fontWeight: on ? 800 : 600, color: on ? OK.green : TAB_INACTIVE }}>{it.label}</span>
@@ -2689,7 +2691,7 @@ function HomeScreen() {
     return () => clearInterval(timer);
   }, [slides.length]);
   const current = slides[slide % slides.length];
-  const headerRight = search => <OkabaHeaderActions search={search} avatar/>;
+  const headerRight = search => <OkabaHeaderActions search={search}/>;
   const head = (title, go) => (
     <div style={{ display: 'flex', alignItems: 'center', margin: '24px 18px 12px' }}>
       <h2 style={{ flex: 1, margin: 0, fontFamily: FONT_UI, fontSize: 18, fontWeight: 800, color: OK.ink, letterSpacing: -0.3 }}>{title}</h2>
@@ -4530,7 +4532,7 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
   // une recherche est en cours. Une fois le header sorti de l'écran, sa
   // première ligne (retour, logo, actions) reste accrochée en haut sur du verre.
   const [revealed, setRevealed] = useState(Boolean(autoFocus || query));
-  const [pinned, setPinned] = useState(false);
+  const [glass, setGlass] = useState(0); // 0 = header visible, 1 = header sorti de l'écran
   const rootRef = useRef(null);
   const inputRef = useRef(null);
   const queryRef = useRef(query);
@@ -4542,7 +4544,7 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
     if (!el) return undefined;
     let startY = null;
     const onScroll = () => {
-      setPinned(el.scrollTop > 170);
+      setGlass(Math.max(0, Math.min(1, el.scrollTop / 90)));
       if (el.scrollTop > 4 && !queryRef.current && document.activeElement !== inputRef.current) setRevealed(false);
     };
     const onTouchStart = event => { startY = el.scrollTop <= 0 ? event.touches[0].clientY : null; };
@@ -4589,11 +4591,7 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
     <div ref={rootRef} style={{ paddingBottom: showBar ? 24 : 0, transition: 'padding-bottom .2s ease' }}>
     <div style={{ position: 'relative', height: 208 }}>
       <Img src={img} style={{ position: 'absolute', inset: 0, backgroundPosition: imgPos }} overlay="linear-gradient(180deg, rgba(4,30,16,0.55) 0%, rgba(4,30,16,0.35) 45%, rgba(4,30,16,0.75) 100%)"/>
-      {left && !goBack && <div style={{ position: 'absolute', top: HERO_ROW_TOP, left: 14, zIndex: 3, display: 'flex', alignItems: 'center' }}>{left}</div>}
-      {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ ...HERO_ICON_BTN, position: 'absolute', top: HERO_ROW_TOP, left: 14 }}><CaretLeftIcon size={20} weight="bold" color="#fff" aria-hidden/></button>}
-      {<div aria-hidden style={{ position: 'absolute', top: HERO_ROW_TOP, left: '50%', transform: 'translateX(-50%)', height: 38, display: 'flex', alignItems: 'center', pointerEvents: 'none' }}><img src="assets/okaba-logo-header.png" alt="" style={{ height: 23, width: 'auto', display: 'block', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }}/></div>}
-      {right && <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8 }}>{typeof right === 'function' ? right(null) : right}</div>}
-      {(title || heading) && <div style={{ position: 'absolute', left: 20, right: 20, bottom: showBar ? 46 : 20, transition: 'bottom .2s ease', textAlign: centered ? 'center' : 'left' }}>
+      {(title || heading) && <div style={{ position: 'absolute', left: 20, right: 20, bottom: showBar ? 46 : 20, transition: 'bottom .2s ease', opacity: Math.max(0, 1 - glass * 1.6), textAlign: centered ? 'center' : 'left' }}>
         {heading || <h1 style={{ margin: 0, fontFamily: FONT_UI, fontSize: titleSize, fontWeight: 700, color: '#fff', letterSpacing: -0.3 }}>{title}</h1>}
         {!heading && subtitle && (typeof subtitle === 'string'
           ? <p style={{ margin: '5px 0 0', fontFamily: FONT_UI, fontSize: 13, lineHeight: 1.45, color: 'rgba(255,255,255,0.92)', maxWidth: centered ? 'none' : 310 }}>{subtitle}</p>
@@ -4601,18 +4599,18 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
       </div>}
       {showBar && bar({ position: 'absolute', left: 14, right: 14, bottom: -24 }, inputRef)}
     </div>
-    {pinned && (
-      <div className="pf-step" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, height: `calc(${HERO_ROW_TOP} + 48px)`,
-        // Verre liquide teinté de la couleur de la photo du header
+    {/* Ligne du haut fixe (retour / gauche, logo, actions) : elle ne bouge jamais ;
+        seul le fond en verre teinté apparaît en descendant et s'efface en remontant. */}
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, height: `calc(${HERO_ROW_TOP} + 48px)`, pointerEvents: 'none' }}>
+      <div aria-hidden style={{ position: 'absolute', inset: 0, opacity: glass, transition: 'opacity .15s linear',
         background: `linear-gradient(180deg, rgba(${tr},${tg},${tb},0.66), rgba(${tr},${tg},${tb},0.42))`,
         backdropFilter: 'blur(22px) saturate(170%)', WebkitBackdropFilter: 'blur(22px) saturate(170%)',
-        borderBottom: '1px solid rgba(255,255,255,0.28)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 24px rgba(0,0,0,0.14)' }}>
-        {left && !goBack && <div style={{ position: 'absolute', top: HERO_ROW_TOP, left: 14, display: 'flex', alignItems: 'center' }}>{left}</div>}
-        {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ ...HERO_ICON_BTN, position: 'absolute', top: HERO_ROW_TOP, left: 14 }}><CaretLeftIcon size={20} weight="bold" color="#fff" aria-hidden/></button>}
-        <div aria-hidden style={{ position: 'absolute', top: HERO_ROW_TOP, left: '50%', transform: 'translateX(-50%)', height: 38, display: 'flex', alignItems: 'center', pointerEvents: 'none' }}><img src="assets/okaba-logo-header.png" alt="" style={{ height: 23, width: 'auto', display: 'block', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }}/></div>
-        {right && <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8 }}>{typeof right === 'function' ? right(null) : right}</div>}
-      </div>
-    )}
+        borderBottom: '1px solid rgba(255,255,255,0.28)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.25), 0 8px 24px rgba(0,0,0,0.14)' }}/>
+      {left && !goBack && <div style={{ position: 'absolute', top: HERO_ROW_TOP, left: 14, display: 'flex', alignItems: 'center', pointerEvents: 'auto' }}>{left}</div>}
+      {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ ...HERO_ICON_BTN, position: 'absolute', top: HERO_ROW_TOP, left: 14, pointerEvents: 'auto' }}><CaretLeftIcon size={20} weight="bold" color="#fff" aria-hidden/></button>}
+      <div aria-hidden style={{ position: 'absolute', top: HERO_ROW_TOP, left: '50%', transform: 'translateX(-50%)', height: 38, display: 'flex', alignItems: 'center' }}><img src="assets/okaba-logo-header.png" alt="" style={{ height: 23, width: 'auto', display: 'block', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }}/></div>
+      {right && <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8, pointerEvents: 'auto' }}>{typeof right === 'function' ? right(null) : right}</div>}
+    </div>
     </div>
   );
 }
