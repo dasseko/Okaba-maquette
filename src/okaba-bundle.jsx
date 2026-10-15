@@ -28,6 +28,9 @@ import {
   ThumbsUpIcon, ArrowsOutIcon, CrosshairIcon, CameraIcon, PlusIcon,
   // Marketplace
   DeviceMobileIcon, TShirtIcon, TicketIcon, TruckIcon,
+  // Menu Publier (premier niveau)
+  PencilSimpleLineIcon, HeadsetIcon, HammerIcon, DotsThreeOutlineIcon, TreeIcon, MountainsIcon, TentIcon, PersonSimpleHikeIcon,
+  CastleTurretIcon, BasketIcon, DiamondIcon, LifebuoyIcon, LightbulbIcon, QuestionIcon,
 } from '@phosphor-icons/react';
 import {
   SquarePen, Store, Handshake, LifeBuoy, Tag, Briefcase, CalendarDays, Megaphone,
@@ -1562,7 +1565,7 @@ function hasDarkStatusBackground(color, fallback = false) {
 // gestion restent en trait simple et en gris, pour ne pas concurrencer Créer.
 // Une teinte par objet aide à repérer l'action d'un coup d'œil.
 const PUB_PH = {
-  building: StorefrontIcon, package: PackageIcon, concierge: ToolboxIcon, tags: PhTagIcon, ticket: CalendarStarIcon,
+  building: StorefrontIcon, car: CarIcon, briefcase: BriefcaseIcon, buildings: BuildingsIcon, package: PackageIcon, concierge: ToolboxIcon, tags: PhTagIcon, ticket: CalendarStarIcon,
   megaphone: MegaphoneIcon, pinplus: MapPinPlusIcon, dashboard: SquaresFourIcon, chart: ChartLineUpIcon,
   draft: NotePencilIcon, chev: CaretRightIcon, history: ClockCounterClockwiseIcon, close: PhXIcon,
 };
@@ -1571,19 +1574,69 @@ function PubIcon({ name, size = 22, color, weight = 'duotone' }) {
   return C ? <C size={size} color={color} weight={weight} aria-hidden/> : null;
 }
 const PUB_CREATE = [
-  { id: 'etab', icon: 'building', tone: '#006600', label: 'Établissement', hint: 'Restaurant, hôtel, boutique, entreprise', screen: ['create', { kind: 'etab' }] },
   { id: 'produit', icon: 'package', tone: '#D9480F', label: 'Produit', hint: 'À vendre sur la Marketplace', screen: ['create', { kind: 'produit' }] },
   { id: 'service', icon: 'concierge', tone: '#1C6DD0', label: 'Service', hint: 'Prestation, excursion, dépannage', screen: ['proposer-service'] },
-  { id: 'annonce', icon: 'tags', tone: '#7048E8', label: 'Annonce', hint: 'Immobilier, véhicule, occasion', screen: ['publier'] },
   { id: 'event', icon: 'ticket', tone: '#D6336C', label: 'Événement', hint: 'Concert, soirée, exposition', screen: ['create', { kind: 'event' }] },
+  { id: 'auto', icon: 'car', tone: '#E8590C', label: 'Automobile', hint: 'Voiture, moto, pièces détachées', screen: ['publier', { cat: 'auto' }] },
+  { id: 'emploi', icon: 'briefcase', tone: '#2B8A3E', label: 'Emploi', hint: 'Offre d’emploi, mission, recherche de poste', screen: ['publier', { cat: 'services' }] },
+  { id: 'immo', icon: 'buildings', tone: '#0C8599', label: 'Immobilier', hint: 'Vente, location, terrain', screen: ['publier', { cat: 'immo' }] },
 ];
 
+// Premier niveau du bouton central : « Que souhaitez-vous faire ? ». « Faire une
+// publication » ouvre le menu de création (niveau suivant) ; « Assistance et
+// contact » ouvre ses propres entrées.
+const PUB_ROOT = [
+  { id: 'publish', tone: '#006600', Icon: PencilSimpleLineIcon, title: 'Faire une publication', sub: 'Produit, service, événement, automobile, emploi, immobilier' },
+  { id: 'activite', tone: '#1C6DD0', Icon: StorefrontIcon, title: 'Inscrire une activité', sub: 'Référencer un commerce, un établissement ou une activité professionnelle' },
+  { id: 'avant', tone: '#C27C00', Icon: MegaphoneIcon, title: 'Mettre en avant', sub: 'Promouvoir une publication, une activité ou une campagne' },
+  { id: 'lieu', tone: '#0C8599', Icon: MapPinIcon, title: 'Suggérer un lieu', sub: 'Faire découvrir un lieu ou une pépite du Gabon' },
+  { id: 'assist', tone: '#7048E8', Icon: HeadsetIcon, title: 'Assistance et contact', sub: 'Obtenir de l’aide, signaler ou faire une suggestion' },
+];
+// Sous-rubriques de chaque entrée (structure fonctionnelle retenue).
+// « Inscrire une activité » est l'entrée unique du référencement professionnel :
+// la sous-rubrique pré-remplit la catégorie du parcours établissement.
+const etabEntry = (cat, extra) => ['create', { kind: 'etab', startStep: cat ? 1 : 0, prefill: { cat: cat || '', specialties: [], ...extra } }];
+const lieuEntry = ptype => ['create', { kind: 'lieu', startStep: 1, prefill: { ptype } }];
+const PUB_LIEU_TONES = ['#0C8599', '#E8590C', '#2F9E44', '#5C7A29', '#A16207', '#7048E8', '#D6336C', '#1C7ED6', '#2B8A3E', '#8D6E63', '#C27C00', '#AE3EC9', '#0B7285', '#495057'];
+const PUB_SUBS = {
+  activite: [
+    { id: 'commerce', Icon: StorefrontIcon, title: 'Commerce / Boutique', tone: '#006600', screen: etabEntry('commerce') },
+    { id: 'resto', Icon: ForkKnifeIcon, title: 'Restaurant / Bar', tone: '#E8590C', screen: etabEntry('food') },
+    { id: 'presta', Icon: WrenchIcon, title: 'Prestataire de services', tone: '#1C6DD0', screen: etabEntry('perso') },
+    { id: 'artisan', Icon: HammerIcon, title: 'Artisan / Indépendant', tone: '#A16207', screen: etabEntry('culture') },
+    { id: 'entreprise', Icon: BuildingsIcon, title: 'Entreprise / Organisation', tone: '#495057', screen: etabEntry('b2b') },
+    { id: 'autre', Icon: DotsThreeOutlineIcon, title: 'Autre activité', tone: '#7048E8', screen: etabEntry('') },
+  ],
+  // « Mettre en avant » part des contenus déjà publiés : on choisit le contenu, puis la formule.
+  avant: [
+    { id: 'boost', Icon: RocketLaunchIcon, title: 'Booster une publication', tone: '#7048E8', sub: 'Remonter une publication en tête des listes', screen: ['promote', { placement: 'boost' }] },
+    { id: 'activite', Icon: StorefrontIcon, title: 'Promouvoir une activité', tone: '#C27C00', sub: 'Mettre votre établissement « À la une »', screen: ['promote', { placement: 'une' }] },
+    { id: 'campagne', Icon: ChartLineUpIcon, title: 'Créer une campagne publicitaire', tone: '#D6336C', sub: 'Bannières et résultats sponsorisés', screen: ['promote', {}] },
+  ],
+  lieu: [
+    ['plage', WavesIcon, 'Plage'], ['gastro', ForkKnifeIcon, 'Gastronomie'], ['nature', TreeIcon, 'Nature'], ['site', MountainsIcon, 'Site naturel'],
+    ['culture', BankIcon, 'Culture & patrimoine'], ['loisir', TentIcon, 'Activité / Loisirs'], ['vue', CameraIcon, 'Point de vue / Spot photo'],
+    ['cascade', DropIcon, 'Lac / Rivière / Cascade'], ['rando', PersonSimpleHikeIcon, 'Randonnée / Aventure'], ['histo', CastleTurretIcon, 'Lieu historique'],
+    ['marche', BasketIcon, 'Artisanat / Marché local'], ['sortie', MusicNotesIcon, 'Sortie / Ambiance'], ['pepite', DiamondIcon, 'Pépite cachée'], ['autre', DotsThreeOutlineIcon, 'Autre'],
+  ].map(([id, Icon, title], i) => ({ id, Icon, title, tone: PUB_LIEU_TONES[i % PUB_LIEU_TONES.length], screen: lieuEntry(id) })),
+  assist: [
+    { id: 'compte', Icon: UserCircleIcon, title: 'Mon compte', tone: '#006600', tab: ['compte', 'me'] },
+    { id: 'sav', Icon: LifebuoyIcon, title: 'SAV', tone: '#1C6DD0', sub: 'Une commande, un paiement, un abonnement', screen: ['form-contact'] },
+    { id: 'signal', Icon: WarningIcon, title: 'Faire un signalement', tone: '#E03131', screen: ['form-signaler'] },
+    { id: 'regie', Icon: MegaphoneIcon, title: 'Régie publicitaire', tone: '#C27C00', sub: 'Annoncer sur O’KABA', screen: ['form-partenariat'] },
+    { id: 'suggestion', Icon: LightbulbIcon, title: 'Faire une suggestion', tone: '#F59F00', screen: ['form-suggestion'] },
+    { id: 'question', Icon: QuestionIcon, title: 'Question générale', tone: '#0C8599', screen: ['form-contact'] },
+    { id: 'autre', Icon: DotsThreeOutlineIcon, title: 'Autre', screen: ['form-contact'], tone: '#7048E8' },
+  ],
+};
+
 function PublishSheet({ open, onClose }) {
-  const { navigate } = useNav();
+  const { navigate, goTab } = useNav();
+  const [level, setLevel] = useState('root'); // 'root' → une entrée (publish, activite, avant, lieu, assist)
   const [drafts, setDrafts] = useState({});
   const [mounted, setMounted] = useState(open);
   useEffect(() => {
-    if (open) { setDrafts(typeof pfDrafts === 'function' ? pfDrafts() : {}); setMounted(true); return undefined; }
+    if (open) { setLevel('root'); setDrafts(typeof pfDrafts === 'function' ? pfDrafts() : {}); setMounted(true); return undefined; }
     const timer = setTimeout(() => setMounted(false), 260);
     return () => clearTimeout(timer);
   }, [open]);
@@ -1618,6 +1671,39 @@ function PublishSheet({ open, onClose }) {
       </span>
     </button>
   );
+  const Choice = ({ item }) => (
+    <button type="button" className="pf-press" onClick={() => setLevel(item.id)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '14px 14px', marginBottom: 10, borderRadius: 14, border: '1px solid #E4E8E4', background: '#fff', cursor: 'pointer', textAlign: 'left' }}>
+      <span style={{ width: 42, height: 42, flexShrink: 0, borderRadius: 12, background: item.tone + '14', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><item.Icon size={23} color={item.tone} weight="duotone" aria-hidden/></span>
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ display: 'block', fontFamily: FONT_UI, fontSize: 15.5, fontWeight: 700, color: OK.ink }}>{item.title}</span>
+        <span style={{ display: 'block', marginTop: 3, fontFamily: FONT_UI, fontSize: 12.5, lineHeight: 1.35, color: OK.ink3 }}>{item.sub}</span>
+      </span>
+      <PubIcon name="chev" size={17} color="#55605A" weight="bold"/>
+    </button>
+  );
+  const heads = {
+    root: ['Que souhaitez-vous faire ?', 'Choisissez une action pour commencer'],
+    publish: ['Faire une publication', 'Que souhaitez-vous partager ?'],
+    activite: ['Inscrire une activité', 'Quel type d’activité souhaitez-vous référencer ?'],
+    avant: ['Mettre en avant', 'Que souhaitez-vous promouvoir ?'],
+    lieu: ['Suggérer un lieu', 'Quel type de lieu voulez-vous faire découvrir ?'],
+    assist: ['Assistance et contact', 'Comment pouvons-nous vous aider ?'],
+  };
+  const openSub = item => { if (item.tab) { onClose(); goTab(...item.tab); } else go(...item.screen); };
+  const SubList = ({ items }) => (
+    <div style={{ marginTop: 12, background: '#fff', borderRadius: 16, overflow: 'hidden', border: '1px solid #E4E8E4' }}>
+      {items.map((item, index) => (
+        <button key={item.id} type="button" className="pf-row" onClick={() => openSub(item)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 13, padding: '0 14px', minHeight: item.sub ? 62 : 52, border: 0, borderTop: index ? '1px solid #EEF0EE' : 0, background: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
+          <span style={{ width: 40, height: 40, flexShrink: 0, borderRadius: 12, background: (item.tone || '#006600') + '14', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><item.Icon size={23} color={item.tone || '#006600'} weight="duotone" aria-hidden/></span>
+          <span style={{ flex: 1, minWidth: 0, padding: '10px 0' }}>
+            <span style={{ display: 'block', fontFamily: FONT_UI, fontSize: 14.5, fontWeight: 700, color: OK.ink }}>{item.title}</span>
+            {item.sub && <span style={{ display: 'block', marginTop: 1, fontFamily: FONT_UI, fontSize: 12.5, color: OK.ink3 }}>{item.sub}</span>}
+          </span>
+          <PubIcon name="chev" size={16} color="#B5BBB5" weight="bold"/>
+        </button>
+      ))}
+    </div>
+  );
   if (!mounted) return null;
   return (
     <div style={{ position: 'absolute', inset: 0, zIndex: 70, pointerEvents: open ? 'auto' : 'none' }}>
@@ -1629,14 +1715,18 @@ function PublishSheet({ open, onClose }) {
         <div onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} style={{ flexShrink: 0, padding: '8px 18px 4px', touchAction: 'none' }}>
           <div style={{ display: 'flex', justifyContent: 'center' }}><span style={{ width: 40, height: 5, borderRadius: 999, background: '#D5D9D5' }}/></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+            {level !== 'root' && <button type="button" onClick={() => setLevel('root')} aria-label="Retour" style={{ width: 36, height: 36, borderRadius: 999, border: 0, background: '#E9ECE9', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><CaretLeftIcon size={17} color={OK.ink} weight="bold" aria-hidden/></button>}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: FONT_UI, fontSize: 22, fontWeight: 800, color: OK.ink, letterSpacing: -.4 }}>Publier</div>
-              <div style={{ marginTop: 1, fontFamily: FONT_UI, fontSize: 13, color: OK.ink3 }}>Que souhaitez-vous partager ?</div>
+              <div style={{ fontFamily: FONT_UI, fontSize: level === 'root' ? 20 : 22, fontWeight: 800, color: OK.ink, letterSpacing: -.4 }}>{heads[level][0]}</div>
+              <div style={{ marginTop: 1, fontFamily: FONT_UI, fontSize: 13, color: OK.ink3 }}>{heads[level][1]}</div>
             </div>
             <button type="button" onClick={onClose} aria-label="Fermer" style={{ width: 36, height: 36, borderRadius: 999, border: 0, background: '#E9ECE9', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><PubIcon name="close" size={17} color={OK.ink} weight="bold"/></button>
           </div>
         </div>
         <div style={{ flex: 1, overflowY: 'auto', overscrollBehavior: 'contain', padding: `4px 16px ${APP_DETAIL_BOTTOM_PADDING}` }}>
+          {level === 'root' && <div key="root" className="pf-step" style={{ paddingTop: 12 }}>{PUB_ROOT.map(item => <Choice key={item.id} item={item}/>)}</div>}
+          {PUB_SUBS[level] && <div key={level} className="pf-step"><SubList items={PUB_SUBS[level]}/></div>}
+          {level === 'publish' && <div key="publish" className="pf-step">
           {latest && (
             <button type="button" onClick={() => go('create', { kind: latest[0], resume: true })} className="pf-press" style={{ width: '100%', marginTop: 12, display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 16, border: 0, background: '#FFF8E1', boxShadow: 'inset 0 0 0 1px rgba(245,184,0,.45)', cursor: 'pointer', textAlign: 'left' }}>
               <span style={{ width: 38, height: 38, borderRadius: 999, background: OK.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><PubIcon name="history" size={20} color="#3D2F00" weight="bold"/></span>
@@ -1648,16 +1738,10 @@ function PublishSheet({ open, onClose }) {
             </button>
           )}
 
-          {sectionTitle('Créer')}
+          {sectionTitle('Publier')}
           <Group>
             {PUB_CREATE.map((item, index) => <Row key={item.id} first={index === 0} icon={item.icon} tone={item.tone} title={item.label} sub={item.hint} onClick={() => go(...item.screen)}/>)}
           </Group>
-
-          {sectionTitle('Promouvoir')}
-          <Group><Row first icon="megaphone" tone="#C27C00" title="Booster ou faire de la publicité" sub="Boost, À la une, grandes bannières" onClick={() => go('promote')}/></Group>
-
-          {sectionTitle('Contribuer')}
-          <Group><Row first icon="pinplus" tone="#0C8599" title="Suggérer un lieu" sub="Plage, cascade, spot incontournable…" onClick={() => go('create', { kind: 'lieu' })}/></Group>
 
           {sectionTitle('Gérer')}
           <Group>
@@ -1666,6 +1750,7 @@ function PublishSheet({ open, onClose }) {
             <Row quiet icon="draft" title="Brouillons" count={Object.keys(drafts).length} onClick={() => go('my-content', { tab: 'drafts' })}/>
           </Group>
           <div style={{ height: 10 }}/>
+          </div>}
         </div>
       </div>
     </div>
@@ -4515,6 +4600,18 @@ function useImageTint(src) {
   return tint;
 }
 
+// Cloche des notifications du header, avec le nombre de non lues.
+function HeaderBell() {
+  const { navigate } = useNav();
+  const unread = NOTIFICATIONS.filter(item => item.unread).length;
+  return (
+    <button type="button" aria-label={`Notifications, ${unread} non lues`} onClick={() => navigate('notifications')} style={HERO_ICON_BTN}>
+      <BellIcon size={20} weight="bold" color="#fff" aria-hidden/>
+      {unread > 0 && <span style={{ position: 'absolute', top: -3, right: -3, minWidth: 17, height: 17, padding: '0 4px', boxSizing: 'border-box', borderRadius: 999, background: '#E03131', border: '1.5px solid #fff', color: '#fff', fontFamily: FONT_UI, fontSize: 9.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{unread}</span>}
+    </button>
+  );
+}
+
 // Bouton rond translucide du header (retour, recherche, partage…), identique partout.
 const HERO_ICON_BTN = { position: 'relative', width: 38, height: 38, flexShrink: 0, borderRadius: 999, border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.16)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 };
 // Rangée du haut du header (retour, logo, actions), calée juste sous la barre d'état.
@@ -4524,8 +4621,12 @@ function HeroIconButton({ label, onClick, icon: IconC }) {
 }
 
 function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, onSearch, query, onQuery, autoFocus = false, onFilter, right, onBack, left, centered = false, titleSize = 22, heading = null }) {
-  const { back, canBack } = useNav();
-  const goBack = onBack || (canBack ? back : null);
+  const { back, canBack, goTab, navigate } = useNav();
+  // Retour partout (sauf Accueil, qui a la localisation à gauche) : ouverte depuis
+  // la barre de menu, une page n'a pas d'historique, le retour ramène à l'Accueil.
+  const goBack = left ? null : (onBack || (canBack ? back : () => goTab('home', 'home')));
+  // Cloche des notifications partout ; OkabaHeaderActions (right en fonction) l'inclut déjà.
+  const bell = typeof right !== 'function' && <HeaderBell/>;
   const searchable = Boolean(onSearch || onQuery);
   // Pas de bouton loupe : la barre de recherche apparaît quand on tire l'écran
   // vers le bas (en haut de page) et se range dès qu'on fait défiler, sauf si
@@ -4609,7 +4710,7 @@ function PageHero({ img, imgPos = 'center 30%', title, subtitle, placeholder, on
       {left && !goBack && <div style={{ position: 'absolute', top: HERO_ROW_TOP, left: 14, display: 'flex', alignItems: 'center', pointerEvents: 'auto' }}>{left}</div>}
       {goBack && <button type="button" aria-label="Retour" onClick={goBack} style={{ ...HERO_ICON_BTN, position: 'absolute', top: HERO_ROW_TOP, left: 14, pointerEvents: 'auto' }}><CaretLeftIcon size={20} weight="bold" color="#fff" aria-hidden/></button>}
       <div aria-hidden style={{ position: 'absolute', top: HERO_ROW_TOP, left: '50%', transform: 'translateX(-50%)', height: 38, display: 'flex', alignItems: 'center' }}><img src="assets/okaba-logo-header.png" alt="" style={{ height: 23, width: 'auto', display: 'block', filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.35))' }}/></div>
-      {right && <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8, pointerEvents: 'auto' }}>{typeof right === 'function' ? right(null) : right}</div>}
+      <div style={{ position: 'absolute', top: HERO_ROW_TOP, right: 14, display: 'flex', alignItems: 'center', gap: 8, pointerEvents: 'auto' }}>{typeof right === 'function' ? right(null) : right}{bell}</div>
     </div>
     </div>
   );
@@ -9497,11 +9598,13 @@ function saveUserListing(l) {
   window.localStorage.setItem(USER_LISTINGS_KEY, JSON.stringify(cur));
 }
 
-function PublierScreen() {
+function PublierScreen({ params }) {
   const { back, navigate, canBack } = useNav();
   const cats = MARKET_CATS.filter(c => !['all', 'gabon', 'services', 'events'].includes(c.id));
-  const [step, setStep] = useState(0);
-  const [sel, setSel] = useState(null);
+  // Ouvert depuis une sous-rubrique (Automobile, Emploi, Immobilier) : catégorie déjà choisie.
+  const preset = params?.cat && LISTING_TYPES[params.cat] ? params.cat : null;
+  const [step, setStep] = useState(preset ? 1 : 0);
+  const [sel, setSel] = useState(preset);
   const [media, setMedia] = useState([{ type: 'photo' }]);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
@@ -10359,7 +10462,7 @@ function CompteScreenV2() {
         onPick={pick} onAdd={() => { setSwitcher(false); navigate('shops'); }}/>
     }>
       <div data-screen-label="Profil">
-        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title="Mon profil" subtitle="Votre espace personnel" right={heroActions}/>
+        <PageHero img="assets/home-header-bg.jpg" imgPos="center 28%" title="Mon profil" subtitle="Votre espace personnel" />
 
         <div style={{ position: 'relative', zIndex: 2, margin: '14px 14px 0' }}>
           <div style={{ overflow: 'visible', background: '#fff', border: '1px solid #EEF0EE', borderRadius: 20, boxShadow: '0 8px 22px rgba(20,40,25,0.10)' }}>
@@ -11327,11 +11430,13 @@ const PF_PRODUCT_CATS = ['Saveurs & épicerie', 'Plats & traiteur', 'Artisanat',
 const PF_ORIGINS = ['Fabriqué au Gabon', 'Transformé au Gabon', 'Importé'];
 const PF_EVENT_TYPES = ['Concert', 'Soirée', 'Exposition', 'Festival', 'Sport', 'Atelier', 'Famille', 'Conférence'];
 const PF_PLACE_TYPES = [
-  { id: 'plage', label: 'Plage', icon: 'waves' }, { id: 'cascade', label: 'Lac, rivière, cascade', icon: 'drops' },
-  { id: 'nature', label: 'Site naturel', icon: 'mountain' }, { id: 'rando', label: 'Randonnée', icon: 'walk' },
-  { id: 'vue', label: 'Point de vue', icon: 'binoculars' }, { id: 'culture', label: 'Culture & patrimoine', icon: 'landmark' },
-  { id: 'gastro', label: 'Gastronomie', icon: 'food' }, { id: 'marche', label: 'Artisanat & marché', icon: 'basket' },
-  { id: 'loisir', label: 'Activité & loisirs', icon: 'tent' }, { id: 'pepite', label: 'Pépite cachée', icon: 'gem' },
+  { id: 'plage', label: 'Plage', icon: 'waves' }, { id: 'gastro', label: 'Gastronomie', icon: 'food' },
+  { id: 'nature', label: 'Nature', icon: 'leaf' }, { id: 'site', label: 'Site naturel', icon: 'mountain' },
+  { id: 'culture', label: 'Culture & patrimoine', icon: 'landmark' }, { id: 'loisir', label: 'Activité / Loisirs', icon: 'tent' },
+  { id: 'vue', label: 'Point de vue / Spot photo', icon: 'binoculars' }, { id: 'cascade', label: 'Lac / Rivière / Cascade', icon: 'drops' },
+  { id: 'rando', label: 'Randonnée / Aventure', icon: 'walk' }, { id: 'histo', label: 'Lieu historique', icon: 'book' },
+  { id: 'marche', label: 'Artisanat / Marché local', icon: 'basket' }, { id: 'sortie', label: 'Sortie / Ambiance', icon: 'music' },
+  { id: 'pepite', label: 'Pépite cachée', icon: 'gem' }, { id: 'autre', label: 'Autre', icon: 'pin' },
 ];
 
 // Espaces d'apparition (glossaire §9).
@@ -12656,7 +12761,7 @@ function EtabStepBody({ stepId, d, set, errors }) {
         <PfSection title="Devis estimé">
           {quote.lines.map(([label, price]) => <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontFamily: FX, fontSize: 13, color: OK.ink2 }}><span>{label}</span><span>{fcfa(price)}</span></div>)}
           <div style={{ height: 1, background: '#EEF0EE' }}/>
-          {[['Total HT', quote.ht], ['TVA (18 %)', quote.tva], ['CSS (1 %)', quote.css]].map(([label, price]) => <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: FX, fontSize: 13, color: OK.ink2 }}><span>{label}</span><span>{fcfa(price)}</span></div>)}
+          {[['Total HT', quote.ht], ['TVA (18 %)', quote.tva], ['CCS (1 %)', quote.css]].map(([label, price]) => <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: FX, fontSize: 13, color: OK.ink2 }}><span>{label}</span><span>{fcfa(price)}</span></div>)}
           <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: FX, fontSize: 17, fontWeight: 800, color: OK.ink }}><span>Total TTC</span><span>{fcfa(quote.ttc)}</span></div>
         </PfSection>
       </>);
@@ -12719,8 +12824,8 @@ function EtabCheckout({ d, onBack, onPublished }) {
           <p style={{ margin: '8px auto 0', maxWidth: 290, fontFamily: FX, fontSize: 13.5, color: OK.ink2, lineHeight: 1.55 }}>Une demande de paiement a été envoyée au <b>+241 {phone}</b>. Validez-la sur votre téléphone avec votre code secret.</p>
         </>) : (<>
           <div className="pf-pop" style={{ width: 84, height: 84, margin: '0 auto', borderRadius: 999, background: '#006600', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CheckIcon size={42} weight="bold" color="#fff" aria-hidden/></div>
-          <h1 style={{ margin: '20px 0 0', fontFamily: FX, fontSize: 22, fontWeight: 800, color: OK.ink }}>Paiement réussi</h1>
-          <p style={{ margin: '8px auto 0', maxWidth: 290, fontFamily: FX, fontSize: 13.5, color: OK.ink2 }}>Votre abonnement {quote.offer.name} a été activé.</p>
+          <h1 style={{ margin: '20px 0 0', fontFamily: FX, fontSize: 22, fontWeight: 800, color: OK.ink }}>Paiement réussi !</h1>
+          <p style={{ margin: '8px auto 0', maxWidth: 290, fontFamily: FX, fontSize: 13.5, color: OK.ink2 }}>Votre abonnement {quote.offer.name} a été activé. Votre établissement est prêt à être publié.</p>
           <div style={{ ...box, marginTop: 22, textAlign: 'left', display: 'grid', gap: 9 }}>
             {[['Référence', receipt.ref], ['Date', receipt.date], ['Montant', fcfa(quote.ttc)], ['Moyen de paiement', receipt.method]].map(([label, value]) => <div key={label} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontFamily: FX, fontSize: 13 }}><span style={{ color: OK.ink3 }}>{label}</span><b style={{ color: OK.ink, textAlign: 'right' }}>{value}</b></div>)}
           </div>
@@ -12732,20 +12837,20 @@ function EtabCheckout({ d, onBack, onPublished }) {
   return (
     <Screen bg={PF_BG} footerPad={100} footer={<PfFooter onBack={onBack} label="Payer maintenant" icon="check" onNext={() => (valid ? setPhase('pending') : notifyDemo('Saisissez un numéro de téléphone valide'))}/>}>
       <div data-screen-label="Paiement de l’abonnement">
-        <PfTopBar title="Paiement" labels={[]} step={0} onBack={onBack}/>
+        <PfTopBar title="Paiement de votre abonnement" labels={[]} step={0} onBack={onBack}/>
         <div style={{ padding: '6px 16px 24px', display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 14 }}>
           <div style={{ ...box, textAlign: 'center' }}>
             <div style={{ fontFamily: FX, fontSize: 12.5, color: OK.ink3 }}>Montant à payer · abonnement {quote.offer.name}</div>
             <div style={{ marginTop: 4, fontFamily: FX, fontSize: 30, fontWeight: 800, color: OK.ink }}>{fcfa(quote.ttc).replace(/ F$/, ' FCFA')}</div>
-            <div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>TTC (TVA 18 % + CSS 1 %)</div>
+            <div style={{ fontFamily: FX, fontSize: 11.5, color: OK.ink3 }}>TTC (TVA 18 % + CCS 1 %)</div>
           </div>
-          <PfSection title="Moyen de paiement">
+          <PfSection title="Sélectionnez votre moyen de paiement">
             {ETAB_PAYMENTS.filter(m => !m.merchant).map(m => {
               const on = method === m.id;
               return <button key={m.id} type="button" role="radio" aria-checked={on} onClick={() => setMethod(m.id)} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, borderRadius: 14, cursor: 'pointer', textAlign: 'left', border: on ? '1.5px solid #006600' : '1px solid #E2E6E2', background: on ? 'rgba(0,102,0,0.05)' : '#fff' }}>
                 <span style={{ width: 40, height: 40, borderRadius: 11, background: '#fff', border: '1px solid #E2E6E2', boxSizing: 'border-box', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><img src={m.logo} alt={m.label} style={{ width: '78%', height: '78%', objectFit: 'contain' }}/></span>
                 <span style={{ flex: 1 }}><span style={{ display: 'block', fontFamily: FX, fontSize: 14, fontWeight: 800, color: OK.ink }}>{m.label}</span><span style={{ display: 'block', fontFamily: FX, fontSize: 12, color: OK.ink3 }}>Payer avec {m.label}</span></span>
-                <span style={{ width: 20, height: 20, borderRadius: 999, border: on ? '6px solid #006600' : '2px solid #D3D8D3', boxSizing: 'border-box' }}/>
+                {on ? <CheckCircleIcon size={24} weight="fill" color="#006600" aria-hidden/> : <span style={{ width: 22, height: 22, margin: 1, borderRadius: 999, border: '2px solid #D3D8D3', boxSizing: 'border-box' }}/>}
               </button>;
             })}
           </PfSection>
@@ -13231,7 +13336,7 @@ function renderScreen(entry) {
     case 'fuel-stations': return <FuelStationsScreen/>;
     case 'baie-information': return <BaieInformationScreen/>;
     case 'baie-article':  return <BaieArticleScreen params={params}/>;
-    case 'publier':       return <PublierScreen/>;
+    case 'publier':       return <PublierScreen params={params}/>;
     case 'create':        return <PfCreateScreen key={(params?.kind || 'etab') + (params?.resume ? ':r' : '') + (params?.context || '')} params={params}/>;
     case 'promote':       return <PfPromoteScreen params={params}/>;
     case 'my-content':    return <PfMySpaceScreen params={params}/>;
